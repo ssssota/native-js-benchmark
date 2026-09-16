@@ -1,0 +1,8 @@
+{
+  "name": "native-js-dream-workloads",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "lodash-es": "catalog:"
+  }
+}

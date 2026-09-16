@@ -1,0 +1,20 @@
+[tools]
+node = "24.21.0"
+deno = "2.9.6"
+bun = "1.4.2"
+pnpm = "12.3.4"
+cmake = "3.31.12"
+ninja = "1.13.2"
+python = "3.13.15"
+
+[tools."github:CanadaHonk/porffor"]
+version = "alpha-6"
+
+[tools."github:CanadaHonk/porffor".platforms]
+macos-arm64 = { asset_pattern = "porffor-darwin-arm64.tar.gz", checksum = "sha256:ff6ce4abeec4b5c0a6cdbbbf73df64511f611de26090a4ca7840ad87d170db68" }
+macos-x64 = { asset_pattern = "porffor-darwin-x64.tar.gz", checksum = "sha256:3397b8ae4e1da87ed1509d8e0cdd7f9060f29e054d2c8567b83ed7971e651e78" }
+linux-arm64 = { asset_pattern = "porffor-linux-arm64.tar.gz", checksum = "sha256:ed5f80ef01fd0a930d3ff5d95cd082530e76fbff193d41950c27b35141420b0a" }
+linux-x64 = { asset_pattern = "porffor-linux-x64.tar.gz", checksum = "sha256:eb0ea557fc9fbcbaf16d81d9090b6fcf5010ede444dc151b94f7c528e1328b82" }
+
+[settings]
+node.gpg_verify = true

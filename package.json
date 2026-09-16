@@ -1,0 +1,23 @@
+{
+  "name": "native-js-dream",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test scripts/tests/*.test.ts",
+    "fmt": "oxfmt .",
+    "cli": "node scripts/cli.ts"
+  },
+  "devDependencies": {
+    "@perryts/perry": "catalog:",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
+    "postject": "catalog:",
+    "scriptc": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.3.4"
+}
