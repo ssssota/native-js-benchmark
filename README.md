@@ -6,7 +6,7 @@ Node.js 24 以上・pnpm・Docker が必要です。
 ## ビルド・実行
 
 ```sh
-# 全11構成をコンパイル（必要な Docker イメージも自動ビルド）
+# 全14構成をコンパイル（必要な Docker イメージも自動ビルド）
 pnpm cli compile --all --workload hello
 
 # 1構成だけコンパイルして実行
@@ -26,7 +26,9 @@ pnpm cli run --tool node --workload primes
 | Node | `node-cache-off` / `node-cache-on` | `node-source` |
 | Bun | `bun-cache-off` / `bun-cache-on` | `bun-source` |
 | Deno | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs` | `deno-source` |
-| AOT | `perry` / `scriptc` / `porffor` / `static_hermes` | — |
+| AOT | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` | — |
+
+`perry-typescript` と `scriptc-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
 
 `--cache`・`--engine` は廃止しました。出力先の名前は変わりません。
 短い `node`・`bun`・`deno` も使えます。単体コンパイル・計測ではキャッシュなし（Deno は V8）、一覧表示ではそのツール全構成を選びます。
@@ -59,7 +61,7 @@ KiB・MiB 単位で表示し、未ビルド・サイズ不明は末尾に置き�
 ```sh
 pnpm cli bench --all --execution source --workload hello
 pnpm cli bench --tool node-source --workload primes --mode in-process
-# バイナリ11構成＋通常起動3構成をまとめて計測
+# バイナリ14構成＋通常起動3構成をまとめて計測
 pnpm cli bench --all --execution both --workload hello
 ```
 
@@ -139,7 +141,7 @@ pnpm cli bench --all --execution both --workload fetch-json --mode in-process
 
 ### CI
 
-GitHub Actions では型検査とテストに加え、11種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
+GitHub Actions では型検査とテストに加え、14種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
 ベンチマークは1回のウォームアップ後に5サンプルを計測し、全構成の結果を中央値順に workflow summary へ出力します。
 Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action で導入します。
 各構成の `result.json` も1日間 artifact として保存します。

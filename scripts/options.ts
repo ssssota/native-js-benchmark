@@ -132,7 +132,7 @@ export function parseOptions(args: string[]) {
       throw new Error("--iterations is for in-process; use --samples for process.");
   }
   const selected = ["sizes", "bench-results"].includes(command)
-    ? toolName !== tool
+    ? exactVariant || sourceTool
       ? [variant]
       : values.tool
         ? variants.filter((v) => v.tool === tool)

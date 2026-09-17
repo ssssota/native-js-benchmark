@@ -23,7 +23,9 @@ export type Variant =
   | { tool: "node" | "bun"; cache: Cache }
   | { tool: "deno"; engine: "v8"; cache: Cache }
   | { tool: "deno"; engine: "quickjs" }
-  | { tool: "perry" | "scriptc" | "porffor" | "static_hermes" };
+  | { tool: "perry" | "scriptc"; language?: "typescript" }
+  | { tool: "static_hermes"; language?: "flow" }
+  | { tool: "porffor" };
 
 export const variants: Variant[] = [
   { tool: "node", cache: "off" },
@@ -34,15 +36,25 @@ export const variants: Variant[] = [
   { tool: "bun", cache: "off" },
   { tool: "bun", cache: "on" },
   { tool: "perry" },
+  { tool: "perry", language: "typescript" },
   { tool: "scriptc" },
+  { tool: "scriptc", language: "typescript" },
   { tool: "porffor" },
   { tool: "static_hermes" },
+  { tool: "static_hermes", language: "flow" },
 ];
 
 export function variantName(v: Variant): string {
   if (v.tool === "deno")
     return v.engine === "quickjs" ? "deno-quickjs" : `deno-v8-cache-${v.cache}`;
+  if ("language" in v && v.language) return `${v.tool}-${v.language}`;
   return "cache" in v ? `${v.tool}-cache-${v.cache}` : v.tool;
+}
+
+export function sourceName(v: Variant, workload: Workload): string {
+  if ("language" in v && v.language === "typescript") return `${workload}.ts`;
+  if ("language" in v && v.language === "flow") return `${workload}.flow.js`;
+  return `${workload}.js`;
 }
 
 export function selectVariant(tool: Tool, cache: Cache, engine: "v8" | "quickjs"): Variant {
