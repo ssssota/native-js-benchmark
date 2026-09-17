@@ -25,7 +25,7 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
   bench --all --execution source --workload hello
   bench --all --execution both --workload primes
   compile --tool bun --workload hello
-  compile --all --workload hello     Compile all 11 configurations
+  compile --all --workload hello     Compile all 14 configurations
   compile --variants --tool deno     Compile Deno V8 off/on and QuickJS
   run --tool node --workload json    Run source (AOT tools compile first)
   run-binary --tool node-cache-on   Run a previously compiled binary
@@ -37,7 +37,8 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
 
 Tools: node-cache-off, node-cache-on, bun-cache-off, bun-cache-on,
        deno-v8-cache-off, deno-v8-cache-on, deno-quickjs,
-       perry, scriptc, porffor, static_hermes, node-source, deno-source, bun-source
+       perry, perry-typescript, scriptc, scriptc-typescript, porffor,
+       static_hermes, static_hermes-flow, node-source, deno-source, bun-source
 Options: --tool, --workload, --execution binary|source|both,
          --backend docker|host, --port, --image-prefix, --image-tag, --help
 Defaults: node (= node-cache-off for compilation/bench), hello, port 3000, native-js-dream:check

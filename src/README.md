@@ -22,6 +22,8 @@ pnpm cli run --workload http-server --port 3000
 プログラムへの引数は `--` の後に渡します。`npm-cli` の依存はworkspaceのcatalogで管理し、Docker実行前に `pnpm deploy` で独立配置します。
 HTTP は localhost に公開し、Ctrl-C で停止します。`GET /` 以外は404です。
 
+各ワークロードには標準の `.js` に加えて、Perry・scriptc向けの `.ts` とStatic Hermes向けの `.flow.js` を用意しています。
+型付き版はそれぞれ `perry-typescript`・`scriptc-typescript`・`static_hermes-flow` で選択し、同じ処理と期待値を保ちます。
 `hello`・`primes`・`json` は標準 JavaScript のみで書いています。
 `fetch-json` はさらに `fetch`・Promise・async/await を使います。その他は Node API や npm に依存し、ツールによっては未対応です。Node SEA の対象は `hello`・`primes`・`json`・`fetch-json` です。
 処理量を変更する場合は、全ツールで同じソースを使ってください。期待値が変わる場合は `scripts/benchmark.ts` の正答チェックも更新します。

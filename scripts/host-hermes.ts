@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { availableParallelism } from "node:os";
 import { execute } from "./process.ts";
 import type { Step } from "./docker.ts";
-import type { Workload } from "./variants.ts";
+import { sourceName, type Variant, type Workload } from "./variants.ts";
 
 export const hermesBuildDirectory = (root: string) =>
   join(root, "build", `host-${process.platform}-${process.arch}`, "hermes");
@@ -40,15 +40,17 @@ export async function buildHostHermes(root: string): Promise<void> {
   ]);
 }
 
-export function hostHermesPlan(root: string, workload: Workload): Step[] {
+export function hostHermesPlan(root: string, variant: Variant, workload: Workload): Step[] {
   const compiler = shermesPath(root);
-  const source = `/src/${workload}.js`;
+  const source = `/src/${sourceName(variant, workload)}`;
+  const typed = "language" in variant && variant.language === "flow" ? ["-typed"] : [];
   return [
-    { argv: [compiler, "-O", "-emit-c", "-o", "/out/out.c", source] },
-    { argv: [compiler, "-O", "-dump-ir", source], stdout: "/out/out.ir" },
+    { argv: [compiler, ...typed, "-O", "-emit-c", "-o", "/out/out.c", source] },
+    { argv: [compiler, ...typed, "-O", "-dump-ir", source], stdout: "/out/out.ir" },
     {
       argv: [
         compiler,
+        ...typed,
         "-O",
         "-static-link",
         `-Wc,${join(hermesBuildDirectory(root), "external/boost/boost_1_86_0/libs/context/libboost_context.a")}`,

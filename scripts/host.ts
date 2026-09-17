@@ -19,7 +19,7 @@ import { buildHostHermes, hostHermesPlan, shermesPath } from "./host-hermes.ts";
 import { hostPerryPlan } from "./host-perry.ts";
 import { execute } from "./process.ts";
 import { batch } from "./workflow.ts";
-import { variantName, type Variant, type Workload } from "./variants.ts";
+import { sourceName, variantName, type Variant, type Workload } from "./variants.ts";
 import { benchmarkName, isSource, type BenchmarkTarget } from "./benchmark-targets.ts";
 import { asyncLoopSource, loopSource } from "./benchmark.ts";
 import { benchmarkResults } from "./benchmark-results.ts";
@@ -81,9 +81,9 @@ export async function hostCompile(
   if (v.tool === "static_hermes") await buildHostHermes(root);
   const steps =
     v.tool === "static_hermes"
-      ? hostHermesPlan(root, workload)
+      ? hostHermesPlan(root, v, workload)
       : v.tool === "perry"
-        ? hostPerryPlan(workload)
+        ? hostPerryPlan(v, workload)
         : compilePlan(v, workload);
   await mkdir(output, { recursive: true });
   await rm(join(output, "build.json"), { force: true });
@@ -182,10 +182,13 @@ async function hostBenchmark(
   if (options.benchmark.mode === "in-process") {
     output = directory;
     const sourceDirectory = join(directory, "src");
+    const inputName = source
+      ? `${options.workload}.js`
+      : sourceName(target, options.workload);
     await mkdir(sourceDirectory, { recursive: true });
-    const body = await readFile(join(root, "src", `${options.workload}.js`), "utf8");
+    const body = await readFile(join(root, "src", inputName), "utf8");
     await writeFile(
-      join(sourceDirectory, `${options.workload}.js`),
+      join(sourceDirectory, inputName),
       (options.workload === "fetch-json" ? asyncLoopSource : loopSource)(body, options.benchmark),
     );
     if (!isSource(target))

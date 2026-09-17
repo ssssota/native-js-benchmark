@@ -50,7 +50,7 @@ test("benchmark options reject unbounded workloads and invalid counts", () => {
     ["--mode", "in-process", "--workload", "file-cli"],
   ])
     assert.throws(() => parseOptions(["bench", ...args]));
-  assert.equal(parseOptions(["bench", "--all"]).selected.length, 11);
+  assert.equal(parseOptions(["bench", "--all"]).selected.length, 14);
   assert.equal(parseOptions(["bench", "--variants", "--tool", "deno"]).selected.length, 3);
 });
 
@@ -87,7 +87,7 @@ test("loop wrapper preserves results and emits warmup plus measured batches", ()
 });
 
 test("Hermes links runtime, console and boost context archives", () => {
-  const link = staticHermesPlan("hello").at(-1)!.argv;
+  const link = staticHermesPlan({ tool: "static_hermes" }, "hello").at(-1)!.argv;
   assert.ok(link.includes("/hermes/build/lib/libhermesvm_a.a"));
   assert.ok(link.some((s) => s.endsWith("libboost_context.a")));
 });

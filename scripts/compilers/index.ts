@@ -12,12 +12,12 @@ export function compilePlan(variant: Variant, workload: Workload): Step[] {
     case "deno":
       return denoPlan(variant, workload);
     case "perry":
-      return perryPlan(workload);
+      return perryPlan(variant, workload);
     case "scriptc":
-      return scriptcPlan(workload);
+      return scriptcPlan(variant, workload);
     case "porffor":
       return porfforPlan(workload);
     case "static_hermes":
-      return staticHermesPlan(workload);
+      return staticHermesPlan(variant, workload);
   }
 }
