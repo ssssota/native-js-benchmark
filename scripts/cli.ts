@@ -40,7 +40,8 @@ Tools: node-cache-off, node-cache-on, bun-cache-off, bun-cache-on,
        perry, perry-typescript, scriptc, scriptc-typescript, porffor,
        static_hermes, static_hermes-flow, node-source, deno-source, bun-source
 Options: --tool, --workload, --execution binary|source|both,
-         --backend docker|host, --port, --image-prefix, --image-tag, --help
+         --backend docker|host, --port, --image-prefix, --image-tag,
+         --skip-image-build, --help
 Defaults: node (= node-cache-off for compilation/bench), hello, port 3000, native-js-dream:check
 Output: build/docker/<tool>[-variant]-<workload>/out (host: build/host-<platform>-<arch>/...)
 Node SEA supports hello/primes/json/fetch-json. API compatibility errors remain visible.
@@ -57,6 +58,7 @@ try {
       fileURLToPath(new URL("../", import.meta.url)),
       options.prefix,
       options.tag,
+      options.buildImages,
     );
     const workflow = new Workflow(docker);
     switch (options.command) {

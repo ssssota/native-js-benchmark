@@ -20,41 +20,81 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm test
 
+  images:
+    name: Build Docker image (${{ matrix.image }})
+    needs: checks
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [node, bun, deno, perry, scriptc, porffor, static_hermes, benchmark]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/${{ matrix.image }}.dockerfile
+          tags: native-js-dream/${{ matrix.image }}:check
+          cache-from: type=gha,scope=image-${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=image-${{ matrix.image }}
+
   benchmark:
     name: Build, run, and benchmark (${{ matrix.tool }})
-    needs: checks
+    needs: images
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        tool:
-          - node-cache-off
-          - node-cache-on
-          - bun-cache-off
-          - bun-cache-on
-          - deno-v8-cache-off
-          - deno-v8-cache-on
-          - deno-quickjs
-          - perry
-          - perry-typescript
-          - scriptc
-          - scriptc-typescript
-          - porffor
-          - static_hermes
-          - static_hermes-flow
+        include:
+          - { tool: node-cache-off, image: node }
+          - { tool: node-cache-on, image: node }
+          - { tool: bun-cache-off, image: bun }
+          - { tool: bun-cache-on, image: bun }
+          - { tool: deno-v8-cache-off, image: deno }
+          - { tool: deno-v8-cache-on, image: deno }
+          - { tool: deno-quickjs, image: deno }
+          - { tool: perry, image: perry }
+          - { tool: perry-typescript, image: perry }
+          - { tool: scriptc, image: scriptc }
+          - { tool: scriptc-typescript, image: scriptc }
+          - { tool: porffor, image: porffor }
+          - { tool: static_hermes, image: static_hermes }
+          - { tool: static_hermes-flow, image: static_hermes }
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: jdx/mise-action@v4.3.0
       - run: pnpm install --frozen-lockfile
+      - uses: docker/setup-buildx-action@v3
+      - name: Build tool image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/${{ matrix.image }}.dockerfile
+          load: true
+          tags: native-js-dream/${{ matrix.image }}:check
+          cache-from: type=gha,scope=image-${{ matrix.image }}
+      - name: Build benchmark image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/benchmark.dockerfile
+          load: true
+          tags: native-js-dream/benchmark:check
+          cache-from: type=gha,scope=image-benchmark
       - name: Build ${{ matrix.tool }}
-        run: pnpm cli compile --tool "${{ matrix.tool }}" --workload hello
+        run: >-
+          pnpm cli compile --tool "${{ matrix.tool }}" --workload hello
+          --skip-image-build
       - name: Run ${{ matrix.tool }}
-        run: pnpm cli run-binary --tool "${{ matrix.tool }}" --workload hello
+        run: >-
+          pnpm cli run-binary --tool "${{ matrix.tool }}" --workload hello
+          --skip-image-build
       - name: Benchmark ${{ matrix.tool }}
         run: >-
           pnpm cli bench --tool "${{ matrix.tool }}" --workload hello
-          --mode process --samples 5 --warmup 1
+          --mode process --samples 5 --warmup 1 --skip-image-build
       - name: Collect benchmark result
         env:
           TOOL: ${{ matrix.tool }}

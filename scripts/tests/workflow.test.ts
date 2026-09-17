@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { parseOptions } from "../options.ts";
 import { variantName, variants } from "../variants.ts";
 import { compilePlan } from "../compilers/index.ts";
-import { renderSteps } from "../docker.ts";
+import { Docker, renderSteps } from "../docker.ts";
 import { batch } from "../workflow.ts";
 import { Interrupted } from "../process.ts";
 
@@ -52,8 +52,16 @@ test("reject unsupported selections before Docker work", () => {
     ["run", "--tool", "deno", "--engine", "quickjs"],
     ["run", "--workload", "http-server", "--port", "70000"],
     ["compile", "--workload", "../secret"],
+    ["build", "--skip-image-build"],
   ])
     assert.throws(() => parseOptions(args));
+});
+
+test("can use images built outside the CLI", async () => {
+  const docker = new Docker("/project", "example", "ci", false);
+  assert.equal(docker.image("node"), "example/node:ci");
+  await docker.build("node");
+  assert.equal(parseOptions(["compile", "--skip-image-build"]).buildImages, false);
 });
 
 test("forward argument boundaries including flags, whitespace, and shell syntax", () => {

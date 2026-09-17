@@ -37,6 +37,7 @@ export function parseOptions(args: string[]) {
       variants: { type: "boolean" },
       "image-prefix": { type: "string" },
       "image-tag": { type: "string" },
+      "skip-image-build": { type: "boolean" },
       mode: { type: "string" },
       execution: { type: "string" },
       samples: { type: "string" },
@@ -77,6 +78,8 @@ export function parseOptions(args: string[]) {
     throw new Error(`${toolName} is source-only; choose a compiled configuration.`);
   if (["build", "deps"].includes(command) && values.workload)
     throw new Error("build/deps do not take workload options.");
+  if (command === "build" && values["skip-image-build"])
+    throw new Error("--skip-image-build cannot be used with build.");
   const variant = exactVariant ?? selectVariant(tool as Tool, "off", "v8");
   const execution =
     values.execution ??
@@ -158,5 +161,6 @@ export function parseOptions(args: string[]) {
     args: separator < 0 && workload === "file-cli" ? ["/src/fixtures/input.txt"] : forwarded,
     prefix: values["image-prefix"] ?? "native-js-dream",
     tag: values["image-tag"] ?? "check",
+    buildImages: !values["skip-image-build"],
   };
 }

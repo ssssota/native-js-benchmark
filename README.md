@@ -35,6 +35,8 @@ pnpm cli run --tool node --workload primes
 
 出力先は `build/docker/bun-cache-on-hello/out` など。`compile` は毎回コンパイルしますが、Docker のビルドキャッシュは使います。
 Docker版は `build/docker/`、ホスト版は `build/host-darwin-arm64/` 以下にまとめます。旧配置の `build/` 直下にある成果物・結果は自動移動せず、一覧にも表示しません。利用する構成を再コンパイル・再計測してください。
+
+CIなどで同じ名前・タグのDockerイメージをあらかじめ用意した場合は、`--skip-image-build`を指定するとCLI内の`docker build`を省略できます。既定のイメージ名は`native-js-dream/<tool>:check`と`native-js-dream/benchmark:check`です。必要に応じて`--image-prefix`と`--image-tag`を併用してください。
 Deno の V8／QuickJS 用ランタイムと Node の `postject` はイメージ作成時に取得します。通常のコンパイルでは再ダウンロードしません（npm 依存の取得やクロスコンパイルは別）。
 `run` は Node/Bun/Deno ではソースを実行し、その他ではコンパイル後に実行します。キャッシュ・エンジンの比較には `run-binary` を使ってください。
 
