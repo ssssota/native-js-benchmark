@@ -137,6 +137,13 @@ pnpm cli bench --all --execution both --workload fetch-json --mode in-process
 
 ## 開発
 
+### CI
+
+GitHub Actions では型検査とテストに加え、11種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
+ベンチマークは1回のウォームアップ後に5サンプルを計測し、全構成の結果を中央値順に workflow summary へ出力します。
+Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action で導入します。
+各構成の `result.json` も1日間 artifact として保存します。
+
 ### Macホストで計測（試験対応）
 
 Docker版を残したまま、`--backend host` でMac上に直接起動できます。全ツールに対応していますが、workloadの `npm-cli` はまだ対象外です。各ツールで使えるJSの機能は異なります。

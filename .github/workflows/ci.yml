@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Typecheck and test
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v3
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+      - run: pnpm test
+
+  benchmark:
+    name: Build, run, and benchmark (${{ matrix.tool }})
+    needs: checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        tool:
+          - node-cache-off
+          - node-cache-on
+          - bun-cache-off
+          - bun-cache-on
+          - deno-v8-cache-off
+          - deno-v8-cache-on
+          - deno-quickjs
+          - perry
+          - scriptc
+          - porffor
+          - static_hermes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v3
+      - run: pnpm install --frozen-lockfile
+      - name: Build ${{ matrix.tool }}
+        run: pnpm cli compile --tool "${{ matrix.tool }}" --workload hello
+      - name: Run ${{ matrix.tool }}
+        run: pnpm cli run-binary --tool "${{ matrix.tool }}" --workload hello
+      - name: Benchmark ${{ matrix.tool }}
+        run: >-
+          pnpm cli bench --tool "${{ matrix.tool }}" --workload hello
+          --mode process --samples 5 --warmup 1
+      - name: Collect benchmark result
+        env:
+          TOOL: ${{ matrix.tool }}
+        run: |
+          mkdir -p reports
+          cp "build/docker/bench-process-${TOOL}-hello/result.json" "reports/${TOOL}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ matrix.tool }}
+          path: reports/${{ matrix.tool }}.json
+          if-no-files-found: error
+          retention-days: 1
+
+  summary:
+    name: Benchmark summary
+    needs: benchmark
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-*
+          path: reports
+          merge-multiple: true
+      - name: Write benchmark summary
+        run: |
+          {
+            echo '## Benchmark results'
+            echo
+            echo 'The `hello` process benchmark runs five measured samples after one warmup.'
+            echo
+            echo '| Configuration | Median (ms) | p95 (ms) | First (ms) | Last (ms) |'
+            echo '| --- | ---: | ---: | ---: | ---: |'
+            jq -r -s '
+              sort_by(.stats.medianMs)[] |
+              "| \(.name) | \(.stats.medianMs) | \(.stats.p95Ms) | \(.stats.firstMs) | \(.stats.lastMs) |"
+            ' reports/*.json
+          } >> "$GITHUB_STEP_SUMMARY"
