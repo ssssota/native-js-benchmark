@@ -69,7 +69,12 @@ export function parseOptions(args: string[]) {
     throw new Error("Program arguments are available for run and run-binary.");
   if (values.port && (!["run", "run-binary"].includes(command) || workload !== "http-server"))
     throw new Error("--port is only available when running http-server.");
-  if (command === "run" && toolName !== tool && !sourceTool)
+  if (
+    command === "run" &&
+    toolName !== tool &&
+    !sourceTool &&
+    ["node", "deno", "bun"].includes(tool)
+  )
     throw new Error(
       "Use run-binary for compiled configurations, or run --tool node-source for source.",
     );
@@ -132,7 +137,7 @@ export function parseOptions(args: string[]) {
       throw new Error("--iterations is for in-process; use --samples for process.");
   }
   const selected = ["sizes", "bench-results"].includes(command)
-    ? toolName !== tool
+    ? exactVariant || sourceTool
       ? [variant]
       : values.tool
         ? variants.filter((v) => v.tool === tool)

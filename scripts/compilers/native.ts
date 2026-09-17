@@ -1,7 +1,8 @@
 import type { Step } from "../docker.ts";
-import type { Workload } from "../variants.ts";
+import { sourceName, type Variant, type Workload } from "../variants.ts";
 
-export function perryPlan(workload: Workload): Step[] {
+export function perryPlan(variant: Variant, workload: Workload): Step[] {
+  const source = sourceName(variant, workload);
   return [
     { argv: ["mkdir", "-p", "/tmp/workload", "/out/intermediates"] },
     { argv: ["cp", "-R", "/src/.", "/tmp/workload/"] },
@@ -10,7 +11,7 @@ export function perryPlan(workload: Workload): Step[] {
       argv: [
         "perry",
         "compile",
-        `/tmp/workload/${workload}.js`,
+        `/tmp/workload/${source}`,
         "--no-cache",
         "--keep-intermediates",
         "--trace",
@@ -22,8 +23,8 @@ export function perryPlan(workload: Workload): Step[] {
   ];
 }
 
-export function scriptcPlan(workload: Workload): Step[] {
-  const source = `/src/${workload}.js`;
+export function scriptcPlan(variant: Variant, workload: Workload): Step[] {
+  const source = `/src/${sourceName(variant, workload)}`;
   return [{ argv: ["scriptc", "build", source, "--keep-c", "--emit-ir", "-o", "/out/out"] }];
 }
 
@@ -35,12 +36,13 @@ export function porfforPlan(workload: Workload): Step[] {
   ];
 }
 
-export function staticHermesPlan(workload: Workload): Step[] {
-  const source = `/src/${workload}.js`;
+export function staticHermesPlan(variant: Variant, workload: Workload): Step[] {
+  const source = `/src/${sourceName(variant, workload)}`;
+  const typed = "language" in variant && variant.language === "flow" ? ["-typed"] : [];
   return [
-    { argv: ["shermes", "-O", "-emit-c", "-o", "/out/out.c", source] },
-    { argv: ["shermes", "-O", "-dump-ir", source], stdout: "/out/out.ir" },
-    { argv: ["shermes", "-O", "-c", "-o", "/out/out.o", source] },
+    { argv: ["shermes", ...typed, "-O", "-emit-c", "-o", "/out/out.c", source] },
+    { argv: ["shermes", ...typed, "-O", "-dump-ir", source], stdout: "/out/out.ir" },
+    { argv: ["shermes", ...typed, "-O", "-c", "-o", "/out/out.o", source] },
     {
       argv: [
         "clang++-19",

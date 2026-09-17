@@ -25,17 +25,25 @@ test("tool names select each exact configuration without changing artifact names
   assert.throws(() => parseOptions(["bench", "--tool", "bun-cache-on", "--execution", "source"]));
 });
 
+test("run accepts exact typed AOT configurations", () => {
+  for (const name of ["perry-typescript", "scriptc-typescript", "static_hermes-flow"]) {
+    const options = parseOptions(["run", "--tool", name]);
+    assert.equal(variantName(options.variant), name);
+  }
+  assert.throws(() => parseOptions(["run", "--tool", "node-cache-on"]));
+});
+
 test("source targets are distinct, deduplicated and opt-in for measurement", () => {
-  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 11);
+  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 14);
   assert.deepEqual(
     parseOptions(["bench", "--all", "--execution", "source"]).benchmarkSelected.map(benchmarkName),
     ["node-source", "deno-source", "bun-source"],
   );
   assert.equal(
     parseOptions(["bench", "--all", "--execution", "both"]).benchmarkSelected.length,
-    14,
+    17,
   );
-  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 14);
+  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 17);
   assert.equal(
     parseOptions(["bench-results", "--tool", "static_hermes"]).benchmarkSelected.length,
     1,

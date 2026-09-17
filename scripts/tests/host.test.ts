@@ -17,7 +17,7 @@ import { hostHermesPlan, hermesBuildDirectory, shermesPath } from "../host-herme
 import { hostPerryPlan } from "../host-perry.ts";
 
 test("host Perry isolates sources and preserves LLVM intermediates", () => {
-  const plan = hostPerryPlan("json");
+  const plan = hostPerryPlan({ tool: "perry" }, "json");
   assert.ok(plan.some((s) => s.argv.includes("/src/json.js")));
   const compile = plan.find((s) => s.argv[0] === "perry")!;
   assert.equal(compile.cwd, "/out/intermediates");
@@ -29,7 +29,7 @@ test("host Perry isolates sources and preserves LLVM intermediates", () => {
 test("host Hermes uses its local compiler, static VM linking and intermediates", () => {
   const root = "/my project";
   assert.equal(hermesBuildDirectory(root), `${hostBuildDirectory(root)}/hermes`);
-  const plan = hostHermesPlan(root, "primes");
+  const plan = hostHermesPlan(root, { tool: "static_hermes" }, "primes");
   assert.ok(plan.every((step) => step.argv[0] === shermesPath(root)));
   assert.ok(plan.some((step) => step.argv.includes("-static-link")));
   assert.ok(
@@ -40,6 +40,21 @@ test("host Hermes uses its local compiler, static VM linking and intermediates",
   assert.ok(plan.some((step) => step.argv.includes("/out/out.c")));
   assert.ok(plan.some((step) => step.stdout === "/out/out.ir"));
   assert.ok(plan.every((step) => step.argv.includes("/src/primes.js")));
+});
+
+test("host typed AOT variants select typed source files", () => {
+  assert.ok(
+    hostPerryPlan({ tool: "perry", language: "typescript" }, "primes").some((step) =>
+      step.argv.includes("/src/primes.ts"),
+    ),
+  );
+  const flow = hostHermesPlan(
+    "/project",
+    { tool: "static_hermes", language: "flow" },
+    "primes",
+  );
+  assert.ok(flow.every((step) => step.argv.includes("-typed")));
+  assert.ok(flow.every((step) => step.argv.includes("/src/primes.flow.js")));
 });
 
 test("host AOT commands use mise Porffor and workspace scriptc", () => {

@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { renderSteps, dockerBuildDirectory } from "./docker.ts";
 import { compilePlan } from "./compilers/index.ts";
 import { Workflow } from "./workflow.ts";
-import type { Workload } from "./variants.ts";
+import { sourceName, type Workload } from "./variants.ts";
 import { benchmarkName, isSource, type BenchmarkTarget } from "./benchmark-targets.ts";
 
 export interface BenchmarkOptions {
@@ -74,11 +74,12 @@ export async function benchmark(
   if (options.mode === "in-process") {
     output = directory;
     const sourceDirectory = join(directory, "src");
+    const inputName = source ? `${workload}.js` : sourceName(v, workload);
     await mkdir(sourceDirectory, { recursive: true });
     await writeFile(
-      join(sourceDirectory, `${workload}.js`),
+      join(sourceDirectory, inputName),
       (workload === "fetch-json" ? asyncLoopSource : loopSource)(
-        await readFile(join(docker.root, "src", `${workload}.js`), "utf8"),
+        await readFile(join(docker.root, "src", inputName), "utf8"),
         options,
       ),
     );
