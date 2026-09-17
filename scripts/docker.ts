@@ -29,11 +29,13 @@ export class Docker {
   readonly root: string;
   readonly prefix: string;
   readonly tag: string;
+  readonly buildImages: boolean;
   private builds = new Map<ImageTarget, Promise<void>>();
-  constructor(root: string, prefix: string, tag: string) {
+  constructor(root: string, prefix: string, tag: string, buildImages = true) {
     this.root = root;
     this.prefix = prefix;
     this.tag = tag;
+    this.buildImages = buildImages;
   }
   image(tool: ImageTarget): string {
     return `${this.prefix}/${tool}:${this.tag}`;
@@ -41,14 +43,16 @@ export class Docker {
   build(tool: ImageTarget): Promise<void> {
     let build = this.builds.get(tool);
     if (!build) {
-      build = execute("docker", [
-        "build",
-        "-f",
-        join(this.root, "dockerfiles", `${tool}.dockerfile`),
-        "-t",
-        this.image(tool),
-        this.root,
-      ]);
+      build = this.buildImages
+        ? execute("docker", [
+            "build",
+            "-f",
+            join(this.root, "dockerfiles", `${tool}.dockerfile`),
+            "-t",
+            this.image(tool),
+            this.root,
+          ])
+        : Promise.resolve();
       this.builds.set(tool, build);
     }
     return build;
