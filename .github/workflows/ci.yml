@@ -11,7 +11,7 @@ permissions:
 jobs:
   checks:
     name: Typecheck and test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v3
@@ -67,7 +67,7 @@ jobs:
   summary:
     name: Benchmark summary
     needs: benchmark
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/download-artifact@v4
         with:
