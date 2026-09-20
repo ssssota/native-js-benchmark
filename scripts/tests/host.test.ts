@@ -13,7 +13,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { parseOptions } from "../options.ts";
-import { hostHermesPlan, hermesBuildDirectory, shermesPath } from "../host-hermes.ts";
+import { hostHermesPlan, shermesPath } from "../host-hermes.ts";
 import { hostPerryPlan } from "../host-perry.ts";
 
 test("host Perry isolates sources and preserves LLVM intermediates", () => {
@@ -26,17 +26,12 @@ test("host Perry isolates sources and preserves LLVM intermediates", () => {
   assert.ok(plan.every((s) => !s.argv.some((arg) => arg.includes("/tmp/workload"))));
 });
 
-test("host Hermes uses its local compiler, static VM linking and intermediates", () => {
+test("host Hermes uses the mise compiler, static VM linking and intermediates", () => {
   const root = "/my project";
-  assert.equal(hermesBuildDirectory(root), `${hostBuildDirectory(root)}/hermes`);
   const plan = hostHermesPlan(root, { tool: "static_hermes" }, "primes");
   assert.ok(plan.every((step) => step.argv[0] === shermesPath(root)));
   assert.ok(plan.some((step) => step.argv.includes("-static-link")));
-  assert.ok(
-    plan.some((step) =>
-      step.argv.some((arg) => arg.startsWith("-Wc,") && arg.endsWith("/libboost_context.a")),
-    ),
-  );
+  assert.ok(plan.every((step) => !step.argv.some((arg) => arg.startsWith("-Wc,"))));
   assert.ok(plan.some((step) => step.argv.includes("/out/out.c")));
   assert.ok(plan.some((step) => step.stdout === "/out/out.ir"));
   assert.ok(plan.every((step) => step.argv.includes("/src/primes.js")));

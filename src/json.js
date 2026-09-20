@@ -4,7 +4,7 @@ const ITERATIONS = 100;
 // Generate deterministic input without depending on filesystem or random APIs.
 const records = [];
 for (let i = 0; i < RECORD_COUNT; i++) {
-  records.push({ id: i, name: "item-" + i, amount: i % 100, active: i % 2 === 0 });
+  records.push({ id: i, name: "item-" + String(i), amount: i % 100, active: i % 2 === 0 });
 }
 const input = JSON.stringify(records);
 

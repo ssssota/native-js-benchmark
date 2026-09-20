@@ -21,8 +21,10 @@ export function loopSource(source: string, options: BenchmarkOptions): string {
   if (!match || source.match(/console\.log\(/g)?.length !== 1)
     throw new Error("Expected one final console.log(result) in the workload.");
   const body = source.slice(0, match.index) + `return ${match[1]};`;
+  const typed = source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source);
+  const durations = typed ? "var durations: number[] = [];" : "var durations = [];";
   return `function benchmarkWorkload() {\n${body}\n}\n
-var durations = [];
+${durations}
 var result;
 for (var sample = 0; sample < ${options.warmup + options.samples}; sample++) {
   var start = Date.now();
@@ -38,11 +40,13 @@ console.log(JSON.stringify({durations: durations, result: result}));
 export function asyncLoopSource(source: string, options: BenchmarkOptions): string {
   const entry = "fetchJsonWorkload().then((result) => console.log(result));";
   if (!source.trimEnd().endsWith(entry)) throw new Error("Unexpected fetch-json entry point.");
+  const typed = source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source);
+  const durations = typed ? "  var durations: number[] = [];" : "  var durations = [];";
   return (
     source.trimEnd().slice(0, -entry.length) +
     `
 async function benchmarkLoop() {
-  var durations = [];
+${durations}
   var result;
   for (var sample = 0; sample < ${options.warmup + options.samples}; sample++) {
     var start = Date.now();

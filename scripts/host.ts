@@ -15,7 +15,7 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { compilePlan } from "./compilers/index.ts";
-import { buildHostHermes, hostHermesPlan, shermesPath } from "./host-hermes.ts";
+import { hostHermesPlan, shermesManifest, shermesPath } from "./host-hermes.ts";
 import { hostPerryPlan } from "./host-perry.ts";
 import { execute } from "./process.ts";
 import { batch } from "./workflow.ts";
@@ -78,7 +78,6 @@ export async function hostCompile(
     assertSystemLibraries(
       execFileSync("/usr/bin/otool", ["-L", process.execPath], { encoding: "utf8" }),
     );
-  if (v.tool === "static_hermes") await buildHostHermes(root);
   const steps =
     v.tool === "static_hermes"
       ? hostHermesPlan(root, v, workload)
@@ -146,13 +145,7 @@ export async function hostCompile(
         platform: process.platform,
         arch: process.arch,
         ...(v.tool === "static_hermes"
-          ? {
-              hermesCommit: execFileSync(
-                "git",
-                ["-C", join(root, "vendor", "hermes"), "rev-parse", "HEAD"],
-                { encoding: "utf8" },
-              ).trim(),
-            }
+          ? { hermesRevision: shermesManifest().hermesRevision }
           : {}),
         binarySha256: createHash("sha256")
           .update(await readFile(join(output, "out")))
@@ -316,7 +309,7 @@ export async function host(root: string, options: Options): Promise<void> {
     }
     case "build":
       if (options.selected.every((v) => v.tool === "static_hermes")) {
-        await buildHostHermes(root);
+        execFileSync(shermesPath(root), ["--version"], { stdio: "inherit" });
         return;
       }
       throw new Error(

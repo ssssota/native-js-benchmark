@@ -42,26 +42,6 @@ export function staticHermesPlan(variant: Variant, workload: Workload): Step[] {
   return [
     { argv: ["shermes", ...typed, "-O", "-emit-c", "-o", "/out/out.c", source] },
     { argv: ["shermes", ...typed, "-O", "-dump-ir", source], stdout: "/out/out.ir" },
-    { argv: ["shermes", ...typed, "-O", "-c", "-o", "/out/out.o", source] },
-    {
-      argv: [
-        "clang++-19",
-        "/out/out.o",
-        "-Wl,--start-group",
-        "/hermes/build/tools/shermes/libshermes_console_a.a",
-        "/hermes/build/lib/libhermesvm_a.a",
-        "/hermes/build/jsi/libjsi.a",
-        "/hermes/build/external/boost/boost_1_86_0/libs/context/libboost_context.a",
-        "-Wl,--end-group",
-        "-licui18n",
-        "-licuuc",
-        "-licudata",
-        "-ldl",
-        "-lpthread",
-        "-lm",
-        "-o",
-        "/out/out",
-      ],
-    },
+    { argv: ["shermes", ...typed, "-O", "-static-link", "-o", "/out/out", source] },
   ];
 }

@@ -86,8 +86,22 @@ test("loop wrapper preserves results and emits warmup plus measured batches", ()
   );
 });
 
-test("Hermes links runtime, console and boost context archives", () => {
-  const link = staticHermesPlan({ tool: "static_hermes" }, "hello").at(-1)!.argv;
-  assert.ok(link.includes("/hermes/build/lib/libhermesvm_a.a"));
-  assert.ok(link.some((s) => s.endsWith("libboost_context.a")));
+test("loop wrapper gives typed sources a typed duration array", () => {
+  const generated = loopSource(
+    "// @flow\nfunction f(x: number): number { return x; }\nconsole.log(f(1));",
+    { mode: "in-process", samples: 1, iterations: 1, warmup: 0 },
+  );
+  assert.match(generated, /var durations: number\[\] = \[\];/);
+});
+
+test("Docker Hermes uses the release compiler's static-link mode", () => {
+  const plan = staticHermesPlan({ tool: "static_hermes" }, "hello");
+  assert.deepEqual(plan.at(-1)!.argv, [
+    "shermes",
+    "-O",
+    "-static-link",
+    "-o",
+    "/out/out",
+    "/src/hello.js",
+  ]);
 });

@@ -176,17 +176,16 @@ node scripts/cli.ts sizes --backend host --workload hello
 NodeはCLI自身を起動したバイナリを使います。SEA作成にはプロジェクトのpostjectとmacOSの `codesign` が必要です。以前の環境で作った成果物・計測結果は自動削除しないため、比較対象はmise環境で再ビルド・再計測してください。
 Node SEAの作成前に共有ライブラリを検査し、OS標準以外への依存があれば失敗にします。
 
-Static Hermesは `vendor/hermes` のsubmoduleからビルドします。CMake・Ninja・Pythonはmise管理、コンパイラとSDKにはXcodeまたはCommand Line Toolsが必要です。
+host版のStatic Hermesはmiseで固定した `static-hermes-cli` を使います。shermes本体、Hermesのヘッダー、静的ライブラリを含むため、ローカルでHermesをビルドする必要はありません。コンパイルと静的リンクにはXcodeまたはCommand Line Toolsが必要です。
 
 ```sh
-git submodule update --init vendor/hermes
 mise install
 mise exec -- pnpm cli build --backend host --tool static_hermes
 mise exec -- pnpm cli run --backend host --tool static_hermes --workload hello
 mise exec -- pnpm cli bench --backend host --tool static_hermes --workload hello
 ```
 
-コンパイラは `build/host-<OS>-<arch>/hermes/bin/shermes` に配置します。`compile` / `run` でも自動で差分ビルドします（初回は数分）。生成物は `out`・`out.c`・`out.ir`。VMを静的リンクし、実行バイナリがOS標準以外の共有ライブラリに依存していないことを検査します。Xcodeのバージョンはmiseでは固定しません。
+`shermes` はmiseのインストール先からヘッダーと静的ライブラリを解決します。生成物は `out`・`out.c`・`out.ir` です。VMを静的リンクし、実行バイナリがOS標準以外の共有ライブラリに依存していないことを検査します。使用したHermes revisionは `build.json` に記録します。Docker版も同じ `static-hermes-cli` のリリースを使います。最終イメージはDebian 13で、配布物が要求するICU 74だけUbuntu 24.04の補助ステージから取り込みます。生成バイナリが使うICU 74はベンチマーク共通イメージにも分離して配置します。
 
 成果物・結果は `build/host-darwin-arm64/` 以下に保存し、Docker版とは分離します。ランタイムのバージョン・CPU・OS情報も結果に記録します。`sizes` はMach-Oのファイルサイズと依存先を表示し、依存ライブラリの容量は含めません。
 
@@ -199,7 +198,7 @@ pnpm test
 ```
 
 pnpmはmiseで管理します。workspaceはルート（CLI・コンパイラ）と `src`（workload）の2つで、依存バージョンは `pnpm-workspace.yaml` の `catalog` に集約しています。変更後は `pnpm install` でlockfileを更新してください。
-Perry・scriptcはworkspaceの固定パッケージを使用します。PorfforはmiseでGitHub Releasesの `alpha-6` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` はworkspaceに含めません。
+Perry・scriptcはworkspaceの固定パッケージを使用します。PorfforはmiseでGitHub Releasesの `alpha-6` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` は参照用で、ビルドには使いません。
 Dockerの `npm-cli` は `pnpm deploy` で `build/docker/workload-deps-*` に独立配置してから使います。旧 `src/package-lock.json` は廃止し、ルートの `pnpm-lock.yaml` に統一しました。現状のworkload依存は純粋なJSのlodash-esのみで、将来ネイティブ依存を追加する場合はLinux向けの配置方法も見直してください。
 
 CLI は `scripts/cli.ts`、コンパイル設定は `scripts/compilers/` にあります。
