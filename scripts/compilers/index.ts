@@ -1,7 +1,7 @@
 import type { Step } from "../docker.ts";
 import type { Variant, Workload } from "../variants.ts";
 import { nodePlan, bunPlan, denoPlan } from "./runtimes.ts";
-import { perryPlan, scriptcPlan, porfforPlan, staticHermesPlan } from "./native.ts";
+import { perryPlan, scriptcPlan, porfforPlan, staticHermesPlan, oseoPlan } from "./native.ts";
 
 export function compilePlan(variant: Variant, workload: Workload): Step[] {
   switch (variant.tool) {
@@ -19,5 +19,7 @@ export function compilePlan(variant: Variant, workload: Workload): Step[] {
       return porfforPlan(workload);
     case "static_hermes":
       return staticHermesPlan(variant, workload);
+    case "oseo":
+      return oseoPlan(variant, workload);
   }
 }

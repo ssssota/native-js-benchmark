@@ -50,7 +50,7 @@ test("benchmark options reject unbounded workloads and invalid counts", () => {
     ["--mode", "in-process", "--workload", "file-cli"],
   ])
     assert.throws(() => parseOptions(["bench", ...args]));
-  assert.equal(parseOptions(["bench", "--all"]).selected.length, 14);
+  assert.equal(parseOptions(["bench", "--all"]).selected.length, 16);
   assert.equal(parseOptions(["bench", "--variants", "--tool", "deno"]).selected.length, 3);
 });
 
@@ -92,6 +92,17 @@ test("loop wrapper gives typed sources a typed duration array", () => {
     { mode: "in-process", samples: 1, iterations: 1, warmup: 0 },
   );
   assert.match(generated, /var durations: number\[\] = \[\];/);
+});
+
+test("Oseo loop wrapper preserves workload hints without an unsupported array hint", () => {
+  const generated = loopSource(
+    "function f(x: number): number { return x; }\nconsole.log(f(1));",
+    { mode: "in-process", samples: 1, iterations: 1, warmup: 0 },
+    false,
+  );
+  assert.match(generated, /function f\(x: number\): number/);
+  assert.match(generated, /var durations = \[\];/);
+  assert.doesNotMatch(generated, /durations: number\[\]/);
 });
 
 test("Docker Hermes uses the release compiler's static-link mode", () => {

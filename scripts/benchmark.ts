@@ -14,14 +14,19 @@ export interface BenchmarkOptions {
   warmup: number;
 }
 
-// Only the three self-contained workloads are accepted. Fail closed if their
+// Only the allowlisted self-contained workloads are accepted. Fail closed if their
 // single observable result changes shape, rather than silently timing logging.
-export function loopSource(source: string, options: BenchmarkOptions): string {
+export function loopSource(
+  source: string,
+  options: BenchmarkOptions,
+  typedDurations?: boolean,
+): string {
   const match = /console\.log\(([^\n]+)\);\s*$/.exec(source);
   if (!match || source.match(/console\.log\(/g)?.length !== 1)
     throw new Error("Expected one final console.log(result) in the workload.");
   const body = source.slice(0, match.index) + `return ${match[1]};`;
-  const typed = source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source);
+  const typed =
+    typedDurations ?? (source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source));
   const durations = typed ? "var durations: number[] = [];" : "var durations = [];";
   return `function benchmarkWorkload() {\n${body}\n}\n
 ${durations}
@@ -37,10 +42,15 @@ console.log(JSON.stringify({durations: durations, result: result}));
 `;
 }
 
-export function asyncLoopSource(source: string, options: BenchmarkOptions): string {
+export function asyncLoopSource(
+  source: string,
+  options: BenchmarkOptions,
+  typedDurations?: boolean,
+): string {
   const entry = "fetchJsonWorkload().then((result) => console.log(result));";
   if (!source.trimEnd().endsWith(entry)) throw new Error("Unexpected fetch-json entry point.");
-  const typed = source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source);
+  const typed =
+    typedDurations ?? (source.includes("@flow") || /:\s*(?:number|string|boolean)\b/.test(source));
   const durations = typed ? "  var durations: number[] = [];" : "  var durations = [];";
   return (
     source.trimEnd().slice(0, -entry.length) +
@@ -85,6 +95,7 @@ export async function benchmark(
       (workload === "fetch-json" ? asyncLoopSource : loopSource)(
         await readFile(join(docker.root, "src", inputName), "utf8"),
         options,
+        v.tool === "oseo" ? false : undefined,
       ),
     );
     if (!isSource(v)) {
@@ -112,9 +123,14 @@ export async function benchmark(
       : join(docker.root, "src", `${workload}.js`)
     : join(output, "out");
   const expected = (
-    { hello: "hello", primes: 9592, json: 1491500, "fetch-json": 14915 } as Partial<
-      Record<Workload, string | number>
-    >
+    {
+      hello: "hello",
+      primes: 9592,
+      json: 1491500,
+      "fetch-json": 14915,
+      "object-stable": 102387360,
+      "object-churn": 102387360,
+    } as Partial<Record<Workload, string | number>>
   )[workload];
   await writeFile(
     join(directory, "config.json"),

@@ -1,6 +1,17 @@
 import type { Step } from "../docker.ts";
 import { sourceName, type Variant, type Workload } from "../variants.ts";
 
+export function oseoPlan(
+  variant: Variant,
+  workload: Workload,
+  checkout = "/opt/oseo",
+  adapter = "/opt/oseo-compile.mjs",
+): Step[] {
+  return [
+    { argv: ["node", adapter, checkout, `/src/${sourceName(variant, workload)}`, "/out/out"] },
+  ];
+}
+
 export function perryPlan(variant: Variant, workload: Workload): Step[] {
   const source = sourceName(variant, workload);
   return [

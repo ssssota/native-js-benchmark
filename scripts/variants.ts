@@ -6,10 +6,14 @@ export const tools = [
   "scriptc",
   "porffor",
   "static_hermes",
+  "oseo",
 ] as const;
 export type Tool = (typeof tools)[number];
 export const workloads = [
   "hello",
+  "node-process",
+  "object-stable",
+  "object-churn",
   "primes",
   "json",
   "fetch-json",
@@ -23,7 +27,7 @@ export type Variant =
   | { tool: "node" | "bun"; cache: Cache }
   | { tool: "deno"; engine: "v8"; cache: Cache }
   | { tool: "deno"; engine: "quickjs" }
-  | { tool: "perry" | "scriptc"; language?: "typescript" }
+  | { tool: "perry" | "scriptc" | "oseo"; language?: "typescript" }
   | { tool: "static_hermes"; language?: "flow" }
   | { tool: "porffor" };
 
@@ -42,6 +46,8 @@ export const variants: Variant[] = [
   { tool: "porffor" },
   { tool: "static_hermes" },
   { tool: "static_hermes", language: "flow" },
+  { tool: "oseo" },
+  { tool: "oseo", language: "typescript" },
 ];
 
 export function variantName(v: Variant): string {

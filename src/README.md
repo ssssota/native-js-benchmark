@@ -5,6 +5,9 @@
 | 名前 | 処理 | 期待する結果 |
 | --- | --- | --- |
 | `hello` | ログを1回出力 | `hello` |
+| `node-process` | `node:process` を import して環境変数を出力 | `process.env.TEST` の値 |
+| `object-stable` | 固定キーの値を更新・読み出し・ゼロに戻す | `102387360` |
+| `object-churn` | キーを追加・読み出し・削除する | `102387360` |
 | `primes` | 100,000 以下の素数を数える | `9592` |
 | `json` | JSON の生成・解析・加工・再生成 | `1491500` |
 | `fetch-json` | ローカルHTTP取得・JSON解析・加工 | `14915` |
@@ -14,6 +17,7 @@
 
 ```sh
 # リポジトリのルートで実行
+TEST=compatibility pnpm cli run --backend host --tool node-source --workload node-process
 pnpm cli run --workload file-cli
 pnpm cli run --workload npm-cli -- 'Hello World'
 pnpm cli run --workload http-server --port 3000
@@ -22,11 +26,32 @@ pnpm cli run --workload http-server --port 3000
 プログラムへの引数は `--` の後に渡します。`npm-cli` の依存はworkspaceのcatalogで管理し、Docker実行前に `pnpm deploy` で独立配置します。
 HTTP は localhost に公開し、Ctrl-C で停止します。`GET /` 以外は404です。
 
-各ワークロードには標準の `.js` に加えて、Perry・scriptc向けの `.ts` とStatic Hermes向けの `.flow.js` を用意しています。
-型付き版はそれぞれ `perry-typescript`・`scriptc-typescript`・`static_hermes-flow` で選択し、同じ処理と期待値を保ちます。
+各ワークロードには標準の `.js` に加えて、Perry・scriptc・Oseo向けの `.ts` とStatic Hermes向けの `.flow.js` を用意しています。
+型付き版はそれぞれ `perry-typescript`・`scriptc-typescript`・`oseo-typescript`・`static_hermes-flow` で選択し、同じ処理と期待値を保ちます。
 `hello`・`primes`・`json` は標準 JavaScript のみで書いています。
 `fetch-json` はさらに `fetch`・Promise・async/await を使います。その他は Node API や npm に依存し、ツールによっては未対応です。Node SEA の対象は `hello`・`primes`・`json`・`fetch-json` です。
+Oseoは開発中の言語プロファイルに従い、Node API・npmパッケージ解決・`fetch` は未対応です。未対応のソースはコンパイル診断をそのまま報告します。
 処理量を変更する場合は、全ツールで同じソースを使ってください。期待値が変わる場合は `scripts/benchmark.ts` の正答チェックも更新します。
+
+## オブジェクトのキー変更
+
+`object-stable` と `object-churn` は256個のオブジェクト、8種類の非整数キー、
+20万回の更新で比較します。配列・オブジェクトの初期化も1回の処理に含みます。
+読み出した値と更新後の状態を checksum に加え、正答を満たさない実行は計測失敗にします。
+JS・TypeScript・Flow 版で同じ操作を行います。
+
+安定版は既存キーにゼロを代入し、変動版は `delete` で削除して次の巡回で再追加します。
+両方とも動的な `object[key]` アクセスです。変動版には削除・追加処理そのものの
+コストと内部表現の変化が含まれるため、比率はJITの最適化失敗だけを表しません。
+Node SEAにも対応し、`in-process` でウォームアップ後の処理時間を測れます。
+
+```sh
+pnpm cli bench --backend host --all --execution both --workload object-stable --mode in-process --samples 7 --warmup 3 --iterations 10
+pnpm cli bench --backend host --all --execution both --workload object-churn --mode in-process --samples 7 --warmup 3 --iterations 10
+```
+
+Node SEA・Bun/Deno の実行ファイル化はJITを除去するものではありません。
+ネイティブコンパイラとの比較では、その区別を保って結果を解釈してください。
 
 ## キャッシュとエンジン
 
@@ -56,6 +81,7 @@ Deno V8 の `run-binary --tool deno-v8-cache-on` は出力先の `runtime-cache/
 | scriptc | `out.ll`（または `.c`）・`out.ir.json` |
 | Perry | `intermediates/.perry-trace/llvm/` 内の LLVM IR |
 | Porffor | `out.c` |
+| Oseo | `out.c`・`out.mir` |
 | Static Hermes | `out.c`・`out.ir`・`out.o` |
 
 中間ファイルは通常の実行には不要です。生成処理も含むため、`compile` 全体の時間を純粋なコンパイル速度として比較しないでください。

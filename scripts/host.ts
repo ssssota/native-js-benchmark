@@ -17,6 +17,7 @@ import { tmpdir } from "node:os";
 import { compilePlan } from "./compilers/index.ts";
 import { hostHermesPlan, shermesManifest, shermesPath } from "./host-hermes.ts";
 import { hostPerryPlan } from "./host-perry.ts";
+import { hostOseoPlan, oseoConfig, oseoDirectory, prepareOseo } from "./host-oseo.ts";
 import { execute } from "./process.ts";
 import { batch } from "./workflow.ts";
 import { sourceName, variantName, type Variant, type Workload } from "./variants.ts";
@@ -30,7 +31,9 @@ type Options = ReturnType<typeof parseOptions>;
 export const hostBuildDirectory = (root: string) =>
   join(root, "build", `host-${process.platform}-${process.arch}`);
 export function requireHostTool(tool: string): void {
-  if (!["node", "deno", "bun", "porffor", "scriptc", "static_hermes", "perry"].includes(tool))
+  if (
+    !["node", "deno", "bun", "porffor", "scriptc", "static_hermes", "perry", "oseo"].includes(tool)
+  )
     throw new Error(`${tool}: host backend is not implemented yet; use --backend docker.`);
 }
 
@@ -74,6 +77,7 @@ export async function hostCompile(
   source = join(root, "src"),
 ): Promise<void> {
   requireHostTool(v.tool);
+  if (v.tool === "oseo") await prepareOseo(root);
   if (v.tool === "node")
     assertSystemLibraries(
       execFileSync("/usr/bin/otool", ["-L", process.execPath], { encoding: "utf8" }),
@@ -83,7 +87,9 @@ export async function hostCompile(
       ? hostHermesPlan(root, v, workload)
       : v.tool === "perry"
         ? hostPerryPlan(v, workload)
-        : compilePlan(v, workload);
+        : v.tool === "oseo"
+          ? hostOseoPlan(root, v, workload)
+          : compilePlan(v, workload);
   await mkdir(output, { recursive: true });
   await rm(join(output, "build.json"), { force: true });
   if (v.tool === "perry") {
@@ -128,13 +134,17 @@ export async function hostCompile(
       });
     if (inject) await execute("/usr/bin/codesign", ["--sign", "-", join(output, "out")]);
   }
-  if (["static_hermes", "perry"].includes(v.tool))
+  if (["static_hermes", "perry", "oseo"].includes(v.tool))
     assertSystemLibraries(
       execFileSync("/usr/bin/otool", ["-L", join(output, "out")], { encoding: "utf8" }),
       `${v.tool} executable`,
     );
   const [runtime, ...runtimeArgs] =
-    v.tool === "static_hermes" ? [shermesPath(root)] : hostToolCommand(v.tool);
+    v.tool === "static_hermes"
+      ? [shermesPath(root)]
+      : v.tool === "oseo"
+        ? [process.execPath, join(root, "scripts", "oseo-compile.mjs"), oseoDirectory(root)]
+        : hostToolCommand(v.tool);
   await writeFile(
     join(output, "build.json"),
     JSON.stringify(
@@ -144,8 +154,9 @@ export async function hostCompile(
         }).trim(),
         platform: process.platform,
         arch: process.arch,
-        ...(v.tool === "static_hermes"
-          ? { hermesRevision: shermesManifest().hermesRevision }
+        ...(v.tool === "static_hermes" ? { hermesRevision: shermesManifest().hermesRevision } : {}),
+        ...(v.tool === "oseo"
+          ? { oseoRevision: oseoConfig.revision, sanitizers: ["address", "undefined"] }
           : {}),
         binarySha256: createHash("sha256")
           .update(await readFile(join(output, "out")))
@@ -175,14 +186,16 @@ async function hostBenchmark(
   if (options.benchmark.mode === "in-process") {
     output = directory;
     const sourceDirectory = join(directory, "src");
-    const inputName = source
-      ? `${options.workload}.js`
-      : sourceName(target, options.workload);
+    const inputName = source ? `${options.workload}.js` : sourceName(target, options.workload);
     await mkdir(sourceDirectory, { recursive: true });
     const body = await readFile(join(root, "src", inputName), "utf8");
     await writeFile(
       join(sourceDirectory, inputName),
-      (options.workload === "fetch-json" ? asyncLoopSource : loopSource)(body, options.benchmark),
+      (options.workload === "fetch-json" ? asyncLoopSource : loopSource)(
+        body,
+        options.benchmark,
+        target.tool === "oseo" ? false : undefined,
+      ),
     );
     if (!isSource(target))
       await hostCompile(root, target, options.workload, output, sourceDirectory);
@@ -224,15 +237,23 @@ async function hostBenchmark(
       backend: "host",
       execution: source ? "source" : "binary",
       runtimeVersion,
+      ...(buildInfo?.oseoRevision
+        ? { oseoRevision: buildInfo.oseoRevision, sanitizers: buildInfo.sanitizers }
+        : {}),
       supervisor: { executable: process.execPath, version: process.version },
       command: source
         ? [runtime, ...(target.tool === "deno" ? ["run", "-A"] : []), entry]
         : ["/out/out"],
       args: options.args,
       expected: (
-        { hello: "hello", primes: 9592, json: 1491500, "fetch-json": 14915 } as Partial<
-          Record<Workload, string | number>
-        >
+        {
+          hello: "hello",
+          primes: 9592,
+          json: 1491500,
+          "fetch-json": 14915,
+          "object-stable": 102387360,
+          "object-churn": 102387360,
+        } as Partial<Record<Workload, string | number>>
       )[options.workload],
       inputPaths: { source: join(root, "src"), output, temporary },
       [source ? "entrySourceSha256" : "binarySha256"]: digest,
@@ -308,6 +329,10 @@ export async function host(root: string, options: Options): Promise<void> {
       return;
     }
     case "build":
+      if (options.selected.every((v) => v.tool === "oseo")) {
+        await prepareOseo(root);
+        return;
+      }
       if (options.selected.every((v) => v.tool === "static_hermes")) {
         execFileSync(shermesPath(root), ["--version"], { stdio: "inherit" });
         return;
@@ -320,7 +345,7 @@ export async function host(root: string, options: Options): Promise<void> {
     case "run":
     case "run-binary": {
       requireHostTool(options.tool);
-      const aot = ["porffor", "scriptc", "static_hermes", "perry"].includes(options.tool);
+      const aot = ["porffor", "scriptc", "static_hermes", "perry", "oseo"].includes(options.tool);
       if (options.command === "run" && aot)
         await hostCompile(root, options.variant, options.workload, output(options.variant));
       const binary = options.command === "run-binary" || aot;

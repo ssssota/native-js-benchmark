@@ -8,9 +8,9 @@ import { Docker, renderSteps } from "../docker.ts";
 import { batch } from "../workflow.ts";
 import { Interrupted } from "../process.ts";
 
-test("matrix has fourteen distinct output names and valid cache settings", () => {
-  assert.equal(new Set(variants.map(variantName)).size, 14);
-  assert.equal(parseOptions(["compile", "--all"]).selected.length, 14);
+test("matrix has sixteen distinct output names and valid cache settings", () => {
+  assert.equal(new Set(variants.map(variantName)).size, 16);
+  assert.equal(parseOptions(["compile", "--all"]).selected.length, 16);
   assert.deepEqual(
     parseOptions(["compile", "--variants", "--tool", "deno"]).selected.map(variantName),
     ["deno-v8-cache-off", "deno-v8-cache-on", "deno-quickjs"],
@@ -35,7 +35,9 @@ test("matrix has fourteen distinct output names and valid cache settings", () =>
       assert.ok(plan.some((step) => step.argv.some((arg) => arg.endsWith("/hello.ts"))));
     if ("language" in v && v.language === "flow") {
       assert.ok(
-        plan.filter((step) => step.argv[0] === "shermes").every((step) => step.argv.includes("-typed")),
+        plan
+          .filter((step) => step.argv[0] === "shermes")
+          .every((step) => step.argv.includes("-typed")),
       );
       assert.ok(plan.some((step) => step.argv.includes("/src/hello.flow.js")));
     }

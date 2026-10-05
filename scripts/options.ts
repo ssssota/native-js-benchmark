@@ -126,10 +126,13 @@ export function parseOptions(args: string[]) {
       );
     if (
       mode === "in-process" &&
-      (!["hello", "primes", "json", "fetch-json"].includes(workload) || forwarded.length)
+      (!["hello", "primes", "json", "fetch-json", "object-stable", "object-churn"].includes(
+        workload,
+      ) ||
+        forwarded.length)
     )
       throw new Error(
-        "in-process supports hello/primes/json/fetch-json without program arguments.",
+        "in-process supports hello/primes/json/fetch-json/object-stable/object-churn without program arguments.",
       );
     if (mode === "process" && values.iterations)
       throw new Error("--iterations is for in-process; use --samples for process.");

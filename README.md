@@ -6,7 +6,7 @@ Node.js 24 以上・pnpm・Docker が必要です。
 ## ビルド・実行
 
 ```sh
-# 全14構成をコンパイル（必要な Docker イメージも自動ビルド）
+# 全16構成をコンパイル（必要な Docker イメージも自動ビルド）
 pnpm cli compile --all --workload hello
 
 # 1構成だけコンパイルして実行
@@ -26,9 +26,14 @@ pnpm cli run --tool node --workload primes
 | Node | `node-cache-off` / `node-cache-on` | `node-source` |
 | Bun | `bun-cache-off` / `bun-cache-on` | `bun-source` |
 | Deno | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs` | `deno-source` |
-| AOT | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` | — |
+| AOT | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | — |
 
-`perry-typescript` と `scriptc-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
+`perry-typescript`・`scriptc-typescript`・`oseo-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
+
+[Oseo](https://github.com/dahlia/oseo) はリビジョン `317b58bbe686219ed9b715473c91ee2e9b5c5817` に固定しています。
+Docker版はLinux x64、ホスト版はmacOS arm64が対象です。Apple Siliconでは `--backend host` を使ってください。
+現行CLIは生成バイナリを保持しないため、Oseoのホスト／ツールチェーンAPIを使って `out`・生成C・MIRを保存します。コンパイル時にはworkloadを実行しません。
+Oseo標準のAddressSanitizer・UndefinedBehaviorSanitizerを有効にしたまま計測するため、他ツールとの速度・サイズ比較にはその負荷が含まれます。
 
 `--cache`・`--engine` は廃止しました。出力先の名前は変わりません。
 短い `node`・`bun`・`deno` も使えます。単体コンパイル・計測ではキャッシュなし（Deno は V8）、一覧表示ではそのツール全構成を選びます。
@@ -63,7 +68,7 @@ KiB・MiB 単位で表示し、未ビルド・サイズ不明は末尾に置き�
 ```sh
 pnpm cli bench --all --execution source --workload hello
 pnpm cli bench --tool node-source --workload primes --mode in-process
-# バイナリ14構成＋通常起動3構成をまとめて計測
+# バイナリ16構成＋通常起動3構成をまとめて計測
 pnpm cli bench --all --execution both --workload hello
 ```
 
@@ -143,12 +148,20 @@ pnpm cli bench --all --execution both --workload fetch-json --mode in-process
 
 ### CI
 
-GitHub Actions では型検査とテストに加え、14種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
+GitHub Actions では型検査とテストに加え、16種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
 ベンチマークは1回のウォームアップ後に5サンプルを計測し、全構成の結果を中央値順に workflow summary へ出力します。
 Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action で導入します。
 各構成の `result.json` も1日間 artifact として保存します。
 
 ### Macホストで計測（試験対応）
+
+Oseoは `mise install` で導入するAube 2.5.0・Zig 0.16.0を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
+
+```sh
+pnpm cli compile --backend host --variants --tool oseo --workload hello
+pnpm cli run-binary --backend host --tool oseo --workload hello
+pnpm cli bench --backend host --tool oseo-typescript --workload hello
+```
 
 Docker版を残したまま、`--backend host` でMac上に直接起動できます。全ツールに対応していますが、workloadの `npm-cli` はまだ対象外です。各ツールで使えるJSの機能は異なります。
 

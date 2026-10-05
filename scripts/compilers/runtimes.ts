@@ -2,8 +2,12 @@ import type { Step } from "../docker.ts";
 import type { Cache, Variant, Workload } from "../variants.ts";
 
 export function nodePlan(cache: Cache, workload: Workload): Step[] {
-  if (!["hello", "primes", "json", "fetch-json"].includes(workload))
-    throw new Error("Node SEA: imports require a bundling step; choose hello, primes, json or fetch-json.");
+  if (
+    !["hello", "primes", "json", "fetch-json", "object-stable", "object-churn"].includes(workload)
+  )
+    throw new Error(
+      "Node SEA: imports require a bundling step; choose hello, primes, json, fetch-json, object-stable or object-churn.",
+    );
   const config = JSON.stringify(
     {
       main: `/src/${workload}.js`,
