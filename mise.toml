@@ -1,12 +1,12 @@
 [tools]
-node = "24.21.0"
-deno = "2.9.6"
+node = "26.10.0"
+deno = "2.9.7"
 bun = "1.4.2"
-pnpm = "12.3.4"
-aube = "2.5.0"
+pnpm = "12.9.1"
+aube = "2.6.1"
 zig = "0.16.0"
-"github:CanadaHonk/porffor" = { version = "alpha-6" }
-"github:ssssota/static-hermes-cli" = { version = "v2026.9.20" }
+"github:CanadaHonk/porffor" = { version = "alpha-15" }
+"github:ssssota/static-hermes-cli" = { version = "v2026.10.1" }
 
 [settings]
 node.gpg_verify = true

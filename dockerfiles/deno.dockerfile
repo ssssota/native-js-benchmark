@@ -1,4 +1,4 @@
-FROM denoland/deno:debian-2.9.6
+FROM denoland/deno:debian-2.9.7
 
 # Keep both denort downloads in an image layer, not a disposable container.
 ENV DENO_DIR=/deno-dir

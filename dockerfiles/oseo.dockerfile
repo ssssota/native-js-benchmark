@@ -1,4 +1,4 @@
-FROM node:24.21.0-trixie-slim
+FROM node:26.10.0-trixie-slim
 
 # Oseo's supported Linux execution target is AMD64. Use the Mac host backend
 # on Apple Silicon; AArch64 Linux is only an upstream inspection target.
@@ -9,8 +9,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl xz-utils git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://github.com/aubepkg/aube/releases/download/v2.5.0/aube-v2.5.0-x86_64-unknown-linux-gnu.tar.gz -o /tmp/aube.tar.gz \
-    && echo '15c5371d4f847da83dd51b4d182cd0928dcd52a9d5cea36d07fb44f3776ee72e  /tmp/aube.tar.gz' | sha256sum -c - \
+RUN curl -fsSL https://github.com/aubepkg/aube/releases/download/v2.6.1/aube-v2.6.1-x86_64-unknown-linux-gnu.tar.gz -o /tmp/aube.tar.gz \
+    && echo '364b4cf201970cd5c943390dd3e736b4256b14a0ac52d304f8fb4acfd6a1fbd3  /tmp/aube.tar.gz' | sha256sum -c - \
     && tar -xzf /tmp/aube.tar.gz -C /usr/local/bin aube \
     && rm /tmp/aube.tar.gz
 

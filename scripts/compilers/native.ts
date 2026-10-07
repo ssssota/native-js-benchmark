@@ -36,7 +36,7 @@ export function perryPlan(variant: Variant, workload: Workload): Step[] {
 
 export function scriptcPlan(variant: Variant, workload: Workload): Step[] {
   const source = `/src/${sourceName(variant, workload)}`;
-  return [{ argv: ["scriptc", "build", source, "--keep-c", "--emit-ir", "-o", "/out/out"] }];
+  return [{ argv: ["scriptc", "build", source, "--keep-llvm", "--emit-ir", "-o", "/out/out"] }];
 }
 
 export function porfforPlan(workload: Workload): Step[] {

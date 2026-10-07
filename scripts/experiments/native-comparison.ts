@@ -5,7 +5,7 @@ import { mkdir, readFile, writeFile, mkdtemp, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { parseArgs } from "node:util";
-import { hostCompile, hostToolCommand } from "../host.ts";
+import { hostCompile } from "../host.ts";
 import { loopSource } from "../benchmark.ts";
 import { execute } from "../process.ts";
 import { benchmarkOutput } from "../benchmark-output.ts";
@@ -27,7 +27,7 @@ const save = (file: string, data: unknown) => writeFile(file, JSON.stringify(dat
 const median = (numbers: number[]) =>
   [...numbers].sort((a, b) => a - b)[Math.floor(numbers.length / 2)];
 const hash = (data: string | Buffer) => createHash("sha256").update(data).digest("hex");
-const targets: { name: string; variant: Variant; cBackend?: boolean }[] = [
+const targets: { name: string; variant: Variant }[] = [
   { name: "porffor", variant: { tool: "porffor" } },
   { name: "shermes", variant: { tool: "static_hermes" } },
   { name: "perry", variant: { tool: "perry" } },
@@ -35,7 +35,6 @@ const targets: { name: string; variant: Variant; cBackend?: boolean }[] = [
   { name: "shermes-flow", variant: { tool: "static_hermes", language: "flow" } },
   { name: "perry-ts", variant: { tool: "perry", language: "typescript" } },
   { name: "scriptc-ts", variant: { tool: "scriptc", language: "typescript" } },
-  { name: "scriptc-c", variant: { tool: "scriptc" }, cBackend: true },
 ];
 const expected = {
   hello: "hello",
@@ -53,30 +52,7 @@ async function build(
   const src = join(output, "src");
   await mkdir(src, { recursive: true });
   await writeFile(join(src, sourceName(target.variant, workload)), body);
-  if (target.cBackend) {
-    const [command, ...prefix] = hostToolCommand("scriptc");
-    const args = [
-      ...prefix,
-      "build",
-      join(src, sourceName(target.variant, workload)),
-      "--backend",
-      "c",
-      "--keep-c",
-      "--emit-ir",
-      "-o",
-      join(output, "out"),
-    ];
-    await execute(command, args, { cwd: output });
-    await save(join(output, "build.json"), {
-      runtimeVersion: execFileSync(command, [...prefix, "--version"], { encoding: "utf8" }).trim(),
-      platform: process.platform,
-      arch: process.arch,
-      backend: "c",
-      command,
-      args,
-      binarySha256: hash(await readFile(join(output, "out"))),
-    });
-  } else await hostCompile(root, target.variant, workload, output, src);
+  await hostCompile(root, target.variant, workload, output, src);
 }
 function run(output: string) {
   return benchmarkOutput(

@@ -1,4 +1,4 @@
-FROM node:24.21.0-trixie-slim
+FROM node:26.10.0-trixie-slim
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential clang-19 libssl-dev=3.5.7-1~deb13u2 \

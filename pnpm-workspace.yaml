@@ -3,12 +3,21 @@ packages:
 
 saveExact: true
 catalog:
-  "@types/node": 24.13.4
-  oxfmt: 0.67.0
+  "@types/node": 26.6.4
+  oxfmt: 0.71.0
   postject: 1.0.0-alpha.6
   typescript: 7.0.2
   "@perryts/perry": 0.5.1520
-  scriptc: 0.0.36
+  scriptc: 0.2.3
   lodash-es: 4.18.1
 allowBuilds:
-  scriptc: false
+  scriptc: true
+minimumReleaseAgeExclude:
+  - "@scriptc/cli-darwin-arm64@0.2.3"
+  - "@scriptc/cli-darwin-x64@0.2.3"
+  - "@scriptc/cli-linux-arm64-gnu@0.2.3"
+  - "@scriptc/cli-linux-arm64-musl@0.2.3"
+  - "@scriptc/cli-linux-x64-gnu@0.2.3"
+  - "@scriptc/cli-linux-x64-musl@0.2.3"
+  - "@scriptc/cli-win32-x64-msvc@0.2.3"
+  - scriptc@0.2.3

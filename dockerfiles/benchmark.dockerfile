@@ -9,9 +9,9 @@ RUN apt-get update \
     && cp -a /usr/lib/*/libicu*.so.74* /opt/hermes-icu/ \
     && rm -rf /var/lib/apt/lists/*
 
-FROM denoland/deno:debian-2.9.6 AS deno
+FROM denoland/deno:debian-2.9.7 AS deno
 FROM oven/bun:1.4.2 AS bun
-FROM node:24.21.0-trixie-slim
+FROM node:26.10.0-trixie-slim
 
 # Shared runtime for every benchmark, including statically linked Hermes VM
 # executables that still depend on the system ICU libraries.

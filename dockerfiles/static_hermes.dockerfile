@@ -11,7 +11,7 @@ FROM debian:13.6-slim
 # static-hermes-cli publishes Linux artifacts for Ubuntu 24.04. Keep the
 # release and each supported archive checksum fixed so Docker does not build a
 # moving Hermes checkout or download an unverified compiler.
-ARG STATIC_HERMES_VERSION=2026.9.20
+ARG STATIC_HERMES_VERSION=2026.10.1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -24,8 +24,8 @@ ENV LD_LIBRARY_PATH="/hermes/lib"
 
 RUN set -eu; \
     case "$(dpkg --print-architecture)" in \
-        amd64) hermes_arch=x64; sha256=8c381735e3f7ae41e55080a5ad123396911a0eddb275c8de71aca269381b8ec7 ;; \
-        arm64) hermes_arch=arm64; sha256=003222d3ef669dcaae96d99cc90397abc068b196b37cac89fa9ae211194fa169 ;; \
+        amd64) hermes_arch=x64; sha256=f56458bbe335e50f52090748432e94ffb9ee3d75eeb6103b73d2850141d5c71e ;; \
+        arm64) hermes_arch=arm64; sha256=ad9106b49e8e7f7fdad24adc5d76b4e9a9d7bb9cf6a5c0d0336ff425f0a587ea ;; \
         *) echo 'Unsupported architecture' >&2; exit 1 ;; \
     esac; \
     archive="/tmp/static-hermes.tar.gz"; \

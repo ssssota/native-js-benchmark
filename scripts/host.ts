@@ -40,9 +40,9 @@ export function requireHostTool(tool: string): void {
 // Perry/scriptc use workspace packages; Porffor uses the mise-managed release binary.
 export function hostToolCommand(tool: string): string[] {
   if (tool === "porffor") return ["porf"];
-  const entry = { scriptc: "scriptc/dist/bootstrap.js", perry: "@perryts/perry/bin/perry.js" }[
-    tool
-  ];
+  if (tool === "scriptc")
+    return [createRequire(import.meta.url).resolve("scriptc/bin/scriptc.exe")];
+  const entry = { perry: "@perryts/perry/bin/perry.js" }[tool];
   return entry
     ? [process.execPath, createRequire(import.meta.url).resolve(entry)]
     : [tool === "node" ? process.execPath : tool];

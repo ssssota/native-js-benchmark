@@ -43,11 +43,7 @@ test("host typed AOT variants select typed source files", () => {
       step.argv.includes("/src/primes.ts"),
     ),
   );
-  const flow = hostHermesPlan(
-    "/project",
-    { tool: "static_hermes", language: "flow" },
-    "primes",
-  );
+  const flow = hostHermesPlan("/project", { tool: "static_hermes", language: "flow" }, "primes");
   assert.ok(flow.every((step) => step.argv.includes("-typed")));
   assert.ok(flow.every((step) => step.argv.includes("/src/primes.flow.js")));
 });
@@ -55,13 +51,11 @@ test("host typed AOT variants select typed source files", () => {
 test("host AOT commands use mise Porffor and workspace scriptc", () => {
   requireHostTool("porffor");
   assert.deepEqual(hostToolCommand("porffor"), ["porf"]);
-  for (const tool of ["scriptc"]) {
-    requireHostTool(tool);
-    const command = hostToolCommand(tool);
-    assert.equal(command[0], process.execPath);
-    assert.ok(command[1].includes("node_modules/"));
-    assert.ok(command[1].endsWith("/scriptc/dist/bootstrap.js"));
-  }
+  requireHostTool("scriptc");
+  const command = hostToolCommand("scriptc");
+  assert.equal(command.length, 1);
+  assert.ok(command[0].includes("node_modules/"));
+  assert.ok(command[0].endsWith("/scriptc/bin/scriptc.exe"));
   assert.deepEqual(hostToolCommand("node"), [process.execPath]);
   requireHostTool("perry");
   assert.equal(hostToolCommand("perry")[0], process.execPath);

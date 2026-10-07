@@ -7,7 +7,8 @@ for (let i = 0; i < 256; i++) {
 }
 let checksum = 0;
 for (let i = 0; i < 200000; i++) {
-  const object = objects[i % 256];
+  // The array has all 256 entries; keep the receiver non-null for native TS checking.
+  const object = objects[i % 256]!;
   const key = keys[Math.floor(i / 256) % 8];
   const value = i % 1024;
   object[key] = value;

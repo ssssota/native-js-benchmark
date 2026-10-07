@@ -21,12 +21,12 @@ pnpm cli run --tool node --workload primes
 - `--variants --tool deno`：Deno の V8 キャッシュなし・あり・QuickJS をまとめて選択。
 - 省略時は `node`・`hello`。コンパイル・計測では `node-cache-off` 相当です。
 
-| ツール | バイナリ構成 | 通常起動 |
-| --- | --- | --- |
-| Node | `node-cache-off` / `node-cache-on` | `node-source` |
-| Bun | `bun-cache-off` / `bun-cache-on` | `bun-source` |
-| Deno | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs` | `deno-source` |
-| AOT | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | — |
+| ツール | バイナリ構成                                                                                                                                      | 通常起動      |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Node   | `node-cache-off` / `node-cache-on`                                                                                                                | `node-source` |
+| Bun    | `bun-cache-off` / `bun-cache-on`                                                                                                                  | `bun-source`  |
+| Deno   | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs`                                                                                         | `deno-source` |
+| AOT    | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | —             |
 
 `perry-typescript`・`scriptc-typescript`・`oseo-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
 
@@ -93,16 +93,16 @@ pnpm cli bench-results --workload primes --mode in-process
 
 `--tool` で対象構成を絞れます。計測モードは次の2種類です。
 
-| モード | 計測対象 | 用途 |
-| --- | --- | --- |
-| `process`（既定） | プロセス起動から終了まで。実処理・出力も含む | `hello` で起動コストを比較 |
-| `in-process` | 同じプロセス内で workload を繰り返し呼ぶ | 初回から後半への速度変化を比較 |
+| モード            | 計測対象                                     | 用途                           |
+| ----------------- | -------------------------------------------- | ------------------------------ |
+| `process`（既定） | プロセス起動から終了まで。実処理・出力も含む | `hello` で起動コストを比較     |
+| `in-process`      | 同じプロセス内で workload を繰り返し呼ぶ     | 初回から後半への速度変化を比較 |
 
-| オプション | `process` の既定 | `in-process` の既定 |
-| --- | --- | --- |
-| `--samples`（集計対象の計測回数） | 50プロセス | 5バッチ |
-| `--iterations`（1バッチ内の反復数） | 指定不可 | 50回 |
-| `--warmup`（集計しない先頭の回数） | 5プロセス | 1バッチ |
+| オプション                          | `process` の既定 | `in-process` の既定 |
+| ----------------------------------- | ---------------- | ------------------- |
+| `--samples`（集計対象の計測回数）   | 50プロセス       | 5バッチ             |
+| `--iterations`（1バッチ内の反復数） | 指定不可         | 50回                |
+| `--warmup`（集計しない先頭の回数）  | 5プロセス        | 1バッチ             |
 
 既定ではプロセスを計55回起動し、プロセス内では1プロセスで合計300回 workload を実行します。
 プロセス内の5サンプルは簡易比較向けです。ばらつきや p95 を詳しく見る場合は `--samples` を増やしてください。
@@ -155,7 +155,7 @@ Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action �
 
 ### Macホストで計測（試験対応）
 
-Oseoは `mise install` で導入するAube 2.5.0・Zig 0.16.0を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
+Oseoは `mise install` で導入するAube 2.6.1・Zig 0.16.0（Oseo指定のバージョン）を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
 
 ```sh
 pnpm cli compile --backend host --variants --tool oseo --workload hello
@@ -167,7 +167,7 @@ Docker版を残したまま、`--backend host` でMac上に直接起動できま
 
 Perryはworkspaceの `@perryts/perry` を使用します（LLVM同梱）。リンクにはXcodeまたはCommand Line Toolsが必要です。ソースを成果物内に隔離してコンパイルし、`intermediates/` にLLVM IR・オブジェクト等を保存します。生成バイナリはOS標準以外の共有ライブラリに依存していないことを検査します。
 
-`mise.toml` で Node 24.21.0・Deno 2.9.6・Bun 1.4.2・pnpm 12.3.4 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
+`mise.toml` で Node 26.10.0・Deno 2.9.7・Bun 1.4.2・pnpm 12.9.1 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
 pnpmはmiseのaquaバックエンドで配布済みバイナリを取得します（npm経由ではありません）。Nodeの署名検証を有効にしているためGnuPGが必要です。古いmiseで署名鍵不足になる場合はmiseを更新するか、Node公式の公開鍵を確認して追加してください（検証は無効にしません）。
 
 ```sh
@@ -211,8 +211,10 @@ pnpm test
 ```
 
 pnpmはmiseで管理します。workspaceはルート（CLI・コンパイラ）と `src`（workload）の2つで、依存バージョンは `pnpm-workspace.yaml` の `catalog` に集約しています。変更後は `pnpm install` でlockfileを更新してください。
-Perry・scriptcはworkspaceの固定パッケージを使用します。PorfforはmiseでGitHub Releasesの `alpha-6` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` は参照用で、ビルドには使いません。
+Perry・scriptcはworkspaceの固定パッケージを使用します。scriptc 0.2.3はネイティブCLIを直接起動し、インストール時に公式postinstallでプラットフォーム別バイナリとtoolchain設定を配置します。コード生成はLLVMのみで、旧Cバックエンドは廃止されています。PorfforはmiseでGitHub Releasesの `alpha-15` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` は参照用で、ビルドには使いません。
 Dockerの `npm-cli` は `pnpm deploy` で `build/docker/workload-deps-*` に独立配置してから使います。旧 `src/package-lock.json` は廃止し、ルートの `pnpm-lock.yaml` に統一しました。現状のworkload依存は純粋なJSのlodash-esのみで、将来ネイティブ依存を追加する場合はLinux向けの配置方法も見直してください。
 
 CLI は `scripts/cli.ts`、コンパイル設定は `scripts/compilers/` にあります。
 プロセス内ループの生成は `scripts/benchmark.ts`、プロセス起動の反復は `scripts/benchmark-runner.ts` です。
+
+調査記録: [C/IRと実行性能の比較](reports/native-comparison.md)、[2026-10-05のツール更新](reports/tool-update-2026-10-05.md)、[更新前後の性能比較](reports/tool-update-performance.md)。

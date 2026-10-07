@@ -2,18 +2,18 @@
 
 コマンドの使い方は[ルートの README](../README.md)を参照してください。
 
-| 名前 | 処理 | 期待する結果 |
-| --- | --- | --- |
-| `hello` | ログを1回出力 | `hello` |
-| `node-process` | `node:process` を import して環境変数を出力 | `process.env.TEST` の値 |
-| `object-stable` | 固定キーの値を更新・読み出し・ゼロに戻す | `102387360` |
-| `object-churn` | キーを追加・読み出し・削除する | `102387360` |
-| `primes` | 100,000 以下の素数を数える | `9592` |
-| `json` | JSON の生成・解析・加工・再生成 | `1491500` |
-| `fetch-json` | ローカルHTTP取得・JSON解析・加工 | `14915` |
-| `file-cli` | ファイルの行数・単語数を数える | 付属データで `{"lines":2,"words":6}` |
-| `http-server` | HTTP サーバーを起動 | `GET /` に `hello` を返す |
-| `npm-cli` | lodash-es で文字列を kebab-case に変換 | 引数なしで `hello-native-java-script` |
+| 名前            | 処理                                        | 期待する結果                          |
+| --------------- | ------------------------------------------- | ------------------------------------- |
+| `hello`         | ログを1回出力                               | `hello`                               |
+| `node-process`  | `node:process` を import して環境変数を出力 | `process.env.TEST` の値               |
+| `object-stable` | 固定キーの値を更新・読み出し・ゼロに戻す    | `102387360`                           |
+| `object-churn`  | キーを追加・読み出し・削除する              | `102387360`                           |
+| `primes`        | 100,000 以下の素数を数える                  | `9592`                                |
+| `json`          | JSON の生成・解析・加工・再生成             | `1491500`                             |
+| `fetch-json`    | ローカルHTTP取得・JSON解析・加工            | `14915`                               |
+| `file-cli`      | ファイルの行数・単語数を数える              | 付属データで `{"lines":2,"words":6}`  |
+| `http-server`   | HTTP サーバーを起動                         | `GET /` に `hello` を返す             |
+| `npm-cli`       | lodash-es で文字列を kebab-case に変換      | 引数なしで `hello-native-java-script` |
 
 ```sh
 # リポジトリのルートで実行
@@ -58,31 +58,31 @@ Node SEA・Bun/Deno の実行ファイル化はJITを除去するものではあ
 `compile`・`run-binary`・`bench` で同じ構成を指定してください。
 ここでのキャッシュはコード／バイトコード用であり、Docker のキャッシュや JIT のウォームアップとは別です。
 
-| 構成 | キャッシュなし | キャッシュあり |
-| --- | --- | --- |
-| Node SEA | コードキャッシュなし | コードキャッシュを埋め込む |
-| Bun | バイトコードなし | `--bytecode` で埋め込む |
-| Deno V8 | `--no-code-cache` | 初回にディスクへ保存し、次回以降に再利用 |
-| Deno QuickJS | キャッシュ切り替え対象外 | 指定不可 |
+| 構成         | キャッシュなし           | キャッシュあり                           |
+| ------------ | ------------------------ | ---------------------------------------- |
+| Node SEA     | コードキャッシュなし     | コードキャッシュを埋め込む               |
+| Bun          | バイトコードなし         | `--bytecode` で埋め込む                  |
+| Deno V8      | `--no-code-cache`        | 初回にディスクへ保存し、次回以降に再利用 |
+| Deno QuickJS | キャッシュ切り替え対象外 | 指定不可                                 |
 
 Deno QuickJS は `--tool deno-quickjs` で選びます。その他は `node-cache-on`・`bun-cache-off`・`deno-v8-cache-on` などの構成名で指定します。
 Deno V8 の `run-binary --tool deno-v8-cache-on` は出力先の `runtime-cache/` を保持します。
 一方、`bench` は計測セッション内だけでキャッシュを共有し、既存の `runtime-cache/` は使いません。
 
-仕様：[Node SEA](https://nodejs.org/download/release/v24.21.0/docs/api/single-executable-applications.html#v8-code-cache-support) / [Bun](https://bun.sh/docs/bundler/executables#bytecode-compilation) / [Deno](https://docs.deno.com/runtime/reference/cli/compile/#choosing-a-javascript-engine)
+仕様：[Node SEA](https://nodejs.org/download/release/v26.10.0/docs/api/single-executable-applications.html#v8-code-cache-support) / [Bun](https://bun.sh/docs/bundler/executables#bytecode-compilation) / [Deno](https://docs.deno.com/runtime/reference/cli/compile/#choosing-a-javascript-engine)
 
 ## 中間ファイルと共有ライブラリ
 
 実行ファイルは `build/docker/<構成>-<workload>/out` に出力します。次の中間ファイルも検証用に残します。
 
-| ツール | 中間ファイル |
-| --- | --- |
-| Node | `out.sea.json`・`out.blob` |
-| scriptc | `out.ll`（または `.c`）・`out.ir.json` |
-| Perry | `intermediates/.perry-trace/llvm/` 内の LLVM IR |
-| Porffor | `out.c` |
-| Oseo | `out.c`・`out.mir` |
-| Static Hermes | `out.c`・`out.ir`・`out.o` |
+| ツール        | 中間ファイル                                    |
+| ------------- | ----------------------------------------------- |
+| Node          | `out.sea.json`・`out.blob`                      |
+| scriptc       | `<workload>.ll`・`<workload>.ir.json`           |
+| Perry         | `intermediates/.perry-trace/llvm/` 内の LLVM IR |
+| Porffor       | `out.c`                                         |
+| Oseo          | `out.c`・`out.mir`                              |
+| Static Hermes | `out.c`・`out.ir`・`out.o`                      |
 
 中間ファイルは通常の実行には不要です。生成処理も含むため、`compile` 全体の時間を純粋なコンパイル速度として比較しないでください。
 
