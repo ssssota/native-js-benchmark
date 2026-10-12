@@ -12,15 +12,31 @@ import {
 } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { compilePlan } from "./compilers/index.ts";
 import { hostHermesPlan, shermesManifest, shermesPath } from "./host-hermes.ts";
 import { hostPerryPlan } from "./host-perry.ts";
 import { hostOseoPlan, oseoConfig, oseoDirectory, prepareOseo } from "./host-oseo.ts";
+import { prepareDynamicAot, dynamicAotCommand, dynamicAotConfig } from "./host-dynamic-aot.ts";
+import {
+  sourceCommand,
+  languageLoopSource,
+  workloadMetadata,
+  workloadClock,
+} from "./language-workloads.ts";
 import { execute } from "./process.ts";
 import { batch } from "./workflow.ts";
-import { sourceName, variantName, type Variant, type Workload } from "./variants.ts";
+import {
+  sourceName,
+  sourceLanguage,
+  sourceTools,
+  tools,
+  requireWorkload,
+  variantName,
+  type Variant,
+  type Workload,
+} from "./variants.ts";
 import { benchmarkName, isSource, type BenchmarkTarget } from "./benchmark-targets.ts";
 import { asyncLoopSource, loopSource } from "./benchmark.ts";
 import { benchmarkResults } from "./benchmark-results.ts";
@@ -31,14 +47,15 @@ type Options = ReturnType<typeof parseOptions>;
 export const hostBuildDirectory = (root: string) =>
   join(root, "build", `host-${process.platform}-${process.arch}`);
 export function requireHostTool(tool: string): void {
-  if (
-    !["node", "deno", "bun", "porffor", "scriptc", "static_hermes", "perry", "oseo"].includes(tool)
-  )
+  if (!tools.includes(tool as any))
     throw new Error(`${tool}: host backend is not implemented yet; use --backend docker.`);
 }
 
 // Perry/scriptc use workspace packages; Porffor uses the mise-managed release binary.
-export function hostToolCommand(tool: string): string[] {
+export function hostToolCommand(tool: string, root = resolve(import.meta.dirname, "..")): string[] {
+  if (tool === "spinel" || tool === "lython") return [dynamicAotCommand(root, tool)];
+  if (tool === "cpython") return ["python3"];
+  if (tool === "cruby") return ["ruby"];
   if (tool === "porffor") return ["porf"];
   if (tool === "scriptc")
     return [createRequire(import.meta.url).resolve("scriptc/bin/scriptc.exe")];
@@ -77,6 +94,8 @@ export async function hostCompile(
   source = join(root, "src"),
 ): Promise<void> {
   requireHostTool(v.tool);
+  requireWorkload(v.tool, workload);
+  if (v.tool === "spinel" || v.tool === "lython") await prepareDynamicAot(root, v.tool);
   if (v.tool === "oseo") await prepareOseo(root);
   if (v.tool === "node")
     assertSystemLibraries(
@@ -92,6 +111,7 @@ export async function hostCompile(
           : compilePlan(v, workload);
   await mkdir(output, { recursive: true });
   await rm(join(output, "build.json"), { force: true });
+  if (v.tool === "spinel" || v.tool === "lython") await rm(join(output, "out"), { force: true });
   if (v.tool === "perry") {
     await mkdir(join(output, "intermediates", "tmp"), { recursive: true });
     await writeFile(join(output, "intermediates", "package.json"), '{"private":true}\n');
@@ -101,6 +121,8 @@ export async function hostCompile(
     if (argv[0] === "cp" && argv[1] === "/usr/local/bin/node")
       argv[1] = await realpath(process.execPath);
     if (argv[0] === "node") argv[0] = process.execPath;
+    if (argv[0] === "spinel" || argv[0] === "lyc")
+      argv[0] = dynamicAotCommand(root, argv[0] === "lyc" ? "lython" : "spinel");
     if (["porf", "scriptc", "perry"].includes(argv[0]))
       argv.splice(0, 1, ...hostToolCommand(argv[0] === "porf" ? "porffor" : argv[0]));
     const inject = argv[0] === "postject";
@@ -134,7 +156,7 @@ export async function hostCompile(
       });
     if (inject) await execute("/usr/bin/codesign", ["--sign", "-", join(output, "out")]);
   }
-  if (["static_hermes", "perry", "oseo"].includes(v.tool))
+  if (["static_hermes", "perry", "oseo", "spinel", "lython"].includes(v.tool))
     assertSystemLibraries(
       execFileSync("/usr/bin/otool", ["-L", join(output, "out")], { encoding: "utf8" }),
       `${v.tool} executable`,
@@ -144,7 +166,7 @@ export async function hostCompile(
       ? [shermesPath(root)]
       : v.tool === "oseo"
         ? [process.execPath, join(root, "scripts", "oseo-compile.mjs"), oseoDirectory(root)]
-        : hostToolCommand(v.tool);
+        : hostToolCommand(v.tool, root);
   await writeFile(
     join(output, "build.json"),
     JSON.stringify(
@@ -154,6 +176,20 @@ export async function hostCompile(
         }).trim(),
         platform: process.platform,
         arch: process.arch,
+        ...workloadMetadata(v, workload),
+        ...(v.tool === "spinel"
+          ? {
+              spinelRelease: dynamicAotConfig.spinel.version,
+              sourceArchiveSha256: dynamicAotConfig.spinel.sha256,
+            }
+          : {}),
+        ...(v.tool === "lython"
+          ? {
+              lythonRevision: dynamicAotConfig.lython.revision,
+              sourceArchiveSha256: dynamicAotConfig.lython.sha256,
+              llvmMajor: dynamicAotConfig.lython.llvmMajor,
+            }
+          : {}),
         ...(v.tool === "static_hermes" ? { hermesRevision: shermesManifest().hermesRevision } : {}),
         ...(v.tool === "oseo"
           ? { oseoRevision: oseoConfig.revision, sanitizers: ["address", "undefined"] }
@@ -174,6 +210,7 @@ async function hostBenchmark(
   target: BenchmarkTarget,
 ): Promise<void> {
   requireHostTool(target.tool);
+  requireWorkload(target.tool, options.workload);
   const name = `${benchmarkName(target)}-${options.workload}`;
   const directory = join(hostBuildDirectory(root), `bench-${options.benchmark.mode}-${name}`);
   await mkdir(directory, { recursive: true });
@@ -186,27 +223,32 @@ async function hostBenchmark(
   if (options.benchmark.mode === "in-process") {
     output = directory;
     const sourceDirectory = join(directory, "src");
-    const inputName = source ? `${options.workload}.js` : sourceName(target, options.workload);
+    const inputName = sourceName(target, options.workload);
+    await rm(sourceDirectory, { recursive: true, force: true });
     await mkdir(sourceDirectory, { recursive: true });
     const body = await readFile(join(root, "src", inputName), "utf8");
     await writeFile(
       join(sourceDirectory, inputName),
-      (options.workload === "fetch-json" ? asyncLoopSource : loopSource)(
-        body,
-        options.benchmark,
-        target.tool === "oseo" ? false : undefined,
-      ),
+      sourceLanguage(target.tool) !== "javascript"
+        ? languageLoopSource(body, target.tool, options.benchmark, options.workload)
+        : (options.workload === "fetch-json" ? asyncLoopSource : loopSource)(
+            body,
+            options.benchmark,
+            target.tool === "oseo" ? false : undefined,
+          ),
     );
     if (!isSource(target))
       await hostCompile(root, target, options.workload, output, sourceDirectory);
   }
   const entry =
     options.benchmark.mode === "in-process"
-      ? `/out/src/${options.workload}.js`
-      : `/src/${options.workload}.js`;
+      ? `/out/src/${sourceName(target, options.workload)}`
+      : `/src/${sourceName(target, options.workload)}`;
   const artifact = source ? hostPath(entry, join(root, "src"), output) : join(output, "out");
   await access(artifact);
-  const runtime = target.tool === "node" ? process.execPath : target.tool;
+  const sourceArgv = sourceCommand(target.tool, entry);
+  if (sourceArgv[0] === "node") sourceArgv[0] = process.execPath;
+  const runtime = sourceArgv[0];
   const digest = createHash("sha256")
     .update(await readFile(artifact))
     .digest("hex");
@@ -230,6 +272,8 @@ async function hostBenchmark(
     // Do not inherit user-provided runtime flags or compile caches into measurements.
     delete env.NODE_OPTIONS;
     delete env.NODE_COMPILE_CACHE;
+    delete env.RUBYOPT;
+    delete env.RUBYLIB;
     const config = {
       ...options.benchmark,
       name,
@@ -237,13 +281,26 @@ async function hostBenchmark(
       backend: "host",
       execution: source ? "source" : "binary",
       runtimeVersion,
+      ...workloadMetadata(target, options.workload),
+      inProcessClock: workloadClock(target.tool),
+      ...(buildInfo?.spinelRelease
+        ? {
+            spinelRelease: buildInfo.spinelRelease,
+            sourceArchiveSha256: buildInfo.sourceArchiveSha256,
+          }
+        : {}),
+      ...(buildInfo?.lythonRevision
+        ? {
+            lythonRevision: buildInfo.lythonRevision,
+            llvmMajor: buildInfo.llvmMajor,
+            sourceArchiveSha256: buildInfo.sourceArchiveSha256,
+          }
+        : {}),
       ...(buildInfo?.oseoRevision
         ? { oseoRevision: buildInfo.oseoRevision, sanitizers: buildInfo.sanitizers }
         : {}),
       supervisor: { executable: process.execPath, version: process.version },
-      command: source
-        ? [runtime, ...(target.tool === "deno" ? ["run", "-A"] : []), entry]
-        : ["/out/out"],
+      command: source ? sourceArgv : ["/out/out"],
       args: options.args,
       expected: (
         {
@@ -329,6 +386,15 @@ export async function host(root: string, options: Options): Promise<void> {
       return;
     }
     case "build":
+      if (options.tool === "spinel" || options.tool === "lython") {
+        await prepareDynamicAot(root, options.tool);
+        return;
+      }
+      if (options.tool === "cpython" || options.tool === "cruby") {
+        const [runtime] = hostToolCommand(options.tool, root);
+        execFileSync(runtime, ["--version"], { stdio: "inherit" });
+        return;
+      }
       if (options.selected.every((v) => v.tool === "oseo")) {
         await prepareOseo(root);
         return;
@@ -345,18 +411,18 @@ export async function host(root: string, options: Options): Promise<void> {
     case "run":
     case "run-binary": {
       requireHostTool(options.tool);
-      const aot = ["porffor", "scriptc", "static_hermes", "perry", "oseo"].includes(options.tool);
+      requireWorkload(options.tool, options.workload);
+      const aot = !sourceTools.includes(options.tool as any);
       if (options.command === "run" && aot)
         await hostCompile(root, options.variant, options.workload, output(options.variant));
       const binary = options.command === "run-binary" || aot;
-      const runtime = options.tool === "node" ? process.execPath : options.tool;
       const command = binary
         ? [join(output(options.variant), "out")]
-        : [
-            runtime,
-            ...(options.tool === "deno" ? ["run", "-A"] : []),
-            join(root, "src", `${options.workload}.js`),
-          ];
+        : sourceCommand(
+            options.tool,
+            join(root, "src", sourceName(options.variant, options.workload)),
+          );
+      if (command[0] === "node") command[0] = process.execPath;
       command.push(
         ...options.args.map((arg) =>
           arg.startsWith("/src/") ? join(root, "src", arg.slice(5)) : arg,

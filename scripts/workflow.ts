@@ -2,7 +2,8 @@ import { mkdir, access, mkdtemp } from "node:fs/promises";
 import { join } from "node:path";
 import { Docker, renderSteps, dockerBuildDirectory } from "./docker.ts";
 import { compilePlan } from "./compilers/index.ts";
-import { variantName } from "./variants.ts";
+import { variantName, sourceTools, sourceName, requireWorkload } from "./variants.ts";
+import { sourceCommand } from "./language-workloads.ts";
 import type { Variant, Workload } from "./variants.ts";
 import { execute, Interrupted } from "./process.ts";
 
@@ -74,6 +75,7 @@ export class Workflow {
     });
   }
   async runBinary(v: Variant, workload: Workload, args: string[], port: number): Promise<void> {
+    requireWorkload(v.tool, workload);
     const output = this.output(v, workload);
     try {
       await access(join(output, "out"));
@@ -108,7 +110,8 @@ export class Workflow {
     });
   }
   async run(v: Variant, workload: Workload, args: string[], port: number): Promise<void> {
-    if (!["node", "deno", "bun"].includes(v.tool)) {
+    requireWorkload(v.tool, workload);
+    if (!sourceTools.includes(v.tool as any)) {
       await this.compile(v, workload);
       return this.runBinary(v, workload, args, port);
     }
@@ -134,7 +137,7 @@ export class Workflow {
     const sourceDirectory = workload === "npm-cli" ? await this.deps() : undefined;
     await this.docker.run(
       v.tool,
-      [v.tool, ...(v.tool === "deno" ? ["run", "-A"] : []), `/src/${workload}.js`, ...args],
+      [...sourceCommand(v.tool, `/src/${sourceName(v, workload)}`), ...args],
       { sourceDirectory, port: workload === "http-server" ? port : undefined },
     );
   }

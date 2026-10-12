@@ -1,0 +1,3260 @@
+{
+  "recordedAt": "2026-10-07T03:45:56.125Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "kernel": "25.6.0",
+  "cpu": "Apple M1",
+  "llvmVersion": "23.1.2",
+  "pins": {
+    "spinel": {
+      "version": "2026.09.12",
+      "url": "https://github.com/matz/spinel/releases/download/2026.09.12/spinel-2026.09.12.tar.xz",
+      "sha256": "1bba269cfc8004bcd60b75471cd44eaccdc66eed60b1f636d1367c897c764a77"
+    },
+    "lython": {
+      "revision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+      "url": "https://codeload.github.com/t3tra-dev/lython/tar.gz/98aa88b92786538ea57eea48ee65a4142f211e71",
+      "sha256": "01406c33835e21f4842628e32244dc7e4cffecd9d91a741587b6d52991f7b133",
+      "llvmMajor": 23
+    }
+  },
+  "power": [
+    "Now drawing from 'Battery Power'\n -InternalBattery-0 (id=38207587)\t96%; discharging; 6:10 remaining present: true\n",
+    "Now drawing from 'Battery Power'\n -InternalBattery-0 (id=38207587)\t96%; discharging; 6:20 remaining present: true\n",
+    "Now drawing from 'Battery Power'\n -InternalBattery-0 (id=38207587)\t95%; discharging; 6:30 remaining present: true\n"
+  ],
+  "method": {
+    "rounds": 3,
+    "round2Order": "reversed",
+    "process": {
+      "samples": 15,
+      "warmup": 3
+    },
+    "inProcess": {
+      "samples": 5,
+      "warmup": 2,
+      "pilotBatchGoalMs": 150
+    },
+    "compilerWork": "finished before measurement",
+    "inputStorage": "host-local",
+    "unit": "milliseconds per workload call",
+    "json": "1000 records x 100 transformations per call",
+    "sourceCommands": {
+      "node": ["node", "entry.js"],
+      "cruby": ["ruby", "--disable-gems", "--disable-yjit", "entry.rb"],
+      "cpython": ["python3", "-I", "-B", "entry.py"]
+    }
+  },
+  "results": [
+    {
+      "case": "hello",
+      "target": {
+        "name": "spinel",
+        "tool": "spinel",
+        "variant": {
+          "tool": "spinel"
+        }
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/spinel",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "2cd1f7d70abd4ac4e9a0080408623cb930aba6cc39b04f5ba6cd518d9bf19a76",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:51.994Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "c35ce32ff82fb4ea436940529b66e01660b9da096a9d3b5f9ccd2531209c5105",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            496.674875, 6.652208, 7.115208, 5.690834, 3.602041, 4.817, 4.236291, 4.724709, 4.130292,
+            4.218625, 3.793458, 3.555375, 3.598167, 3.779834, 3.755292, 3.808209, 3.839959, 3.589542
+          ],
+          "stats": {
+            "firstMs": 5.690834,
+            "medianMs": 3.808209,
+            "p95Ms": 5.690834,
+            "minMs": 3.555375,
+            "meanMs": 4.075975199999999,
+            "lastMs": 3.589542
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:15.730Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "c35ce32ff82fb4ea436940529b66e01660b9da096a9d3b5f9ccd2531209c5105",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            224.929375, 7.414458, 4.197917, 2.999042, 3.724, 4.013292, 3.269792, 3.217416, 2.983542,
+            2.871625, 3.220084, 2.997416, 2.712667, 2.603625, 2.643875, 2.627541, 2.585875, 2.54775
+          ],
+          "stats": {
+            "firstMs": 2.999042,
+            "medianMs": 2.983542,
+            "p95Ms": 4.013292,
+            "minMs": 2.54775,
+            "meanMs": 3.001169466666667,
+            "lastMs": 2.54775
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:16.095Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "c35ce32ff82fb4ea436940529b66e01660b9da096a9d3b5f9ccd2531209c5105",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            208.199958, 3.084167, 2.83625, 2.742417, 2.601125, 3.164417, 2.615666, 2.485875,
+            2.629334, 2.6055, 2.524083, 2.476417, 2.710625, 2.678875, 2.689041, 2.519708, 2.550166,
+            2.646209
+          ],
+          "stats": {
+            "firstMs": 2.742417,
+            "medianMs": 2.615666,
+            "p95Ms": 3.164417,
+            "minMs": 2.476417,
+            "meanMs": 2.642630533333333,
+            "lastMs": 2.646209
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 2.983542,
+      "minRoundMedianMs": 2.615666,
+      "maxRoundMedianMs": 3.808209,
+      "language": "ruby",
+      "sourceFile": "hello.rb",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/hello/spinel/plain/out.c",
+          "bytes": 7270,
+          "sha256": "22d3a6c49caaf84dc1b1878787e9b106e0aca1e97b4136ea50d0fb2c81416c24"
+        }
+      ],
+      "binaryBytes": 186800,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "spinel",
+        "tool": "spinel",
+        "variant": {
+          "tool": "spinel"
+        }
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/spinel",
+      "mode": "in-process",
+      "iterations": 12,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f38d90252dc932095042788970574cf8a90f9aadb677a9d01b51e3fd95d8b9f4",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:52.849Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "f242d7d9032da3d5a5853046d6ddab6155d569a36ded3922a26232668651ec19",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            4.177916678600013, 4.195749992504716, 4.179916655023892, 4.188000030505161,
+            4.18524999016275, 4.239833331666887, 4.208416678011417
+          ],
+          "stats": {
+            "firstMs": 4.179916655023892,
+            "medianMs": 4.188000030505161,
+            "p95Ms": 4.239833331666887,
+            "minMs": 4.179916655023892,
+            "meanMs": 4.200283337074021,
+            "lastMs": 4.208416678011417
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:15.352Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "f242d7d9032da3d5a5853046d6ddab6155d569a36ded3922a26232668651ec19",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            6.3727499994759755, 4.180416658831139, 4.1814166664456325, 4.172250007589658,
+            4.1631666632990045, 4.164249985478818, 4.16541666102906
+          ],
+          "stats": {
+            "firstMs": 4.1814166664456325,
+            "medianMs": 4.16541666102906,
+            "p95Ms": 4.1814166664456325,
+            "minMs": 4.1631666632990045,
+            "meanMs": 4.1692999967684345,
+            "lastMs": 4.16541666102906
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:16.762Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "f242d7d9032da3d5a5853046d6ddab6155d569a36ded3922a26232668651ec19",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            5.832333311749001, 4.183250013738871, 4.1915833329161005, 4.176416667178273,
+            4.198666661977768, 4.174249984013538, 4.1759166633710265
+          ],
+          "stats": {
+            "firstMs": 4.1915833329161005,
+            "medianMs": 4.176416667178273,
+            "p95Ms": 4.198666661977768,
+            "minMs": 4.174249984013538,
+            "meanMs": 4.183366661891341,
+            "lastMs": 4.1759166633710265
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 4.176416667178273,
+      "minRoundMedianMs": 4.16541666102906,
+      "maxRoundMedianMs": 4.188000030505161,
+      "language": "ruby",
+      "sourceFile": "primes.rb",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/primes/spinel/measured/out.c",
+          "bytes": 23041,
+          "sha256": "ac4b6ed220c3fbf197b3df4a98eef2d8f89cce933e2ea99063f266587543783b"
+        }
+      ],
+      "binaryBytes": 188384,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "spinel",
+        "tool": "spinel",
+        "variant": {
+          "tool": "spinel"
+        }
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/spinel",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "b6b838e1f8038a0e77c4eb3e38185dffbce776e35029726d12d77ed35d01c37d",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:54.262Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "81ff25b1ae9b132ee9d94cb458c1cc3f998da5d53a3e9e48610901d00f1f72df",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            145.34200029447675, 130.53900003433228, 129.96299983933568, 127.88400007411838,
+            128.99600015953183, 132.41499988362193, 131.42800005152822
+          ],
+          "stats": {
+            "firstMs": 129.96299983933568,
+            "medianMs": 129.96299983933568,
+            "p95Ms": 132.41499988362193,
+            "minMs": 127.88400007411838,
+            "meanMs": 130.1372000016272,
+            "lastMs": 131.42800005152822
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:14.649Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "81ff25b1ae9b132ee9d94cb458c1cc3f998da5d53a3e9e48610901d00f1f72df",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            155.43699963018298, 128.46599984914064, 128.87400016188622, 126.86799978837371,
+            128.47999995574355, 127.29500001296401, 128.79900028929114
+          ],
+          "stats": {
+            "firstMs": 128.87400016188622,
+            "medianMs": 128.47999995574355,
+            "p95Ms": 128.87400016188622,
+            "minMs": 126.86799978837371,
+            "meanMs": 128.06320004165173,
+            "lastMs": 128.79900028929114
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:18.013Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "81ff25b1ae9b132ee9d94cb458c1cc3f998da5d53a3e9e48610901d00f1f72df",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            153.52800022810698, 128.7449998781085, 128.6189998500049, 127.22899997606874,
+            128.98699985817075, 127.2400002926588, 128.7750001065433
+          ],
+          "stats": {
+            "firstMs": 128.6189998500049,
+            "medianMs": 128.6189998500049,
+            "p95Ms": 128.98699985817075,
+            "minMs": 127.22899997606874,
+            "meanMs": 128.1700000166893,
+            "lastMs": 128.7750001065433
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 128.6189998500049,
+      "minRoundMedianMs": 128.47999995574355,
+      "maxRoundMedianMs": 129.96299983933568,
+      "language": "ruby",
+      "sourceFile": "json.rb",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/json/spinel/measured/out.c",
+          "bytes": 27489,
+          "sha256": "ec3ec2db6ccb48164e931c239803966a085f9ccf1b13fc6a04864e7e77ef1eb6"
+        }
+      ],
+      "binaryBytes": 225120,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "spinel",
+        "tool": "spinel",
+        "variant": {
+          "tool": "spinel"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/spinel",
+      "mode": "in-process",
+      "iterations": 6,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f8151632ced61507e07f49beec781891c920ea93793f7d66424e347d7fd70f71",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:55.503Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4c1f2030a7c9c7451ebedf1cd8fe371a62614f08473a31a2b6bbf5da92a3d1b7",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            19.15366668254137, 17.587000038474798, 17.530833293373387, 17.507500015199184,
+            17.498833360150456, 17.51033333130181, 17.519166693091393
+          ],
+          "stats": {
+            "firstMs": 17.530833293373387,
+            "medianMs": 17.51033333130181,
+            "p95Ms": 17.530833293373387,
+            "minMs": 17.498833360150456,
+            "meanMs": 17.513333338623248,
+            "lastMs": 17.519166693091393
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:13.401Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4c1f2030a7c9c7451ebedf1cd8fe371a62614f08473a31a2b6bbf5da92a3d1b7",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            21.38516663884123, 17.59366667829454, 17.577833340813715, 17.56233333920439,
+            17.558000050485134, 17.555666621774435, 17.83133336963753
+          ],
+          "stats": {
+            "firstMs": 17.577833340813715,
+            "medianMs": 17.56233333920439,
+            "p95Ms": 17.83133336963753,
+            "minMs": 17.555666621774435,
+            "meanMs": 17.61703334438304,
+            "lastMs": 17.83133336963753
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:19.108Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4c1f2030a7c9c7451ebedf1cd8fe371a62614f08473a31a2b6bbf5da92a3d1b7",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            21.075000055134296, 17.58716666760544, 17.694999929517508, 17.698166736712057,
+            17.567333299666643, 17.57899997755885, 17.580999992787838
+          ],
+          "stats": {
+            "firstMs": 17.694999929517508,
+            "medianMs": 17.580999992787838,
+            "p95Ms": 17.698166736712057,
+            "minMs": 17.567333299666643,
+            "meanMs": 17.624099987248577,
+            "lastMs": 17.580999992787838
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 17.56233333920439,
+      "minRoundMedianMs": 17.51033333130181,
+      "maxRoundMedianMs": 17.580999992787838,
+      "language": "ruby",
+      "sourceFile": "object-stable.rb",
+      "representation": "Ruby Hash with string keys",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-stable/spinel/measured/out.c",
+          "bytes": 27320,
+          "sha256": "4078761b97ca09cf70b199fe659f7484c7b9892dd9a10d950eb2407cfd1ee1c2"
+        }
+      ],
+      "binaryBytes": 225584,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "spinel",
+        "tool": "spinel",
+        "variant": {
+          "tool": "spinel"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/spinel",
+      "mode": "in-process",
+      "iterations": 7,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "b0f3c5b63ffa7e14676ddf3e61552755b187dd1f45962907f1c14a03b324a67c",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:56.628Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4d0af84fa82d7d03909e2652eeae58da926b17af7597c8c73d0c837e63db27ac",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            15.324428544512816, 12.03342859766313, 12.066999982510294, 12.06442853435874,
+            12.105000005768877, 12.10371431495462, 12.689714253480945
+          ],
+          "stats": {
+            "firstMs": 12.066999982510294,
+            "medianMs": 12.10371431495462,
+            "p95Ms": 12.689714253480945,
+            "minMs": 12.06442853435874,
+            "meanMs": 12.205971418214697,
+            "lastMs": 12.689714253480945
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:12.310Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4d0af84fa82d7d03909e2652eeae58da926b17af7597c8c73d0c837e63db27ac",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            15.3004285613341, 12.086428568831511, 12.06600000815732, 12.059142879609551,
+            12.062999952052321, 12.043714323746306, 12.115857098251581
+          ],
+          "stats": {
+            "firstMs": 12.06600000815732,
+            "medianMs": 12.062999952052321,
+            "p95Ms": 12.115857098251581,
+            "minMs": 12.043714323746306,
+            "meanMs": 12.069542852363416,
+            "lastMs": 12.115857098251581
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:20.052Z",
+          "runtimeVersion": "spinel e2ae5d835bc2 (unreleased) [Apple clang version 17.0.0 (clang-1700.3.19.1)]",
+          "spinelRelease": "2026.09.12",
+          "artifactSha256": "4d0af84fa82d7d03909e2652eeae58da926b17af7597c8c73d0c837e63db27ac",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            13.036142835127455, 12.407571409962006, 12.061142894838538, 12.084999986525093,
+            12.076000017779213, 12.042714282870293, 12.066571441079889
+          ],
+          "stats": {
+            "firstMs": 12.061142894838538,
+            "medianMs": 12.066571441079889,
+            "p95Ms": 12.084999986525093,
+            "minMs": 12.042714282870293,
+            "meanMs": 12.066285724618606,
+            "lastMs": 12.066571441079889
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 12.066571441079889,
+      "minRoundMedianMs": 12.062999952052321,
+      "maxRoundMedianMs": 12.10371431495462,
+      "language": "ruby",
+      "sourceFile": "object-churn.rb",
+      "representation": "Ruby Hash with string keys",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-churn/spinel/measured/out.c",
+          "bytes": 27462,
+          "sha256": "3e29de8a405e5cfa88b1336fc42465024de66f72e32e9053fde04fb64b12dadd"
+        }
+      ],
+      "binaryBytes": 243888,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "cruby",
+        "tool": "cruby"
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/cruby",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "2cd1f7d70abd4ac4e9a0080408623cb930aba6cc39b04f5ba6cd518d9bf19a76",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:56.979Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "2cd1f7d70abd4ac4e9a0080408623cb930aba6cc39b04f5ba6cd518d9bf19a76",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            14.986666, 13.978875, 13.78025, 13.618, 13.495, 14.113292, 13.45175, 13.985917, 13.591,
+            13.912708, 13.61, 13.582917, 13.589792, 13.698417, 14.001208, 13.55125, 13.584375,
+            13.618542
+          ],
+          "stats": {
+            "firstMs": 13.618,
+            "medianMs": 13.61,
+            "p95Ms": 14.113292,
+            "minMs": 13.45175,
+            "meanMs": 13.693611199999998,
+            "lastMs": 13.618542
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:11.358Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "2cd1f7d70abd4ac4e9a0080408623cb930aba6cc39b04f5ba6cd518d9bf19a76",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            15.27825, 14.130292, 13.883917, 14.539667, 13.76875, 13.986416, 14.381292, 14.214833,
+            13.925292, 13.818083, 14.173, 13.667042, 13.950834, 13.668791, 13.860375, 14.218541,
+            15.191333, 13.820541
+          ],
+          "stats": {
+            "firstMs": 14.539667,
+            "medianMs": 13.950834,
+            "p95Ms": 15.191333,
+            "minMs": 13.667042,
+            "meanMs": 14.078985999999997,
+            "lastMs": 13.820541
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:20.410Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "2cd1f7d70abd4ac4e9a0080408623cb930aba6cc39b04f5ba6cd518d9bf19a76",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            16.408958, 14.688125, 14.482334, 14.649334, 14.92575, 14.952083, 14.314875, 14.108833,
+            13.620833, 13.7905, 13.614125, 13.830542, 14.154917, 14.656167, 14.360375, 14.398917,
+            15.382333, 14.159667
+          ],
+          "stats": {
+            "firstMs": 14.649334,
+            "medianMs": 14.314875,
+            "p95Ms": 15.382333,
+            "minMs": 13.614125,
+            "meanMs": 14.327950066666668,
+            "lastMs": 14.159667
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 13.950834,
+      "minRoundMedianMs": 13.61,
+      "maxRoundMedianMs": 14.314875,
+      "language": "ruby",
+      "sourceFile": "hello.rb",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "cruby",
+        "tool": "cruby"
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/cruby",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f38d90252dc932095042788970574cf8a90f9aadb677a9d01b51e3fd95d8b9f4",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:58.259Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "3adc5de4a33d223ca2265668789c7e513a75a771d6eb058f799260747f709249",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            166.00600024685264, 166.21199995279312, 166.54499992728233, 166.07100004330277,
+            165.87699996307492, 165.90700019150972, 165.99299991503358
+          ],
+          "stats": {
+            "firstMs": 166.54499992728233,
+            "medianMs": 165.99299991503358,
+            "p95Ms": 166.54499992728233,
+            "minMs": 165.87699996307492,
+            "meanMs": 166.07860000804067,
+            "lastMs": 165.99299991503358
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:11.000Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "3adc5de4a33d223ca2265668789c7e513a75a771d6eb058f799260747f709249",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            166.20799992233515, 165.47799995169044, 166.15899978205562, 166.2759999744594,
+            166.4390000514686, 166.26500012353063, 166.0070000216365
+          ],
+          "stats": {
+            "firstMs": 166.15899978205562,
+            "medianMs": 166.26500012353063,
+            "p95Ms": 166.4390000514686,
+            "minMs": 166.0070000216365,
+            "meanMs": 166.22919999063015,
+            "lastMs": 166.0070000216365
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:21.694Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "3adc5de4a33d223ca2265668789c7e513a75a771d6eb058f799260747f709249",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            166.01999988779426, 166.2920000962913, 165.96700018271804, 165.7960000447929,
+            166.0299999639392, 165.66199995577335, 166.42599971964955
+          ],
+          "stats": {
+            "firstMs": 165.96700018271804,
+            "medianMs": 165.96700018271804,
+            "p95Ms": 166.42599971964955,
+            "minMs": 165.66199995577335,
+            "meanMs": 165.9761999733746,
+            "lastMs": 166.42599971964955
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 165.99299991503358,
+      "minRoundMedianMs": 165.96700018271804,
+      "maxRoundMedianMs": 166.26500012353063,
+      "language": "ruby",
+      "sourceFile": "primes.rb",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "cruby",
+        "tool": "cruby"
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/cruby",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "b6b838e1f8038a0e77c4eb3e38185dffbce776e35029726d12d77ed35d01c37d",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:38:59.410Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "f180c51ad692fb3babcade4d81e6c7660c13dc58a661062fccf27d69e3a4f8e0",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            76.24850003048778, 72.60750001296401, 76.80499996058643, 72.10400002077222,
+            72.7619999088347, 72.04249990172684, 72.56500003859401
+          ],
+          "stats": {
+            "firstMs": 76.80499996058643,
+            "medianMs": 72.56500003859401,
+            "p95Ms": 76.80499996058643,
+            "minMs": 72.04249990172684,
+            "meanMs": 73.25569996610284,
+            "lastMs": 72.56500003859401
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:09.723Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "f180c51ad692fb3babcade4d81e6c7660c13dc58a661062fccf27d69e3a4f8e0",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            75.15849987976253, 72.4845000077039, 75.49750013276935, 72.18000013381243,
+            72.298499988392, 74.85500001348555, 71.81849982589483
+          ],
+          "stats": {
+            "firstMs": 75.49750013276935,
+            "medianMs": 72.298499988392,
+            "p95Ms": 75.49750013276935,
+            "minMs": 71.81849982589483,
+            "meanMs": 73.32990001887083,
+            "lastMs": 71.81849982589483
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:22.844Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "f180c51ad692fb3babcade4d81e6c7660c13dc58a661062fccf27d69e3a4f8e0",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            74.97499999590218, 73.25050001963973, 76.12500013783574, 72.80299998819828,
+            73.53650010190904, 72.67950009554625, 72.66100007109344
+          ],
+          "stats": {
+            "firstMs": 76.12500013783574,
+            "medianMs": 72.80299998819828,
+            "p95Ms": 76.12500013783574,
+            "minMs": 72.66100007109344,
+            "meanMs": 73.56100007891655,
+            "lastMs": 72.66100007109344
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 72.56500003859401,
+      "minRoundMedianMs": 72.298499988392,
+      "maxRoundMedianMs": 72.80299998819828,
+      "language": "ruby",
+      "sourceFile": "json.rb",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "cruby",
+        "tool": "cruby"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/cruby",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f8151632ced61507e07f49beec781891c920ea93793f7d66424e347d7fd70f71",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:00.388Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "0839b6d5c78defe91939b87010a917db020235ac9f79b8b715a345375d7597f1",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            61.30699999630451, 61.41699990257621, 61.45499995909631, 61.320999870076776,
+            61.22849998064339, 61.10400008037686, 61.20550003834069
+          ],
+          "stats": {
+            "firstMs": 61.45499995909631,
+            "medianMs": 61.22849998064339,
+            "p95Ms": 61.45499995909631,
+            "minMs": 61.10400008037686,
+            "meanMs": 61.262799985706806,
+            "lastMs": 61.20550003834069
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:08.575Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "0839b6d5c78defe91939b87010a917db020235ac9f79b8b715a345375d7597f1",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            61.14750006236136, 61.15849991329014, 61.333500081673265, 61.73399998806417,
+            61.89699983224273, 61.1839999910444, 61.16400007158518
+          ],
+          "stats": {
+            "firstMs": 61.333500081673265,
+            "medianMs": 61.333500081673265,
+            "p95Ms": 61.89699983224273,
+            "minMs": 61.16400007158518,
+            "meanMs": 61.46249999292195,
+            "lastMs": 61.16400007158518
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:23.822Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "0839b6d5c78defe91939b87010a917db020235ac9f79b8b715a345375d7597f1",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            61.12850015051663, 61.18600000627339, 60.891499975696206, 60.989500023424625,
+            61.20550003834069, 61.13950000144541, 61.22200004756451
+          ],
+          "stats": {
+            "firstMs": 60.891499975696206,
+            "medianMs": 61.13950000144541,
+            "p95Ms": 61.22200004756451,
+            "minMs": 60.891499975696206,
+            "meanMs": 61.08960001729429,
+            "lastMs": 61.22200004756451
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 61.22849998064339,
+      "minRoundMedianMs": 61.13950000144541,
+      "maxRoundMedianMs": 61.333500081673265,
+      "language": "ruby",
+      "sourceFile": "object-stable.rb",
+      "representation": "Ruby Hash with string keys",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "cruby",
+        "tool": "cruby"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/cruby",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "b0f3c5b63ffa7e14676ddf3e61552755b187dd1f45962907f1c14a03b324a67c",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:01.292Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "119e1b8490ee417e8c3971fe3229b7d7f76bc7ea6feca37b3785e92035a6098b",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            55.91200012713671, 56.043999968096614, 56.36200006119907, 56.203499902039766,
+            56.32849992252886, 56.067500030621886, 56.00200011394918
+          ],
+          "stats": {
+            "firstMs": 56.36200006119907,
+            "medianMs": 56.203499902039766,
+            "p95Ms": 56.36200006119907,
+            "minMs": 56.00200011394918,
+            "meanMs": 56.19270000606775,
+            "lastMs": 56.00200011394918
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:07.595Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "119e1b8490ee417e8c3971fe3229b7d7f76bc7ea6feca37b3785e92035a6098b",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            56.38349987566471, 56.39149993658066, 56.8355000577867, 57.74999991990626,
+            56.752500124275684, 56.39200005680323, 56.43200012855232
+          ],
+          "stats": {
+            "firstMs": 56.8355000577867,
+            "medianMs": 56.752500124275684,
+            "p95Ms": 57.74999991990626,
+            "minMs": 56.39200005680323,
+            "meanMs": 56.83240005746484,
+            "lastMs": 56.43200012855232
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:24.740Z",
+          "runtimeVersion": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin23]",
+          "artifactSha256": "119e1b8490ee417e8c3971fe3229b7d7f76bc7ea6feca37b3785e92035a6098b",
+          "clock": "Process.clock_gettime(CLOCK_MONOTONIC), milliseconds",
+          "samplesMs": [
+            56.15199985913932, 57.50300013460219, 56.17400002665818, 56.21800012886524,
+            56.48300005123019, 56.14949995651841, 58.20650001987815
+          ],
+          "stats": {
+            "firstMs": 56.17400002665818,
+            "medianMs": 56.21800012886524,
+            "p95Ms": 58.20650001987815,
+            "minMs": 56.14949995651841,
+            "meanMs": 56.646200036630034,
+            "lastMs": 58.20650001987815
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 56.21800012886524,
+      "minRoundMedianMs": 56.203499902039766,
+      "maxRoundMedianMs": 56.752500124275684,
+      "language": "ruby",
+      "sourceFile": "object-churn.rb",
+      "representation": "Ruby Hash with string keys",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "node",
+        "tool": "node"
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/node",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:02.279Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            56.576834, 48.051292, 47.963167, 46.418417, 53.170333, 47.750667, 48.549583, 48.101042,
+            50.49675, 47.319667, 46.016584, 48.462208, 45.932875, 47.887167, 52.795208, 50.228833,
+            48.572375, 50.226875
+          ],
+          "stats": {
+            "firstMs": 46.418417,
+            "medianMs": 48.462208,
+            "p95Ms": 53.170333,
+            "minMs": 45.932875,
+            "meanMs": 48.79523893333333,
+            "lastMs": 50.226875
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:06.658Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            49.851375, 50.877208, 50.034917, 46.392583, 48.413458, 48.013375, 47.661667, 46.639,
+            48.407917, 48.2445, 45.656625, 49.885875, 47.454917, 49.516875, 46.1585, 45.376917,
+            47.668625, 46.920291
+          ],
+          "stats": {
+            "firstMs": 46.392583,
+            "medianMs": 47.661667,
+            "p95Ms": 49.885875,
+            "minMs": 45.376917,
+            "meanMs": 47.49407500000002,
+            "lastMs": 46.920291
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:25.706Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            50.156708, 48.295583, 45.262292, 47.745875, 47.050583, 47.35125, 47.489292, 47.818208,
+            50.993666, 46.402958, 45.714916, 47.629875, 50.693041, 46.881709, 49.323375, 47.014167,
+            46.986708, 54.178583
+          ],
+          "stats": {
+            "firstMs": 47.745875,
+            "medianMs": 47.489292,
+            "p95Ms": 54.178583,
+            "minMs": 45.714916,
+            "meanMs": 48.218280400000005,
+            "lastMs": 54.178583
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 47.661667,
+      "minRoundMedianMs": 47.489292,
+      "maxRoundMedianMs": 48.462208,
+      "language": "javascript",
+      "sourceFile": "hello.js",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "node",
+        "tool": "node"
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/node",
+      "mode": "in-process",
+      "iterations": 17,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "1ec649ec16b5189a479cc868cad1c6d27897de7916f86727be6bb1324456a167",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:03.216Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "58955b068ac07d0584622b022a8ffaedf45181304905c9271fc2803ccd2725a1",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            6.647058823529412, 6.647058823529412, 6.529411764705882, 6.529411764705882,
+            6.529411764705882, 6.705882352941177, 6.588235294117647
+          ],
+          "stats": {
+            "firstMs": 6.529411764705882,
+            "medianMs": 6.529411764705882,
+            "p95Ms": 6.705882352941177,
+            "minMs": 6.529411764705882,
+            "meanMs": 6.576470588235294,
+            "lastMs": 6.588235294117647
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:05.698Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "58955b068ac07d0584622b022a8ffaedf45181304905c9271fc2803ccd2725a1",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            6.588235294117647, 6.529411764705882, 6.529411764705882, 6.529411764705882,
+            6.647058823529412, 6.529411764705882, 6.529411764705882
+          ],
+          "stats": {
+            "firstMs": 6.529411764705882,
+            "medianMs": 6.529411764705882,
+            "p95Ms": 6.647058823529412,
+            "minMs": 6.529411764705882,
+            "meanMs": 6.552941176470588,
+            "lastMs": 6.529411764705882
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:26.634Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "58955b068ac07d0584622b022a8ffaedf45181304905c9271fc2803ccd2725a1",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            6.647058823529412, 6.529411764705882, 6.529411764705882, 6.529411764705882,
+            6.529411764705882, 6.705882352941177, 6.529411764705882
+          ],
+          "stats": {
+            "firstMs": 6.529411764705882,
+            "medianMs": 6.529411764705882,
+            "p95Ms": 6.705882352941177,
+            "minMs": 6.529411764705882,
+            "meanMs": 6.564705882352941,
+            "lastMs": 6.529411764705882
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 6.529411764705882,
+      "minRoundMedianMs": 6.529411764705882,
+      "maxRoundMedianMs": 6.529411764705882,
+      "language": "javascript",
+      "sourceFile": "primes.js",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "node",
+        "tool": "node"
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/node",
+      "mode": "in-process",
+      "iterations": 5,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "4a2c75c94db7b21d0ca9d5d2c32ff05f5a432f1b8dbc0fd7166f6b516ef9e706",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:04.322Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "d0b97a636fcca603e007ff6b550132fe082002acc8d3cdacf3fe129b0b750e00",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [27.6, 28.6, 26.8, 27, 27.2, 26.8, 26.8],
+          "stats": {
+            "firstMs": 26.8,
+            "medianMs": 26.8,
+            "p95Ms": 27.2,
+            "minMs": 26.8,
+            "meanMs": 26.919999999999998,
+            "lastMs": 26.8
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:04.762Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "d0b97a636fcca603e007ff6b550132fe082002acc8d3cdacf3fe129b0b750e00",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [27.6, 28.2, 26.8, 27.4, 26.6, 26.8, 26.8],
+          "stats": {
+            "firstMs": 26.8,
+            "medianMs": 26.8,
+            "p95Ms": 27.4,
+            "minMs": 26.6,
+            "meanMs": 26.880000000000003,
+            "lastMs": 26.8
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:27.787Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "d0b97a636fcca603e007ff6b550132fe082002acc8d3cdacf3fe129b0b750e00",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [27.8, 29, 29, 29.2, 27.8, 29, 29.4],
+          "stats": {
+            "firstMs": 29,
+            "medianMs": 29,
+            "p95Ms": 29.4,
+            "minMs": 27.8,
+            "meanMs": 28.880000000000003,
+            "lastMs": 29.4
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 26.8,
+      "minRoundMedianMs": 26.8,
+      "maxRoundMedianMs": 29,
+      "language": "javascript",
+      "sourceFile": "json.js",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "node",
+        "tool": "node"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/node",
+      "mode": "in-process",
+      "iterations": 13,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb3e65eb85cfe3f0eb891975694b5cadf9da0212c7de65d2a6c48f48d4d0b454",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:05.258Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "81057b807e90bcddade9cc7fec1880af37e49b67abb42f63a54c72f72640b16d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            9.538461538461538, 8.615384615384615, 8.461538461538462, 8.538461538461538,
+            8.538461538461538, 8.538461538461538, 8.461538461538462
+          ],
+          "stats": {
+            "firstMs": 8.461538461538462,
+            "medianMs": 8.538461538461538,
+            "p95Ms": 8.538461538461538,
+            "minMs": 8.461538461538462,
+            "meanMs": 8.507692307692308,
+            "lastMs": 8.461538461538462
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:03.665Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "81057b807e90bcddade9cc7fec1880af37e49b67abb42f63a54c72f72640b16d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            9.384615384615385, 8.615384615384615, 8.461538461538462, 8.538461538461538,
+            8.538461538461538, 8.461538461538462, 8.538461538461538
+          ],
+          "stats": {
+            "firstMs": 8.461538461538462,
+            "medianMs": 8.538461538461538,
+            "p95Ms": 8.538461538461538,
+            "minMs": 8.461538461538462,
+            "meanMs": 8.507692307692308,
+            "lastMs": 8.538461538461538
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:28.720Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "81057b807e90bcddade9cc7fec1880af37e49b67abb42f63a54c72f72640b16d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            9.461538461538462, 8.538461538461538, 8.538461538461538, 8.461538461538462,
+            8.538461538461538, 8.538461538461538, 8.461538461538462
+          ],
+          "stats": {
+            "firstMs": 8.538461538461538,
+            "medianMs": 8.538461538461538,
+            "p95Ms": 8.538461538461538,
+            "minMs": 8.461538461538462,
+            "meanMs": 8.507692307692308,
+            "lastMs": 8.461538461538462
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 8.538461538461538,
+      "minRoundMedianMs": 8.538461538461538,
+      "maxRoundMedianMs": 8.538461538461538,
+      "language": "javascript",
+      "sourceFile": "object-stable.js",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "node",
+        "tool": "node"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/node",
+      "mode": "in-process",
+      "iterations": 8,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb2b8ced0ea3577b573ee60d76dcbcdc9064e7338b82d53b02c82ca42c0e3b83",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:06.289Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "5535f768a5987fb8c5fdee6715460fc9fb3b56d8f694253dd5788c97c7a9d741",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [16.75, 16.25, 15.75, 16, 15.25, 15.25, 15.125],
+          "stats": {
+            "firstMs": 15.75,
+            "medianMs": 15.25,
+            "p95Ms": 16,
+            "minMs": 15.125,
+            "meanMs": 15.475,
+            "lastMs": 15.125
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:02.730Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "5535f768a5987fb8c5fdee6715460fc9fb3b56d8f694253dd5788c97c7a9d741",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [16.75, 16.5, 15.625, 15.25, 15.25, 15.25, 15.25],
+          "stats": {
+            "firstMs": 15.625,
+            "medianMs": 15.25,
+            "p95Ms": 15.625,
+            "minMs": 15.25,
+            "meanMs": 15.325,
+            "lastMs": 15.25
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:29.744Z",
+          "runtimeVersion": "v26.10.0",
+          "artifactSha256": "5535f768a5987fb8c5fdee6715460fc9fb3b56d8f694253dd5788c97c7a9d741",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [16.875, 16.375, 15.5, 15.125, 15, 15, 15.125],
+          "stats": {
+            "firstMs": 15.5,
+            "medianMs": 15.125,
+            "p95Ms": 15.5,
+            "minMs": 15,
+            "meanMs": 15.15,
+            "lastMs": 15.125
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 15.25,
+      "minRoundMedianMs": 15.125,
+      "maxRoundMedianMs": 15.25,
+      "language": "javascript",
+      "sourceFile": "object-churn.js",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "porffor",
+        "tool": "porffor",
+        "variant": {
+          "tool": "porffor"
+        }
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/porffor",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:06.858Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "8ff0e6d67d47243ff78b81f856450d6d72ac85f289a1b3873c90114aab9489da",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            406.500583, 7.290875, 6.045375, 5.843167, 3.532917, 3.750584, 3.439334, 3.397041,
+            4.050875, 3.6045, 2.782125, 2.539291, 2.680666, 2.622333, 2.811083, 2.512584, 2.428084,
+            2.345042
+          ],
+          "stats": {
+            "firstMs": 5.843167,
+            "medianMs": 2.811083,
+            "p95Ms": 5.843167,
+            "minMs": 2.345042,
+            "meanMs": 3.222641733333333,
+            "lastMs": 2.345042
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:01.703Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "8ff0e6d67d47243ff78b81f856450d6d72ac85f289a1b3873c90114aab9489da",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            219.709375, 9.814875, 6.507917, 6.396459, 3.387042, 3.815583, 2.774041, 3.165, 2.8735,
+            2.651917, 2.564292, 2.50325, 2.490792, 2.456125, 2.39425, 2.414417, 2.372625, 2.360792
+          ],
+          "stats": {
+            "firstMs": 6.396459,
+            "medianMs": 2.564292,
+            "p95Ms": 6.396459,
+            "minMs": 2.360792,
+            "meanMs": 2.9746723333333334,
+            "lastMs": 2.360792
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:30.122Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "8ff0e6d67d47243ff78b81f856450d6d72ac85f289a1b3873c90114aab9489da",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            229.187375, 3.000708, 2.595208, 2.693125, 2.514375, 3.042375, 2.54325, 2.509542,
+            2.52025, 2.505291, 2.49275, 2.428667, 2.425834, 2.387042, 2.414417, 2.409958, 2.378,
+            2.398
+          ],
+          "stats": {
+            "firstMs": 2.693125,
+            "medianMs": 2.49275,
+            "p95Ms": 3.042375,
+            "minMs": 2.378,
+            "meanMs": 2.510858400000001,
+            "lastMs": 2.398
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 2.564292,
+      "minRoundMedianMs": 2.49275,
+      "maxRoundMedianMs": 2.811083,
+      "language": "javascript",
+      "sourceFile": "hello.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/hello/porffor/plain/out.c",
+          "bytes": 95549,
+          "sha256": "cc4799562eb16243f1c187eebe0df5b2c6bd9947383612dad9e7d14db40910f4"
+        }
+      ],
+      "binaryBytes": 33648,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "porffor",
+        "tool": "porffor",
+        "variant": {
+          "tool": "porffor"
+        }
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/porffor",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "1ec649ec16b5189a479cc868cad1c6d27897de7916f86727be6bb1324456a167",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:08.608Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "247a1d7d82dfe8a6b5732486680ec761b8da2f6acac5cfd2e38dac4ce8cdf3a5",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [100, 88, 88, 88, 87.5, 87.5, 88.5],
+          "stats": {
+            "firstMs": 88,
+            "medianMs": 88,
+            "p95Ms": 88.5,
+            "minMs": 87.5,
+            "meanMs": 87.9,
+            "lastMs": 88.5
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:01.323Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "247a1d7d82dfe8a6b5732486680ec761b8da2f6acac5cfd2e38dac4ce8cdf3a5",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [98.5, 88, 88, 89, 88, 88.5, 88],
+          "stats": {
+            "firstMs": 88,
+            "medianMs": 88,
+            "p95Ms": 89,
+            "minMs": 88,
+            "meanMs": 88.3,
+            "lastMs": 88
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:31.681Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "247a1d7d82dfe8a6b5732486680ec761b8da2f6acac5cfd2e38dac4ce8cdf3a5",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [97, 89.5, 88, 88, 88, 88, 88.5],
+          "stats": {
+            "firstMs": 88,
+            "medianMs": 88,
+            "p95Ms": 88.5,
+            "minMs": 88,
+            "meanMs": 88.1,
+            "lastMs": 88.5
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 88,
+      "minRoundMedianMs": 88,
+      "maxRoundMedianMs": 88,
+      "language": "javascript",
+      "sourceFile": "primes.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/primes/porffor/measured/out.c",
+          "bytes": 276800,
+          "sha256": "a3609ffe43f17c37e09558ebe0dfa09116f41e2412bab4f79e42321d2709fbc8"
+        }
+      ],
+      "binaryBytes": 133920,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "porffor",
+        "tool": "porffor",
+        "variant": {
+          "tool": "porffor"
+        }
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/porffor",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "4a2c75c94db7b21d0ca9d5d2c32ff05f5a432f1b8dbc0fd7166f6b516ef9e706",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:10.389Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "e2c9f83801e799709054b6009b121f5d0450639009c969275ba853d15f5d238e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [201, 181, 180, 179, 180, 181, 178],
+          "stats": {
+            "firstMs": 180,
+            "medianMs": 180,
+            "p95Ms": 181,
+            "minMs": 178,
+            "meanMs": 179.6,
+            "lastMs": 178
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:39:59.732Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "e2c9f83801e799709054b6009b121f5d0450639009c969275ba853d15f5d238e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [207, 180, 181, 179, 180, 179, 182],
+          "stats": {
+            "firstMs": 181,
+            "medianMs": 180,
+            "p95Ms": 182,
+            "minMs": 179,
+            "meanMs": 180.2,
+            "lastMs": 182
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:33.291Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "e2c9f83801e799709054b6009b121f5d0450639009c969275ba853d15f5d238e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [209, 180, 181, 178, 179, 180, 179],
+          "stats": {
+            "firstMs": 181,
+            "medianMs": 179,
+            "p95Ms": 181,
+            "minMs": 178,
+            "meanMs": 179.4,
+            "lastMs": 179
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 180,
+      "minRoundMedianMs": 179,
+      "maxRoundMedianMs": 180,
+      "language": "javascript",
+      "sourceFile": "json.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/json/porffor/measured/out.c",
+          "bytes": 347149,
+          "sha256": "a7c89bf813bf7d346a914c23238aeed301e8dc959f77ee9e43dc9a970119a315"
+        }
+      ],
+      "binaryBytes": 150480,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "porffor",
+        "tool": "porffor",
+        "variant": {
+          "tool": "porffor"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/porffor",
+      "mode": "in-process",
+      "iterations": 6,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb3e65eb85cfe3f0eb891975694b5cadf9da0212c7de65d2a6c48f48d4d0b454",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:11.446Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "6b41308c2622eef9811fe74f3f849b6cbc3089fdf81b14654f6ff2963d48062e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            16.166666666666668, 12.833333333333334, 12.666666666666666, 12.833333333333334,
+            12.833333333333334, 12.666666666666666, 12.833333333333334
+          ],
+          "stats": {
+            "firstMs": 12.666666666666666,
+            "medianMs": 12.833333333333334,
+            "p95Ms": 12.833333333333334,
+            "minMs": 12.666666666666666,
+            "meanMs": 12.766666666666667,
+            "lastMs": 12.833333333333334
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:58.113Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "6b41308c2622eef9811fe74f3f849b6cbc3089fdf81b14654f6ff2963d48062e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            17, 12.666666666666666, 12.833333333333334, 12.666666666666666, 12.666666666666666,
+            12.833333333333334, 12.666666666666666
+          ],
+          "stats": {
+            "firstMs": 12.833333333333334,
+            "medianMs": 12.666666666666666,
+            "p95Ms": 12.833333333333334,
+            "minMs": 12.666666666666666,
+            "meanMs": 12.733333333333333,
+            "lastMs": 12.666666666666666
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:34.181Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "6b41308c2622eef9811fe74f3f849b6cbc3089fdf81b14654f6ff2963d48062e",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            17.166666666666668, 12.666666666666666, 12.666666666666666, 12.833333333333334,
+            12.666666666666666, 12.833333333333334, 12.666666666666666
+          ],
+          "stats": {
+            "firstMs": 12.666666666666666,
+            "medianMs": 12.666666666666666,
+            "p95Ms": 12.833333333333334,
+            "minMs": 12.666666666666666,
+            "meanMs": 12.733333333333333,
+            "lastMs": 12.666666666666666
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 12.666666666666666,
+      "minRoundMedianMs": 12.666666666666666,
+      "maxRoundMedianMs": 12.833333333333334,
+      "language": "javascript",
+      "sourceFile": "object-stable.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-stable/porffor/measured/out.c",
+          "bytes": 302705,
+          "sha256": "4177263355061791958872e0331bb0bcd2712fd59a1909655dc67a67734c2cab"
+        }
+      ],
+      "binaryBytes": 133920,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "porffor",
+        "tool": "porffor",
+        "variant": {
+          "tool": "porffor"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/porffor",
+      "mode": "in-process",
+      "iterations": 7,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb2b8ced0ea3577b573ee60d76dcbcdc9064e7338b82d53b02c82ca42c0e3b83",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:12.825Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "3e1b2378e22ab14bf132ffd663e004f005de8553c44fb75aefdd0ad78de14aa3",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            18, 19.857142857142858, 27.571428571428573, 17.142857142857142, 14.142857142857142,
+            14.142857142857142, 14
+          ],
+          "stats": {
+            "firstMs": 27.571428571428573,
+            "medianMs": 14.142857142857142,
+            "p95Ms": 27.571428571428573,
+            "minMs": 14,
+            "meanMs": 17.4,
+            "lastMs": 14
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:57.217Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "3e1b2378e22ab14bf132ffd663e004f005de8553c44fb75aefdd0ad78de14aa3",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            17.428571428571427, 14.142857142857142, 14, 14.142857142857142, 14.142857142857142, 14,
+            14.142857142857142
+          ],
+          "stats": {
+            "firstMs": 14,
+            "medianMs": 14.142857142857142,
+            "p95Ms": 14.142857142857142,
+            "minMs": 14,
+            "meanMs": 14.085714285714285,
+            "lastMs": 14.142857142857142
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:35.222Z",
+          "runtimeVersion": "alpha 15 (72d048d 2026-10-02)",
+          "artifactSha256": "3e1b2378e22ab14bf132ffd663e004f005de8553c44fb75aefdd0ad78de14aa3",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            17.714285714285715, 14.142857142857142, 14.142857142857142, 14, 14.142857142857142, 14,
+            14.142857142857142
+          ],
+          "stats": {
+            "firstMs": 14.142857142857142,
+            "medianMs": 14.142857142857142,
+            "p95Ms": 14.142857142857142,
+            "minMs": 14,
+            "meanMs": 14.085714285714285,
+            "lastMs": 14.142857142857142
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 14.142857142857142,
+      "minRoundMedianMs": 14.142857142857142,
+      "maxRoundMedianMs": 14.142857142857142,
+      "language": "javascript",
+      "sourceFile": "object-churn.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-churn/porffor/measured/out.c",
+          "bytes": 303555,
+          "sha256": "e06be6036e125ab8adaee1c941a509f8e87e6cfddcdf586a4f556acf11e3adca"
+        }
+      ],
+      "binaryBytes": 133920,
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "shermes",
+        "tool": "static_hermes",
+        "variant": {
+          "tool": "static_hermes"
+        }
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/shermes",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "f9444510dc7403e41049deb133f6892aa6a63c05591b2b59e4ee5b234d7bbd99",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:13.570Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "15dbb9df1448b6264a77d566f555cc82db9186007749a482f7b4b38f50918bdf",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            470.417541, 11.069833, 9.496208, 9.400375, 9.179, 10.015417, 8.996167, 9.232333,
+            8.96575, 9.318541, 9.22, 8.849584, 8.740167, 8.755917, 8.818834, 9.013834, 9.078, 9.0405
+          ],
+          "stats": {
+            "firstMs": 9.400375,
+            "medianMs": 9.0405,
+            "p95Ms": 10.015417,
+            "minMs": 8.740167,
+            "meanMs": 9.108294599999999,
+            "lastMs": 9.0405
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:39:56.169Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "15dbb9df1448b6264a77d566f555cc82db9186007749a482f7b4b38f50918bdf",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            319.597375, 15.212584, 11.380125, 10.114916, 9.080833, 9.94875, 8.835125, 8.608708,
+            8.811542, 8.734917, 8.704083, 8.486917, 8.577, 8.752583, 8.818042, 8.833916, 8.752292,
+            8.900666
+          ],
+          "stats": {
+            "firstMs": 10.114916,
+            "medianMs": 8.811542,
+            "p95Ms": 10.114916,
+            "minMs": 8.486917,
+            "meanMs": 8.930686,
+            "lastMs": 8.900666
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:35.805Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "15dbb9df1448b6264a77d566f555cc82db9186007749a482f7b4b38f50918bdf",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            310.271667, 14.3815, 10.846, 10.432334, 9.16825, 9.790209, 8.741083, 8.842417, 8.804959,
+            8.922875, 8.588709, 8.804375, 8.86675, 8.650875, 8.656292, 8.62725, 8.776292, 8.960333
+          ],
+          "stats": {
+            "firstMs": 10.432334,
+            "medianMs": 8.804959,
+            "p95Ms": 10.432334,
+            "minMs": 8.588709,
+            "meanMs": 8.975533533333333,
+            "lastMs": 8.960333
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 8.811542,
+      "minRoundMedianMs": 8.804959,
+      "maxRoundMedianMs": 9.0405,
+      "language": "javascript",
+      "sourceFile": "hello.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/hello/shermes/plain/out.c",
+          "bytes": 5262,
+          "sha256": "2cdf323810a7fb364725edf6076ca7e6d2f59e3ccccb364167cbe310e5a7f674"
+        },
+        {
+          "file": "build/cross-language-2026-10-07/study/hello/shermes/plain/out.ir",
+          "bytes": 323,
+          "sha256": "e907276a7a2f1c0e3eb032eba5e34bba83bccf12d139d56bd0b5336a4ee8134f"
+        }
+      ],
+      "binaryBytes": 5412080,
+      "libraries": [
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4040.1.255)",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4040.1.255)",
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.63.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "shermes",
+        "tool": "static_hermes",
+        "variant": {
+          "tool": "static_hermes"
+        }
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/shermes",
+      "mode": "in-process",
+      "iterations": 25,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "1ec649ec16b5189a479cc868cad1c6d27897de7916f86727be6bb1324456a167",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:15.232Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "02f3393616a1ed21f6312f931253b54ebe00a1a58264fd220cf194d6fc8e5661",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [6.28, 6.32, 6.28, 6.2, 6.2, 6.16, 6.2],
+          "stats": {
+            "firstMs": 6.28,
+            "medianMs": 6.2,
+            "p95Ms": 6.28,
+            "minMs": 6.16,
+            "meanMs": 6.208,
+            "lastMs": 6.2
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:39:55.571Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "02f3393616a1ed21f6312f931253b54ebe00a1a58264fd220cf194d6fc8e5661",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [6.76, 6.28, 6.16, 6.2, 6.24, 6.16, 6.16],
+          "stats": {
+            "firstMs": 6.16,
+            "medianMs": 6.16,
+            "p95Ms": 6.24,
+            "minMs": 6.16,
+            "meanMs": 6.184,
+            "lastMs": 6.16
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:37.319Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "02f3393616a1ed21f6312f931253b54ebe00a1a58264fd220cf194d6fc8e5661",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [6.6, 6.16, 6.28, 6.2, 6.16, 6.2, 6.16],
+          "stats": {
+            "firstMs": 6.28,
+            "medianMs": 6.2,
+            "p95Ms": 6.28,
+            "minMs": 6.16,
+            "meanMs": 6.2,
+            "lastMs": 6.16
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 6.2,
+      "minRoundMedianMs": 6.16,
+      "maxRoundMedianMs": 6.2,
+      "language": "javascript",
+      "sourceFile": "primes.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/primes/shermes/measured/out.c",
+          "bytes": 14261,
+          "sha256": "9f12edf7bf8825efbcb8f3bc9ce29d4dc1f5fc64f5b52473efa3be198da0ba0e"
+        },
+        {
+          "file": "build/cross-language-2026-10-07/study/primes/shermes/measured/out.ir",
+          "bytes": 5414,
+          "sha256": "a914716edcba57b1423ef8aaad2f036aa9e9daccb7763f37f9f98b28962aaf7e"
+        }
+      ],
+      "binaryBytes": 5412144,
+      "libraries": [
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4040.1.255)",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4040.1.255)",
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.63.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "shermes",
+        "tool": "static_hermes",
+        "variant": {
+          "tool": "static_hermes"
+        }
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/shermes",
+      "mode": "in-process",
+      "iterations": 3,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "4a2c75c94db7b21d0ca9d5d2c32ff05f5a432f1b8dbc0fd7166f6b516ef9e706",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:17.155Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "90e6f91debf335d9c58c209edc66e49b13edc4dd8a0ba6a236777567a8db6a7d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [51.666666666666664, 47.333333333333336, 48, 47.333333333333336, 47, 47, 47],
+          "stats": {
+            "firstMs": 48,
+            "medianMs": 47,
+            "p95Ms": 48,
+            "minMs": 47,
+            "meanMs": 47.266666666666666,
+            "lastMs": 47
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:39:54.047Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "90e6f91debf335d9c58c209edc66e49b13edc4dd8a0ba6a236777567a8db6a7d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [
+            51, 46.666666666666664, 46.666666666666664, 46.666666666666664, 47, 46.666666666666664,
+            47
+          ],
+          "stats": {
+            "firstMs": 46.666666666666664,
+            "medianMs": 46.666666666666664,
+            "p95Ms": 47,
+            "minMs": 46.666666666666664,
+            "meanMs": 46.8,
+            "lastMs": 47
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:38.752Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "90e6f91debf335d9c58c209edc66e49b13edc4dd8a0ba6a236777567a8db6a7d",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [52, 47.333333333333336, 47, 47, 47.333333333333336, 46.666666666666664, 47],
+          "stats": {
+            "firstMs": 47,
+            "medianMs": 47,
+            "p95Ms": 47.333333333333336,
+            "minMs": 46.666666666666664,
+            "meanMs": 47,
+            "lastMs": 47
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 47,
+      "minRoundMedianMs": 46.666666666666664,
+      "maxRoundMedianMs": 47,
+      "language": "javascript",
+      "sourceFile": "json.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/json/shermes/measured/out.c",
+          "bytes": 20075,
+          "sha256": "fa106fa43449643c79d7893913f44d704eb6d2a1e15a10b180e975499ebbc098"
+        },
+        {
+          "file": "build/cross-language-2026-10-07/study/json/shermes/measured/out.ir",
+          "bytes": 8978,
+          "sha256": "2f100cd38aede9128b1346f92b23965fa93149addf2e953615a53d623b9d9707"
+        }
+      ],
+      "binaryBytes": 5412112,
+      "libraries": [
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4040.1.255)",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4040.1.255)",
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.63.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "shermes",
+        "tool": "static_hermes",
+        "variant": {
+          "tool": "static_hermes"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/shermes",
+      "mode": "in-process",
+      "iterations": 5,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb3e65eb85cfe3f0eb891975694b5cadf9da0212c7de65d2a6c48f48d4d0b454",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:19.150Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "82ad8264f35ec32ebc4d35dd81167af54bfada9bb88e79d0c2c4f23cbd088318",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [28.2, 26, 26, 66.6, 47, 54.8, 29],
+          "stats": {
+            "firstMs": 26,
+            "medianMs": 47,
+            "p95Ms": 66.6,
+            "minMs": 26,
+            "meanMs": 44.67999999999999,
+            "lastMs": 29
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:52.622Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "82ad8264f35ec32ebc4d35dd81167af54bfada9bb88e79d0c2c4f23cbd088318",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [28.2, 25.8, 25.8, 25.8, 25.8, 25.8, 25.8],
+          "stats": {
+            "firstMs": 25.8,
+            "medianMs": 25.8,
+            "p95Ms": 25.8,
+            "minMs": 25.8,
+            "meanMs": 25.8,
+            "lastMs": 25.8
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:40.078Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "82ad8264f35ec32ebc4d35dd81167af54bfada9bb88e79d0c2c4f23cbd088318",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [25.8, 25.8, 25.8, 25.8, 25.8, 25.8, 25.8],
+          "stats": {
+            "firstMs": 25.8,
+            "medianMs": 25.8,
+            "p95Ms": 25.8,
+            "minMs": 25.8,
+            "meanMs": 25.8,
+            "lastMs": 25.8
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 25.8,
+      "minRoundMedianMs": 25.8,
+      "maxRoundMedianMs": 47,
+      "language": "javascript",
+      "sourceFile": "object-stable.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-stable/shermes/measured/out.c",
+          "bytes": 16502,
+          "sha256": "5666ec38fb206f943c19c5d29eea512bd938105cdef9e37c40419ab71556b4f9"
+        },
+        {
+          "file": "build/cross-language-2026-10-07/study/object-stable/shermes/measured/out.ir",
+          "bytes": 6856,
+          "sha256": "d8a3c29162ec54cb79ae69502695775563a09a1674a9a88c151dffbd506b4137"
+        }
+      ],
+      "binaryBytes": 5412144,
+      "libraries": [
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4040.1.255)",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4040.1.255)",
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.63.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "shermes",
+        "tool": "static_hermes",
+        "variant": {
+          "tool": "static_hermes"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/shermes",
+      "mode": "in-process",
+      "iterations": 4,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "eb2b8ced0ea3577b573ee60d76dcbcdc9064e7338b82d53b02c82ca42c0e3b83",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:21.057Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "c004b223aa85c21cb1bc0d7237beb8b67fc2711a15aad0a7000baeba18d59257",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [48.25, 45.5, 44.5, 44.75, 46.25, 46, 50],
+          "stats": {
+            "firstMs": 44.5,
+            "medianMs": 46,
+            "p95Ms": 50,
+            "minMs": 44.5,
+            "meanMs": 46.3,
+            "lastMs": 50
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:51.283Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "c004b223aa85c21cb1bc0d7237beb8b67fc2711a15aad0a7000baeba18d59257",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [48.5, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25],
+          "stats": {
+            "firstMs": 44.25,
+            "medianMs": 44.25,
+            "p95Ms": 44.25,
+            "minMs": 44.25,
+            "meanMs": 44.25,
+            "lastMs": 44.25
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:41.769Z",
+          "runtimeVersion": "LLVM (http://llvm.org/):\n  LLVH version 8.0.0svn\n  Optimized build\n\nStatic Hermes JS Compiler v0.0",
+          "hermesRevision": "6e2181b288b0306d8bd1988d38d32aa879b745d5",
+          "artifactSha256": "c004b223aa85c21cb1bc0d7237beb8b67fc2711a15aad0a7000baeba18d59257",
+          "clock": "Date.now (1 ms batch resolution)",
+          "samplesMs": [47.5, 44, 44.25, 44.25, 44, 44.25, 44.25],
+          "stats": {
+            "firstMs": 44.25,
+            "medianMs": 44.25,
+            "p95Ms": 44.25,
+            "minMs": 44,
+            "meanMs": 44.2,
+            "lastMs": 44.25
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 44.25,
+      "minRoundMedianMs": 44.25,
+      "maxRoundMedianMs": 46,
+      "language": "javascript",
+      "sourceFile": "object-churn.js",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-churn/shermes/measured/out.c",
+          "bytes": 16495,
+          "sha256": "8dd2e9b51284bd5ed380c0b04d52f90f19dc05313dc2175584dfd6481aa98477"
+        },
+        {
+          "file": "build/cross-language-2026-10-07/study/object-churn/shermes/measured/out.ir",
+          "bytes": 6857,
+          "sha256": "683360c7e25d5612718043803b88fffa204fd73c1692a70849134df80365826f"
+        }
+      ],
+      "binaryBytes": 5412144,
+      "libraries": [
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4040.1.255)",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4040.1.255)",
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.63.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "lython",
+        "tool": "lython",
+        "variant": {
+          "tool": "lython"
+        }
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/lython",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "c6ad4c0187f71e5ac821f80149f47a0cc1514966fa41af60b2e7e05db01808fb",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:21.639Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e0ac4226b8df10a4ce6ce41e1ca3dc6fd6f43b4df9e2c03a9b2fc0fb1efaa79",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            404.062709, 7.0225, 10.003583, 5.756375, 4.911666, 4.755584, 3.392916, 3.333542,
+            3.596709, 3.527583, 4.248833, 3.438542, 2.942041, 2.682042, 2.70875, 3.291917, 2.937709,
+            2.737125
+          ],
+          "stats": {
+            "firstMs": 5.756375,
+            "medianMs": 3.392916,
+            "p95Ms": 5.756375,
+            "minMs": 2.682042,
+            "meanMs": 3.617422266666667,
+            "lastMs": 2.737125
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:39:49.616Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e0ac4226b8df10a4ce6ce41e1ca3dc6fd6f43b4df9e2c03a9b2fc0fb1efaa79",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            231.477209, 3.326209, 8.716, 7.709125, 3.510625, 3.726459, 2.901958, 3.372875, 3.2835,
+            2.881666, 2.85475, 2.705458, 2.793, 2.719292, 2.6485, 2.614333, 2.870875, 2.57875
+          ],
+          "stats": {
+            "firstMs": 7.709125,
+            "medianMs": 2.870875,
+            "p95Ms": 7.709125,
+            "minMs": 2.57875,
+            "meanMs": 3.2780777333333333,
+            "lastMs": 2.57875
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:42.168Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e0ac4226b8df10a4ce6ce41e1ca3dc6fd6f43b4df9e2c03a9b2fc0fb1efaa79",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            227.185542, 8.730708, 8.501666, 5.358875, 3.123958, 4.407542, 3.963125, 3.853708,
+            3.40375, 3.205666, 2.805792, 2.598, 2.939917, 2.748708, 2.682667, 2.679708, 2.745917,
+            2.648166
+          ],
+          "stats": {
+            "firstMs": 5.358875,
+            "medianMs": 2.939917,
+            "p95Ms": 5.358875,
+            "minMs": 2.598,
+            "meanMs": 3.277699933333333,
+            "lastMs": 2.648166
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 2.939917,
+      "minRoundMedianMs": 2.870875,
+      "maxRoundMedianMs": 3.392916,
+      "language": "python",
+      "sourceFile": "hello.py",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/hello/lython/plain/out.ll",
+          "bytes": 750431,
+          "sha256": "57dd1ccef31a3e80cca088ef00ebfce7bd9635a799446640dd45095405e8f47c"
+        }
+      ],
+      "binaryBytes": 92128,
+      "libraries": [
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "lython",
+        "tool": "lython",
+        "variant": {
+          "tool": "lython"
+        }
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/lython",
+      "mode": "in-process",
+      "iterations": 10,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "0b90fd382effc361d597f98d1669b85f1c38edede86d6ae508263ff00465044f",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:22.770Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "8640311bd79eaaa487ce75e056f4fadebe2509915c693f9113142e97b539c81a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            10.9118000138551, 8.522300003096461, 8.920599985867739, 8.837100025266409,
+            8.707100013270974, 8.72649997472763, 8.873899979516864
+          ],
+          "stats": {
+            "firstMs": 8.920599985867739,
+            "medianMs": 8.837100025266409,
+            "p95Ms": 8.920599985867739,
+            "minMs": 8.707100013270974,
+            "meanMs": 8.813039995729923,
+            "lastMs": 8.873899979516864
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:39:49.220Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "8640311bd79eaaa487ce75e056f4fadebe2509915c693f9113142e97b539c81a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            9.978900011628866, 8.513000002130866, 8.493499970063567, 8.481999998912215,
+            8.485600026324391, 8.490499993786216, 8.487699972465634
+          ],
+          "stats": {
+            "firstMs": 8.493499970063567,
+            "medianMs": 8.487699972465634,
+            "p95Ms": 8.493499970063567,
+            "minMs": 8.481999998912215,
+            "meanMs": 8.487859992310405,
+            "lastMs": 8.487699972465634
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:43.116Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "8640311bd79eaaa487ce75e056f4fadebe2509915c693f9113142e97b539c81a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            10.58320002630353, 8.733299979940057, 8.499799994751811, 8.49200002849102,
+            8.496699994429946, 8.491399977356195, 8.487700019031763
+          ],
+          "stats": {
+            "firstMs": 8.499799994751811,
+            "medianMs": 8.49200002849102,
+            "p95Ms": 8.499799994751811,
+            "minMs": 8.487700019031763,
+            "meanMs": 8.493520002812147,
+            "lastMs": 8.487700019031763
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 8.49200002849102,
+      "minRoundMedianMs": 8.487699972465634,
+      "maxRoundMedianMs": 8.837100025266409,
+      "language": "python",
+      "sourceFile": "primes.py",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/primes/lython/measured/out.ll",
+          "bytes": 2641034,
+          "sha256": "16d06006203971b392eecc5696586d72661b7b00c58afd34a35fa5a5a0753b65"
+        }
+      ],
+      "binaryBytes": 237616,
+      "libraries": [
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "lython",
+        "tool": "lython",
+        "variant": {
+          "tool": "lython"
+        }
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/lython",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "95a311a1893e4b3c2bdc371bab6b434297397580e8434be11729138a1f73c946",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:28.441Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "1cd9bff82d188cba4db25dfb56e1872b6b277225cbe6394fde847995c04d1754",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            750.9449999779463, 727.02999971807, 729.6799998730421, 729.8250002786517,
+            749.8750002123415, 733.1619998440146, 732.524000108242
+          ],
+          "stats": {
+            "firstMs": 729.6799998730421,
+            "medianMs": 732.524000108242,
+            "p95Ms": 749.8750002123415,
+            "minMs": 729.6799998730421,
+            "meanMs": 735.0132000632584,
+            "lastMs": 732.524000108242
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:39:48.281Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "1cd9bff82d188cba4db25dfb56e1872b6b277225cbe6394fde847995c04d1754",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            760.1180002093315, 725.9990000165999, 810.9809998422861, 730.5319998413324,
+            732.5790002942085, 735.0249998271465, 733.2500000484288
+          ],
+          "stats": {
+            "firstMs": 810.9809998422861,
+            "medianMs": 733.2500000484288,
+            "p95Ms": 810.9809998422861,
+            "minMs": 730.5319998413324,
+            "meanMs": 748.4733999706805,
+            "lastMs": 733.2500000484288
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:48.599Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "1cd9bff82d188cba4db25dfb56e1872b6b277225cbe6394fde847995c04d1754",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            752.4359999224544, 727.7760002762079, 731.7770002409816, 730.1290002651513,
+            731.6959998570383, 733.1980001181364, 733.0819997005165
+          ],
+          "stats": {
+            "firstMs": 731.7770002409816,
+            "medianMs": 731.7770002409816,
+            "p95Ms": 733.1980001181364,
+            "minMs": 730.1290002651513,
+            "meanMs": 731.9764000363648,
+            "lastMs": 733.0819997005165
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 732.524000108242,
+      "minRoundMedianMs": 731.7770002409816,
+      "maxRoundMedianMs": 733.2500000484288,
+      "language": "python",
+      "sourceFile": "json.lython.py",
+      "representation": "Lython tagged JSONValue tree (typed JSON API)",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/json/lython/measured/out.ll",
+          "bytes": 11370144,
+          "sha256": "7a14581962c5587828e4aaba95bb2e66fd2fb8a11c7c99750de2b2fe8c4690bc"
+        }
+      ],
+      "binaryBytes": 880944,
+      "libraries": [
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "lython",
+        "tool": "lython",
+        "variant": {
+          "tool": "lython"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/lython",
+      "mode": "in-process",
+      "iterations": 3,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "41c22eb0cec721cd30f5c6eb821d662f54c2585de88ef60f605a5a1c0cebab81",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:30.062Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e1e8560d35644d95f3ad0771b5d35da986e33b791a270a0b6208a40df39b4af",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            57.12199987222751, 52.63466667383909, 51.75699992105365, 51.79866667216023,
+            51.791000024725996, 51.797000070412956, 51.78266670554876
+          ],
+          "stats": {
+            "firstMs": 51.75699992105365,
+            "medianMs": 51.791000024725996,
+            "p95Ms": 51.79866667216023,
+            "minMs": 51.75699992105365,
+            "meanMs": 51.78526667878032,
+            "lastMs": 51.78266670554876
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:42.718Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e1e8560d35644d95f3ad0771b5d35da986e33b791a270a0b6208a40df39b4af",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            60.99499994888902, 53.50999999791384, 53.47466670597593, 53.65433326611916,
+            53.48100000992417, 53.70400007814169, 54.52933333193263
+          ],
+          "stats": {
+            "firstMs": 53.47466670597593,
+            "medianMs": 53.65433326611916,
+            "p95Ms": 54.52933333193263,
+            "minMs": 53.47466670597593,
+            "meanMs": 53.76866667841871,
+            "lastMs": 54.52933333193263
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:50.043Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "7e1e8560d35644d95f3ad0771b5d35da986e33b791a270a0b6208a40df39b4af",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            57.954666670411825, 51.85966674859325, 51.855000046392284, 51.87133327126503,
+            51.87033334126075, 51.93266676117977, 51.868666584293045
+          ],
+          "stats": {
+            "firstMs": 51.855000046392284,
+            "medianMs": 51.87033334126075,
+            "p95Ms": 51.93266676117977,
+            "minMs": 51.855000046392284,
+            "meanMs": 51.87960000087818,
+            "lastMs": 51.868666584293045
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 51.87033334126075,
+      "minRoundMedianMs": 51.791000024725996,
+      "maxRoundMedianMs": 53.65433326611916,
+      "language": "python",
+      "sourceFile": "object-stable.py",
+      "representation": "Python dict with string keys",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-stable/lython/measured/out.ll",
+          "bytes": 3098817,
+          "sha256": "dfd62ce6e2faf7ef65c28d298ce5e3ad6b29ef93a06932a576c80241214b60f2"
+        }
+      ],
+      "binaryBytes": 272624,
+      "libraries": [
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "lython",
+        "tool": "lython",
+        "variant": {
+          "tool": "lython"
+        }
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/lython",
+      "mode": "in-process",
+      "iterations": 3,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "cd3643ac573d4928fa48d5a49315d95b576f743e6ad4cadd0ad71d500a3ce232",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:31.560Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "a1139a484b7ab60b4ab9520b4ff5b5a6b1d13ccfa97b78f98298c8f6bf29514e",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            53.95433337738117, 46.1159998861452, 46.11800005659461, 46.20433319360018,
+            46.160999995966755, 46.14799997458855, 46.20466660708189
+          ],
+          "stats": {
+            "firstMs": 46.11800005659461,
+            "medianMs": 46.160999995966755,
+            "p95Ms": 46.20466660708189,
+            "minMs": 46.11800005659461,
+            "meanMs": 46.1671999655664,
+            "lastMs": 46.20466660708189
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:41.239Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "a1139a484b7ab60b4ab9520b4ff5b5a6b1d13ccfa97b78f98298c8f6bf29514e",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            48.51566658665737, 45.32999995475014, 45.333999985208116, 45.325666666030884,
+            45.26999996354183, 46.47000009814898, 45.35733334099253
+          ],
+          "stats": {
+            "firstMs": 45.333999985208116,
+            "medianMs": 45.333999985208116,
+            "p95Ms": 46.47000009814898,
+            "minMs": 45.26999996354183,
+            "meanMs": 45.55140001078447,
+            "lastMs": 45.35733334099253
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:51.336Z",
+          "runtimeVersion": "Lython CLI based on MLIR",
+          "lythonRevision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+          "artifactSha256": "a1139a484b7ab60b4ab9520b4ff5b5a6b1d13ccfa97b78f98298c8f6bf29514e",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            46.29733320325613, 45.97600006187955, 45.98533331106106, 45.854666735976934,
+            45.92566673333446, 45.85799993947148, 45.875333404789366
+          ],
+          "stats": {
+            "firstMs": 45.98533331106106,
+            "medianMs": 45.875333404789366,
+            "p95Ms": 45.98533331106106,
+            "minMs": 45.854666735976934,
+            "meanMs": 45.899800024926655,
+            "lastMs": 45.875333404789366
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 45.875333404789366,
+      "minRoundMedianMs": 45.333999985208116,
+      "maxRoundMedianMs": 46.160999995966755,
+      "language": "python",
+      "sourceFile": "object-churn.py",
+      "representation": "Python dict with string keys",
+      "execution": "binary",
+      "intermediates": [
+        {
+          "file": "build/cross-language-2026-10-07/study/object-churn/lython/measured/out.ll",
+          "bytes": 3103533,
+          "sha256": "1801674d73ff9afbde62ba15e88c12f8021c7f4a4fd285b22d9c565d287b3f78"
+        }
+      ],
+      "binaryBytes": 272496,
+      "libraries": [
+        "/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+        "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+      ]
+    },
+    {
+      "case": "hello",
+      "target": {
+        "name": "cpython",
+        "tool": "cpython"
+      },
+      "expected": "hello",
+      "output": "build/cross-language-2026-10-07/study/hello/cpython",
+      "mode": "process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "c6ad4c0187f71e5ac821f80149f47a0cc1514966fa41af60b2e7e05db01808fb",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:32.087Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "c6ad4c0187f71e5ac821f80149f47a0cc1514966fa41af60b2e7e05db01808fb",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            65.784916, 22.185709, 21.226709, 21.369458, 21.361292, 22.848833, 21.258375, 21.885709,
+            21.295666, 21.169792, 21.073709, 20.802292, 20.74, 20.601958, 21.229084, 20.832583,
+            20.344917, 20.378
+          ],
+          "stats": {
+            "firstMs": 21.369458,
+            "medianMs": 21.169792,
+            "p95Ms": 22.848833,
+            "minMs": 20.344917,
+            "meanMs": 21.1461112,
+            "lastMs": 20.378
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:39:39.955Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "c6ad4c0187f71e5ac821f80149f47a0cc1514966fa41af60b2e7e05db01808fb",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            22.036375, 20.641167, 20.797292, 20.48025, 21.062958, 21.372417, 21.001375, 20.407,
+            20.5145, 20.27975, 20.495917, 20.1205, 20.551541, 20.273542, 20.283125, 20.633583,
+            20.392792, 20.241334
+          ],
+          "stats": {
+            "firstMs": 20.48025,
+            "medianMs": 20.48025,
+            "p95Ms": 21.372417,
+            "minMs": 20.1205,
+            "meanMs": 20.5407056,
+            "lastMs": 20.241334
+          },
+          "result": "hello\n"
+        },
+        {
+          "timestamp": "2026-10-07T03:40:51.844Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "c6ad4c0187f71e5ac821f80149f47a0cc1514966fa41af60b2e7e05db01808fb",
+          "clock": "hrtime (parent spawn-to-exit)",
+          "samplesMs": [
+            58.482625, 21.112083, 21.726167, 20.518583, 20.905958, 21.893125, 20.52775, 20.304917,
+            20.564792, 20.457042, 20.828542, 20.397125, 20.255084, 20.303875, 21.037542, 20.392708,
+            20.197167, 21.351375
+          ],
+          "stats": {
+            "firstMs": 20.518583,
+            "medianMs": 20.518583,
+            "p95Ms": 21.893125,
+            "minMs": 20.197167,
+            "meanMs": 20.662372333333334,
+            "lastMs": 21.351375
+          },
+          "result": "hello\n"
+        }
+      ],
+      "medianMs": 20.518583,
+      "minRoundMedianMs": 20.48025,
+      "maxRoundMedianMs": 21.169792,
+      "language": "python",
+      "sourceFile": "hello.py",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "primes",
+      "target": {
+        "name": "cpython",
+        "tool": "cpython"
+      },
+      "expected": 9592,
+      "output": "build/cross-language-2026-10-07/study/primes/cpython",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "0b90fd382effc361d597f98d1669b85f1c38edede86d6ae508263ff00465044f",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:33.445Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "160f53fb880e8d731734e6dc8c4f55e8930545d738591511191ecd0fb74aad7b",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            190.764166880399, 209.81616619974375, 164.55170884728432, 150.07983287796378,
+            149.50679219327867, 150.29270807281137, 150.17512487247586
+          ],
+          "stats": {
+            "firstMs": 164.55170884728432,
+            "medianMs": 150.17512487247586,
+            "p95Ms": 164.55170884728432,
+            "minMs": 149.50679219327867,
+            "meanMs": 152.9212333727628,
+            "lastMs": 150.17512487247586
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:39:39.486Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "160f53fb880e8d731734e6dc8c4f55e8930545d738591511191ecd0fb74aad7b",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            149.9341249000281, 149.47195793502033, 148.96099991165102, 151.48191712796688,
+            156.5970832016319, 149.8401251155883, 151.06745809316635
+          ],
+          "stats": {
+            "firstMs": 148.96099991165102,
+            "medianMs": 151.06745809316635,
+            "p95Ms": 156.5970832016319,
+            "minMs": 148.96099991165102,
+            "meanMs": 151.5895166900009,
+            "lastMs": 151.06745809316635
+          },
+          "result": 9592
+        },
+        {
+          "timestamp": "2026-10-07T03:40:53.028Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "160f53fb880e8d731734e6dc8c4f55e8930545d738591511191ecd0fb74aad7b",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            149.29520897567272, 149.30641604587436, 149.26316705532372, 149.69141711480916,
+            149.27187492139637, 149.29316588677466, 149.48537503369153
+          ],
+          "stats": {
+            "firstMs": 149.26316705532372,
+            "medianMs": 149.29316588677466,
+            "p95Ms": 149.69141711480916,
+            "minMs": 149.26316705532372,
+            "meanMs": 149.4010000023991,
+            "lastMs": 149.48537503369153
+          },
+          "result": 9592
+        }
+      ],
+      "medianMs": 150.17512487247586,
+      "minRoundMedianMs": 149.29316588677466,
+      "maxRoundMedianMs": 151.06745809316635,
+      "language": "python",
+      "sourceFile": "primes.py",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "json",
+      "target": {
+        "name": "cpython",
+        "tool": "cpython"
+      },
+      "expected": 1491500,
+      "output": "build/cross-language-2026-10-07/study/json/cpython",
+      "mode": "in-process",
+      "iterations": 1,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "27a15d95ae7a03fa6fa53084a4b74982fd258b2a549da1a8d321b9e017e75e4b",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:34.241Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "7958edfc6afdc4f10a316ae8a583d50d3319166a71469d5db17d2db9b9962188",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            94.76787503808737, 94.06620915979147, 93.88237493112683, 94.2822911310941,
+            95.17533285543323, 94.23250006511807, 96.19120904244483
+          ],
+          "stats": {
+            "firstMs": 93.88237493112683,
+            "medianMs": 94.2822911310941,
+            "p95Ms": 96.19120904244483,
+            "minMs": 93.88237493112683,
+            "meanMs": 94.75274160504341,
+            "lastMs": 96.19120904244483
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:39:38.291Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "7958edfc6afdc4f10a316ae8a583d50d3319166a71469d5db17d2db9b9962188",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            100.90841702185571, 100.74754199013114, 98.7487081438303, 98.8090829923749,
+            129.37312480062246, 105.88433407247066, 100.74712499044836
+          ],
+          "stats": {
+            "firstMs": 98.7487081438303,
+            "medianMs": 100.74712499044836,
+            "p95Ms": 129.37312480062246,
+            "minMs": 98.7487081438303,
+            "meanMs": 106.71247499994934,
+            "lastMs": 100.74712499044836
+          },
+          "result": 1491500
+        },
+        {
+          "timestamp": "2026-10-07T03:40:53.828Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "7958edfc6afdc4f10a316ae8a583d50d3319166a71469d5db17d2db9b9962188",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            95.81783297471702, 94.53795803710818, 94.58333300426602, 94.72970804199576,
+            94.7717500384897, 95.25100002065301, 96.0329589433968
+          ],
+          "stats": {
+            "firstMs": 94.58333300426602,
+            "medianMs": 94.7717500384897,
+            "p95Ms": 96.0329589433968,
+            "minMs": 94.58333300426602,
+            "meanMs": 95.07375000976026,
+            "lastMs": 96.0329589433968
+          },
+          "result": 1491500
+        }
+      ],
+      "medianMs": 94.7717500384897,
+      "minRoundMedianMs": 94.2822911310941,
+      "maxRoundMedianMs": 100.74712499044836,
+      "language": "python",
+      "sourceFile": "json.cpython.py",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-stable",
+      "target": {
+        "name": "cpython",
+        "tool": "cpython"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-stable/cpython",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "41c22eb0cec721cd30f5c6eb821d662f54c2585de88ef60f605a5a1c0cebab81",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:35.029Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "3134317b1c60395ce8400ff52751b8688131792a9909c34d8ecc76ec0eea1755",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            46.130500035360456, 46.306208008900285, 46.45887506194413, 46.365250018425286,
+            46.7141040135175, 46.759249991737306, 47.059541451744735
+          ],
+          "stats": {
+            "firstMs": 46.45887506194413,
+            "medianMs": 46.7141040135175,
+            "p95Ms": 47.059541451744735,
+            "minMs": 46.365250018425286,
+            "meanMs": 46.67140410747379,
+            "lastMs": 47.059541451744735
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:37.399Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "3134317b1c60395ce8400ff52751b8688131792a9909c34d8ecc76ec0eea1755",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            53.95249999128282, 47.03247908037156, 47.06572892609984, 46.83302098419517,
+            46.960833016783, 46.980228973552585, 65.90504199266434
+          ],
+          "stats": {
+            "firstMs": 47.06572892609984,
+            "medianMs": 46.980228973552585,
+            "p95Ms": 65.90504199266434,
+            "minMs": 46.83302098419517,
+            "meanMs": 50.748970778658986,
+            "lastMs": 65.90504199266434
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:54.605Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "3134317b1c60395ce8400ff52751b8688131792a9909c34d8ecc76ec0eea1755",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            46.09993752092123, 46.22814594767988, 45.99408351350576, 45.95889605116099,
+            46.117708436213434, 45.837124926038086, 46.167375054210424
+          ],
+          "stats": {
+            "firstMs": 45.99408351350576,
+            "medianMs": 45.99408351350576,
+            "p95Ms": 46.167375054210424,
+            "minMs": 45.837124926038086,
+            "meanMs": 46.01503759622574,
+            "lastMs": 46.167375054210424
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 46.7141040135175,
+      "minRoundMedianMs": 45.99408351350576,
+      "maxRoundMedianMs": 46.980228973552585,
+      "language": "python",
+      "sourceFile": "object-stable.py",
+      "representation": "Python dict with string keys",
+      "execution": "source",
+      "intermediates": []
+    },
+    {
+      "case": "object-churn",
+      "target": {
+        "name": "cpython",
+        "tool": "cpython"
+      },
+      "expected": 102387360,
+      "output": "build/cross-language-2026-10-07/study/object-churn/cpython",
+      "mode": "in-process",
+      "iterations": 2,
+      "alias": {
+        "passed": true,
+        "output": "9\n-1"
+      },
+      "status": "passed",
+      "originalSourceSha256": "cd3643ac573d4928fa48d5a49315d95b576f743e6ad4cadd0ad71d500a3ce232",
+      "rounds": [
+        {
+          "timestamp": "2026-10-07T03:39:35.778Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "fc7e069f4fe0d2d4f32ea9efb195aa320e7a7dd3d934cb830d724d20dbab333a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            43.62720844801515, 43.72587497346103, 43.86658302973956, 43.711062520742416,
+            43.901187484152615, 43.8455204712227, 43.475624988786876
+          ],
+          "stats": {
+            "firstMs": 43.86658302973956,
+            "medianMs": 43.8455204712227,
+            "p95Ms": 43.901187484152615,
+            "minMs": 43.475624988786876,
+            "meanMs": 43.75999569892883,
+            "lastMs": 43.475624988786876
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:39:36.545Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "fc7e069f4fe0d2d4f32ea9efb195aa320e7a7dd3d934cb830d724d20dbab333a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            43.2296454673633, 43.54591702576727, 45.19377101678401, 44.470124994404614,
+            43.72202046215534, 43.2229790603742, 44.22133299522102
+          ],
+          "stats": {
+            "firstMs": 45.19377101678401,
+            "medianMs": 44.22133299522102,
+            "p95Ms": 45.19377101678401,
+            "minMs": 43.2229790603742,
+            "meanMs": 44.16604570578784,
+            "lastMs": 44.22133299522102
+          },
+          "result": 102387360
+        },
+        {
+          "timestamp": "2026-10-07T03:40:55.354Z",
+          "runtimeVersion": "Python 3.14.8",
+          "artifactSha256": "fc7e069f4fe0d2d4f32ea9efb195aa320e7a7dd3d934cb830d724d20dbab333a",
+          "clock": "time.perf_counter, milliseconds",
+          "samplesMs": [
+            43.41247898992151, 43.35231252480298, 43.94081246573478, 43.82995842024684,
+            43.11439604498446, 43.95108297467232, 43.31041651312262
+          ],
+          "stats": {
+            "firstMs": 43.94081246573478,
+            "medianMs": 43.82995842024684,
+            "p95Ms": 43.95108297467232,
+            "minMs": 43.11439604498446,
+            "meanMs": 43.6293332837522,
+            "lastMs": 43.31041651312262
+          },
+          "result": 102387360
+        }
+      ],
+      "medianMs": 43.8455204712227,
+      "minRoundMedianMs": 43.82995842024684,
+      "maxRoundMedianMs": 44.22133299522102,
+      "language": "python",
+      "sourceFile": "object-churn.py",
+      "representation": "Python dict with string keys",
+      "execution": "source",
+      "intermediates": []
+    }
+  ]
+}

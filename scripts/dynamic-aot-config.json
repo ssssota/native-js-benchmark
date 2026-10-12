@@ -1,0 +1,13 @@
+{
+  "spinel": {
+    "version": "2026.09.12",
+    "url": "https://github.com/matz/spinel/releases/download/2026.09.12/spinel-2026.09.12.tar.xz",
+    "sha256": "1bba269cfc8004bcd60b75471cd44eaccdc66eed60b1f636d1367c897c764a77"
+  },
+  "lython": {
+    "revision": "98aa88b92786538ea57eea48ee65a4142f211e71",
+    "url": "https://codeload.github.com/t3tra-dev/lython/tar.gz/98aa88b92786538ea57eea48ee65a4142f211e71",
+    "sha256": "01406c33835e21f4842628e32244dc7e4cffecd9d91a741587b6d52991f7b133",
+    "llvmMajor": 23
+  }
+}

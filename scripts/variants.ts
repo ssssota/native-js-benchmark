@@ -7,6 +7,10 @@ export const tools = [
   "porffor",
   "static_hermes",
   "oseo",
+  "spinel",
+  "lython",
+  "cpython",
+  "cruby",
 ] as const;
 export type Tool = (typeof tools)[number];
 export const workloads = [
@@ -29,7 +33,8 @@ export type Variant =
   | { tool: "deno"; engine: "quickjs" }
   | { tool: "perry" | "scriptc" | "oseo"; language?: "typescript" }
   | { tool: "static_hermes"; language?: "flow" }
-  | { tool: "porffor" };
+  | { tool: "porffor" | "spinel" | "lython" }
+  | { tool: "cpython" | "cruby" };
 
 export const variants: Variant[] = [
   { tool: "node", cache: "off" },
@@ -48,7 +53,19 @@ export const variants: Variant[] = [
   { tool: "static_hermes", language: "flow" },
   { tool: "oseo" },
   { tool: "oseo", language: "typescript" },
+  { tool: "spinel" },
+  { tool: "lython" },
 ];
+
+export const sourceTools = ["node", "deno", "bun", "cpython", "cruby"] as const;
+export type SourceTool = (typeof sourceTools)[number];
+export const isInterpreter = (tool: string) => tool === "cpython" || tool === "cruby";
+export const sourceLanguage = (tool: string) =>
+  tool === "spinel" || tool === "cruby"
+    ? "ruby"
+    : tool === "lython" || tool === "cpython"
+      ? "python"
+      : "javascript";
 
 export function variantName(v: Variant): string {
   if (v.tool === "deno")
@@ -57,10 +74,24 @@ export function variantName(v: Variant): string {
   return "cache" in v ? `${v.tool}-cache-${v.cache}` : v.tool;
 }
 
-export function sourceName(v: Variant, workload: Workload): string {
+export function sourceName(v: { tool: string; language?: string }, workload: Workload): string {
+  if (v.tool === "lython" && workload === "json") return "json.lython.py";
+  if (v.tool === "cpython" && workload === "json") return "json.cpython.py";
+  if (sourceLanguage(v.tool) === "ruby") return `${workload}.rb`;
+  if (sourceLanguage(v.tool) === "python") return `${workload}.py`;
   if ("language" in v && v.language === "typescript") return `${workload}.ts`;
   if ("language" in v && v.language === "flow") return `${workload}.flow.js`;
   return `${workload}.js`;
+}
+
+export function requireWorkload(tool: string, workload: Workload): void {
+  if (
+    sourceLanguage(tool) !== "javascript" &&
+    !["hello", "primes", "json", "object-stable", "object-churn"].includes(workload)
+  )
+    throw new Error(
+      `${tool}: Ruby/Python ports support hello, primes, json, object-stable and object-churn.`,
+    );
 }
 
 export function selectVariant(tool: Tool, cache: Cache, engine: "v8" | "quickjs"): Variant {

@@ -4,7 +4,7 @@ import { parseDependencies } from "../sizes.ts";
 import { parseOptions } from "../options.ts";
 
 test("sizes selects all variants by default and supports tool filters", () => {
-  assert.equal(parseOptions(["sizes", "--workload", "hello"]).selected.length, 16);
+  assert.equal(parseOptions(["sizes", "--workload", "hello"]).selected.length, 18);
   assert.equal(parseOptions(["sizes", "--tool", "deno"]).selected.length, 3);
   assert.equal(parseOptions(["sizes", "--tool", "deno-quickjs"]).selected.length, 1);
   assert.throws(() => parseOptions(["sizes", "--cache", "on"]));

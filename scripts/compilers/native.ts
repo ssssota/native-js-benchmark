@@ -1,6 +1,22 @@
 import type { Step } from "../docker.ts";
 import { sourceName, type Variant, type Workload } from "../variants.ts";
 
+export function spinelPlan(workload: Workload): Step[] {
+  const source = `/src/${workload}.rb`;
+  return [
+    { argv: ["spinel", source, "-c", "-o", "/out/out.c"] },
+    { argv: ["spinel", source, "-o", "/out/out"] },
+  ];
+}
+
+export function lythonPlan(workload: Workload): Step[] {
+  const source = `/src/${sourceName({ tool: "lython" }, workload)}`;
+  return [
+    { argv: ["lyc", source, "--emit-llvm", "-o", "/out/out.ll"] },
+    { argv: ["lyc", source, "-o", "/out/out"] },
+  ];
+}
+
 export function oseoPlan(
   variant: Variant,
   workload: Workload,

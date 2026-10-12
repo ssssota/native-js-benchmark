@@ -1,10 +1,17 @@
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { renderSteps, dockerBuildDirectory } from "./docker.ts";
 import { compilePlan } from "./compilers/index.ts";
 import { Workflow } from "./workflow.ts";
-import { sourceName, type Workload } from "./variants.ts";
+import { sourceName, sourceLanguage, requireWorkload, type Workload } from "./variants.ts";
+import {
+  sourceCommand,
+  languageLoopSource,
+  workloadMetadata,
+  workloadClock,
+} from "./language-workloads.ts";
+import { dynamicAotConfig } from "./host-dynamic-aot.ts";
 import { benchmarkName, isSource, type BenchmarkTarget } from "./benchmark-targets.ts";
 
 export interface BenchmarkOptions {
@@ -80,23 +87,34 @@ export async function benchmark(
   args: string[],
 ): Promise<void> {
   const docker = workflow.docker;
+  requireWorkload(v.tool, workload);
   const source = isSource(v);
   const name = `${benchmarkName(v)}-${workload}`;
   const directory = join(dockerBuildDirectory(docker.root), `bench-${options.mode}-${name}`);
   await mkdir(directory, { recursive: true });
+  // A failed rerun must not leave an old successful report visible.
+  await rm(join(directory, "result.json"), { force: true });
   let output = source ? directory : workflow.output(v, workload);
   if (options.mode === "in-process") {
     output = directory;
     const sourceDirectory = join(directory, "src");
-    const inputName = source ? `${workload}.js` : sourceName(v, workload);
+    const inputName = sourceName(v, workload);
+    await rm(sourceDirectory, { recursive: true, force: true });
     await mkdir(sourceDirectory, { recursive: true });
     await writeFile(
       join(sourceDirectory, inputName),
-      (workload === "fetch-json" ? asyncLoopSource : loopSource)(
-        await readFile(join(docker.root, "src", inputName), "utf8"),
-        options,
-        v.tool === "oseo" ? false : undefined,
-      ),
+      sourceLanguage(v.tool) !== "javascript"
+        ? languageLoopSource(
+            await readFile(join(docker.root, "src", inputName), "utf8"),
+            v.tool,
+            options,
+            workload,
+          )
+        : (workload === "fetch-json" ? asyncLoopSource : loopSource)(
+            await readFile(join(docker.root, "src", inputName), "utf8"),
+            options,
+            v.tool === "oseo" ? false : undefined,
+          ),
     );
     if (!isSource(v)) {
       await docker.build(v.tool);
@@ -113,14 +131,15 @@ export async function benchmark(
   // Every measured child uses the same OS libraries and Node supervisor.
   await docker.build("benchmark");
   const sourceDirectory = workload === "npm-cli" ? await workflow.deps() : undefined;
-  const entry = options.mode === "in-process" ? `/out/src/${workload}.js` : `/src/${workload}.js`;
-  const command = source
-    ? [v.tool, ...(v.tool === "deno" ? ["run", "-A"] : []), entry]
-    : ["/out/out"];
+  const entry =
+    options.mode === "in-process"
+      ? `/out/src/${sourceName(v, workload)}`
+      : `/src/${sourceName(v, workload)}`;
+  const command = source ? sourceCommand(v.tool, entry) : ["/out/out"];
   const artifact = source
     ? options.mode === "in-process"
-      ? join(output, "src", `${workload}.js`)
-      : join(docker.root, "src", `${workload}.js`)
+      ? join(output, "src", sourceName(v, workload))
+      : join(docker.root, "src", sourceName(v, workload))
     : join(output, "out");
   const expected = (
     {
@@ -138,6 +157,23 @@ export async function benchmark(
       ...options,
       name,
       workload,
+      ...workloadMetadata(v, workload),
+      inProcessClock: workloadClock(v.tool),
+      ...(v.tool === "spinel"
+        ? {
+            spinelRelease: dynamicAotConfig.spinel.version,
+            sourceArchiveSha256: dynamicAotConfig.spinel.sha256,
+          }
+        : {}),
+      ...(v.tool === "lython"
+        ? {
+            lythonRevision: dynamicAotConfig.lython.revision,
+            llvmMajor: dynamicAotConfig.lython.llvmMajor,
+            sourceArchiveSha256: dynamicAotConfig.lython.sha256,
+          }
+        : {}),
+      ...(v.tool === "cpython" ? { runtimeImagePin: "python:3.14.8-slim-trixie" } : {}),
+      ...(v.tool === "cruby" ? { runtimeImagePin: "ruby:4.0.7-slim-trixie", yjit: false } : {}),
       image: docker.image("benchmark"),
       buildImage: source ? undefined : docker.image(v.tool),
       execution: source ? "source" : "binary",

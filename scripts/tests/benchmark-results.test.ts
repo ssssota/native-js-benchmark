@@ -4,7 +4,7 @@ import { resultRow } from "../benchmark-results.ts";
 import { parseOptions } from "../options.ts";
 
 test("saved reports select all variants or filter by tool", () => {
-  assert.equal(parseOptions(["bench-results"]).selected.length, 16);
+  assert.equal(parseOptions(["bench-results"]).selected.length, 18);
   assert.equal(
     parseOptions(["bench-results", "--tool", "deno", "--mode", "in-process"]).selected.length,
     3,

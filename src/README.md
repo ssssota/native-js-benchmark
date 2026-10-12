@@ -83,9 +83,25 @@ Deno V8 の `run-binary --tool deno-v8-cache-on` は出力先の `runtime-cache/
 | Porffor       | `out.c`                                         |
 | Oseo          | `out.c`・`out.mir`                              |
 | Static Hermes | `out.c`・`out.ir`・`out.o`                      |
+| Spinel        | `out.c`                                         |
+| Lython        | `out.ll`（runtimeリンク後・最終LLVM最適化前）   |
 
 中間ファイルは通常の実行には不要です。生成処理も含むため、`compile` 全体の時間を純粋なコンパイル速度として比較しないでください。
 
 Static Hermes は VM・console・JSI・Boost Context を静的リンクしています。
 Hermes 固有の `.so` は不要ですが、ICU・libc・C++ ランタイムには依存し、完全な静的バイナリではありません。
 古い成果物で `libshermes_console.so` などが要求される場合は再コンパイルしてください。
+
+## Ruby / Pythonの類似workload
+
+`.rb`はSpinelとCRuby、JSON以外の`.py`はLythonとCPythonで共用します。helloは`hello`、primesは100,000までの試し割りで`9592`、JSONは1,000レコード×100回で`1491500`、objectの両条件は256個・8キー・200,000更新で`102387360`を出力します。
+
+Ruby/Pythonの数値は整数を使い、JSのNumberと表現が異なります。objectは文字列キーのHash/dictを使い、stableは値を0へ戻し、churnはキーを削除して欠落を確認します。JSのshape変化と同じ実装を仮定する比較ではありません。PythonのJSONはcompact separatorsを指定し、このASCII入力ではJS/Rubyと同じ文字数にしています。
+
+Pythonはmembership確認後に必要なら値を読むため、stableの欠落・ゼロ確認ではRuby/JSより検索が1回多くなります。同言語のAOTとinterpreterは同じソースで比較します。
+
+JSONはCPython用の`json.cpython.py`とLython用の`json.lython.py`を選択します。LythonのJSONライブラリは専用の`JSONValue`ツリーを受け取るため、同じレコードをそのAPIで構築し、型別アクセサーで加工します。データ表現とライブラリの実装差を含む比較です。`json.py`というファイル名は標準ライブラリのimportを隠すため使いません。
+
+通常実行と反復計測は同じ`benchmark_workload`を呼びます。Rubyは`Process.clock_gettime(CLOCK_MONOTONIC)`、Pythonは`time.perf_counter()`でバッチ時間をmsにし、共通runnerで呼出し数を割ります。初期化も各呼出しに含めます。計測結果には言語・ソース名・時計・Hash/dict表現を記録します。
+
+CPythonは`python3 -I -B src/json.cpython.py`のように実行してください。`-I`は環境変数やユーザー側のimportパスを除外します。CRubyの比較基準ではYJITを無効にしています。file-cli・fetch-json・http-server・npm-cli・node-processは移植していません。

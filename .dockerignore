@@ -1,0 +1,7 @@
+.git
+build
+node_modules
+src/node_modules
+reports
+**/__pycache__
+**/*.pyc

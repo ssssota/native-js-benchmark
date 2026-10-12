@@ -13,7 +13,7 @@ test("tool names select each exact configuration without changing artifact names
       assert.deepEqual(options.benchmarkSelected.map(benchmarkName), [name]);
     }
   }
-  for (const tool of ["node", "deno", "bun"]) {
+  for (const tool of ["node", "deno", "bun", "cpython", "cruby"]) {
     for (const command of ["bench", "bench-results"])
       assert.deepEqual(
         parseOptions([command, "--tool", `${tool}-source`]).benchmarkSelected.map(benchmarkName),
@@ -26,16 +26,16 @@ test("tool names select each exact configuration without changing artifact names
 });
 
 test("source targets are distinct, deduplicated and opt-in for measurement", () => {
-  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 16);
+  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 18);
   assert.deepEqual(
     parseOptions(["bench", "--all", "--execution", "source"]).benchmarkSelected.map(benchmarkName),
-    ["node-source", "deno-source", "bun-source"],
+    ["node-source", "deno-source", "bun-source", "cpython-source", "cruby-source"],
   );
   assert.equal(
     parseOptions(["bench", "--all", "--execution", "both"]).benchmarkSelected.length,
-    19,
+    23,
   );
-  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 19);
+  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 23);
   assert.equal(
     parseOptions(["bench-results", "--tool", "static_hermes"]).benchmarkSelected.length,
     1,

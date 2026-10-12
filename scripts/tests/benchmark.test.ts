@@ -50,7 +50,7 @@ test("benchmark options reject unbounded workloads and invalid counts", () => {
     ["--mode", "in-process", "--workload", "file-cli"],
   ])
     assert.throws(() => parseOptions(["bench", ...args]));
-  assert.equal(parseOptions(["bench", "--all"]).selected.length, 16);
+  assert.equal(parseOptions(["bench", "--all"]).selected.length, 18);
   assert.equal(parseOptions(["bench", "--variants", "--tool", "deno"]).selected.length, 3);
 });
 

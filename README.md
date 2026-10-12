@@ -1,12 +1,14 @@
 # Native JS Dream
 
 JavaScript を各ツールで実行ファイルにし、サイズ・起動時間・反復処理の速度を比較する実験です。
+Ruby/Pythonの類似workloadもSpinel/LythonでAOTコンパイルし、CRuby/CPythonの通常実行と比較できます。
+[方式・C/IR・性能の検証結果](reports/cross-language-aot.md)を保存しています。
 Node.js 24 以上・pnpm・Docker が必要です。
 
 ## ビルド・実行
 
 ```sh
-# 全16構成をコンパイル（必要な Docker イメージも自動ビルド）
+# 全18構成をコンパイル（必要な Docker イメージも自動ビルド）
 pnpm cli compile --all --workload hello
 
 # 1構成だけコンパイルして実行
@@ -21,14 +23,19 @@ pnpm cli run --tool node --workload primes
 - `--variants --tool deno`：Deno の V8 キャッシュなし・あり・QuickJS をまとめて選択。
 - 省略時は `node`・`hello`。コンパイル・計測では `node-cache-off` 相当です。
 
-| ツール | バイナリ構成                                                                                                                                      | 通常起動      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| Node   | `node-cache-off` / `node-cache-on`                                                                                                                | `node-source` |
-| Bun    | `bun-cache-off` / `bun-cache-on`                                                                                                                  | `bun-source`  |
-| Deno   | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs`                                                                                         | `deno-source` |
-| AOT    | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | —             |
+| ツール | バイナリ構成                                                                                                                                      | 通常起動                          |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| Node   | `node-cache-off` / `node-cache-on`                                                                                                                | `node-source`                     |
+| Bun    | `bun-cache-off` / `bun-cache-on`                                                                                                                  | `bun-source`                      |
+| Deno   | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs`                                                                                         | `deno-source`                     |
+| AOT    | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | —                                 |
+| Ruby   | `spinel`                                                                                                                                          | `cruby-source`（`cruby`も可）     |
+| Python | `lython`                                                                                                                                          | `cpython-source`（`cpython`も可） |
 
 `perry-typescript`・`scriptc-typescript`・`oseo-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
+
+[Spinel](https://github.com/matz/spinel)はrelease archive `2026.09.12`、[Lython](https://github.com/t3tra-dev/lython)はrevision `98aa88b92786538ea57eea48ee65a4142f211e71`に固定し、ソースをSHA-256検証付きで取得します。Spinelは生成C、LythonはLLVM IRとネイティブ実行物を保存します。Lythonの`jit`コマンドは計測に使いません。
+CRuby 4.0.7・CPython 3.14.8はソース実行専用で、`compile`・`run-binary`・`sizes`には含めません。CRubyは`--disable-gems --disable-yjit`、CPythonは`-I -B`で起動します。
 
 [Oseo](https://github.com/dahlia/oseo) はリビジョン `317b58bbe686219ed9b715473c91ee2e9b5c5817` に固定しています。
 Docker版はLinux x64、ホスト版はmacOS arm64が対象です。Apple Siliconでは `--backend host` を使ってください。
@@ -43,7 +50,7 @@ Docker版は `build/docker/`、ホスト版は `build/host-darwin-arm64/` 以下
 
 CIなどで同じ名前・タグのDockerイメージをあらかじめ用意した場合は、`--skip-image-build`を指定するとCLI内の`docker build`を省略できます。既定のイメージ名は`native-js-dream/<tool>:check`と`native-js-dream/benchmark:check`です。必要に応じて`--image-prefix`と`--image-tag`を併用してください。
 Deno の V8／QuickJS 用ランタイムと Node の `postject` はイメージ作成時に取得します。通常のコンパイルでは再ダウンロードしません（npm 依存の取得やクロスコンパイルは別）。
-`run` は Node/Bun/Deno ではソースを実行し、その他ではコンパイル後に実行します。キャッシュ・エンジンの比較には `run-binary` を使ってください。
+`run` は Node/Bun/Deno/CPython/CRubyではソースを実行し、AOTツールではコンパイル後に実行します。キャッシュ・エンジンの比較には `run-binary` を使ってください。
 
 ワークロードと対応上の注意は [src/README.md](src/README.md)、その他のオプションは `pnpm cli help` を参照してください。
 
@@ -63,12 +70,12 @@ KiB・MiB 単位で表示し、未ビルド・サイズ不明は末尾に置き�
 
 ## 速度比較
 
-通常のソース直接実行も Node・Deno・Bun で計測できます（事前コンパイル不要）。
+通常のソース直接実行もNode・Deno・Bun・CPython・CRubyで計測できます（事前コンパイル不要）。
 
 ```sh
 pnpm cli bench --all --execution source --workload hello
 pnpm cli bench --tool node-source --workload primes --mode in-process
-# バイナリ16構成＋通常起動3構成をまとめて計測
+# バイナリ18構成＋通常起動5構成をまとめて計測
 pnpm cli bench --all --execution both --workload hello
 ```
 
@@ -76,7 +83,7 @@ pnpm cli bench --all --execution both --workload hello
 `source` は各ランタイムの通常設定（Deno は `run -A`）を使います。`--tool node-source` などの指定時は `--execution source` を省略できます。
 ダウンロード・ディスクキャッシュは同じ計測セッション内で再利用します。
 プロセス内計測ではバイナリ版と同じループを生成し、コンパイルせずに実行します。
-結果は `node-source`・`deno-source`・`bun-source` の名前で別保存します。
+結果は`node-source`・`deno-source`・`bun-source`・`cpython-source`・`cruby-source`の名前で別保存します。
 `bench-results` は既定で両方を一覧表示し、`--execution binary` / `source` で絞れます。
 
 ```sh
@@ -121,8 +128,8 @@ pnpm cli bench-results --workload primes --mode in-process
 
 ### 比較時の注意
 
-- プロセス内計測は `hello`・`primes`・`json`・`fetch-json` に対応。末尾のログを戻り値に置き換えるため、`hello` はログ出力性能の計測にはなりません。
-- プロセス内の時計は1 ms精度です。短い処理には `--iterations` を増やしてください。
+- プロセス内計測は `hello`・`primes`・`json`・`fetch-json`・`object-stable`・`object-churn` に対応。末尾のログを戻り値に置き換えるため、`hello` はログ出力性能の計測にはなりません。
+- JSのプロセス内時計は1 ms精度です。Ruby/Pythonは単調増加時計を使います。短い処理には `--iterations` を増やしてください。
 - 計測ごとに新しいコンテナを使いますが、その中の反復間では Deno のディスクキャッシュなどを再利用します。OS のページキャッシュは消しません。
 - 速度変化には JIT 以外に GC・CPU 負荷なども影響します。Docker Desktop 上では Linux VM 内の性能です。
 - HTTP サーバーは計測対象外です。起動完了やリクエスト性能には別の計測が必要です。
@@ -148,7 +155,7 @@ pnpm cli bench --all --execution both --workload fetch-json --mode in-process
 
 ### CI
 
-GitHub Actions では型検査とテストに加え、16種類すべての構成で `hello` のコンパイル・実行・ベンチマークを行います。
+GitHub Actionsでは型検査とテストに加え、18種類のバイナリ構成とCPython/CRubyの通常実行で`hello`を検証・計測します。
 ベンチマークは1回のウォームアップ後に5サンプルを計測し、全構成の結果を中央値順に workflow summary へ出力します。
 Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action で導入します。
 各構成の `result.json` も1日間 artifact として保存します。
@@ -156,6 +163,23 @@ Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action �
 ### Macホストで計測（試験対応）
 
 Oseoは `mise install` で導入するAube 2.6.1・Zig 0.16.0（Oseo指定のバージョン）を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
+
+Spinel/Lythonもホストの`build` / `compile`で固定ソースを取得・ビルドし、`build/tools/spinel-2026.09.12/`・`build/tools/lython-<revision>/`に保存します。SpinelはCコンパイラとmake、LythonはLLVM/MLIR 23・CMake・Ninjaが必要です。macOSではHomebrewの`llvm`を用意してください。別のLLVM 23を使う場合は`LYTHON_LLVM_PREFIX`でprefixを指定します。Python・Ruby・CMake・Ninjaはmiseに固定しています。
+
+```sh
+mise install
+mise exec -- pnpm cli build --backend host --tool spinel
+mise exec -- pnpm cli build --backend host --tool lython
+mise exec -- pnpm cli run --backend host --tool spinel --workload primes
+mise exec -- pnpm cli run --backend host --tool lython --workload primes
+mise exec -- pnpm cli bench --backend host --tool cruby --workload primes --mode in-process --iterations 5
+mise exec -- pnpm cli bench --backend host --tool cpython --workload primes --mode in-process --iterations 5
+mise exec -- pnpm cli bench --backend host --tool spinel --workload primes --mode in-process --iterations 5
+mise exec -- pnpm cli bench --backend host --tool lython --workload primes --mode in-process --iterations 5
+mise exec -- pnpm cli bench-results --backend host --workload primes --mode in-process
+```
+
+Ruby/Pythonにはhello・primes・json・object-stable・object-churnを移植しています。objectは文字列キーのHash/dictで、JSのhidden classを測るものではありません。数値表現やJSONライブラリも言語ごとに異なります。入力規模・アルゴリズム・期待値を合わせた類似処理の比較として扱ってください。未移植のworkloadは明示的に拒否し、コンパイラの未対応機能・エラーは隠しません。
 
 ```sh
 pnpm cli compile --backend host --variants --tool oseo --workload hello

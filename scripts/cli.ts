@@ -25,7 +25,7 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
   bench --all --execution source --workload hello
   bench --all --execution both --workload primes
   compile --tool bun --workload hello
-  compile --all --workload hello     Compile all 16 configurations
+  compile --all --workload hello     Compile all 18 configurations
   compile --variants --tool deno     Compile Deno V8 off/on and QuickJS
   run --tool node --workload json    Run source (AOT tools compile first)
   run-binary --tool node-cache-on   Run a previously compiled binary
@@ -38,14 +38,16 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
 Tools: node-cache-off, node-cache-on, bun-cache-off, bun-cache-on,
        deno-v8-cache-off, deno-v8-cache-on, deno-quickjs,
        perry, perry-typescript, scriptc, scriptc-typescript, porffor,
-       static_hermes, static_hermes-flow, oseo, oseo-typescript,
-       node-source, deno-source, bun-source
+       static_hermes, static_hermes-flow, oseo, oseo-typescript, spinel, lython,
+       node-source, deno-source, bun-source, cpython-source, cruby-source
+       cpython, cruby (source-only aliases; no compile/run-binary/sizes)
 Options: --tool, --workload, --execution binary|source|both,
          --backend docker|host, --port, --image-prefix, --image-tag,
          --skip-image-build, --help
 Defaults: node (= node-cache-off for compilation/bench), hello, port 3000, native-js-dream:check
 Output: build/docker/<tool>[-variant]-<workload>/out (host: build/host-<platform>-<arch>/...)
 Node SEA supports hello/primes/json/fetch-json/object-stable/object-churn. API compatibility errors remain visible.
+Ruby/Python ports support hello/primes/json/object-stable/object-churn; Hash/dict are analogous keyed containers.
 No timestamp-based rebuild detection; Docker still caches image layers.
 `;
 

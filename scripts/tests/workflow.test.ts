@@ -8,9 +8,9 @@ import { Docker, renderSteps } from "../docker.ts";
 import { batch } from "../workflow.ts";
 import { Interrupted } from "../process.ts";
 
-test("matrix has sixteen distinct output names and valid cache settings", () => {
-  assert.equal(new Set(variants.map(variantName)).size, 16);
-  assert.equal(parseOptions(["compile", "--all"]).selected.length, 16);
+test("matrix has eighteen distinct output names and valid cache settings", () => {
+  assert.equal(new Set(variants.map(variantName)).size, 18);
+  assert.equal(parseOptions(["compile", "--all"]).selected.length, 18);
   assert.deepEqual(
     parseOptions(["compile", "--variants", "--tool", "deno"]).selected.map(variantName),
     ["deno-v8-cache-off", "deno-v8-cache-on", "deno-quickjs"],

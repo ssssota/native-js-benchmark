@@ -101,7 +101,7 @@ try {
         clock:
           config.mode === "process"
             ? "hrtime (parent spawn-to-exit)"
-            : "Date.now (1 ms batch resolution)",
+            : (config.inProcessClock ?? "Date.now (1 ms batch resolution)"),
         cachePolicy:
           config.backend === "host"
             ? "fresh temporary/cache directories; retained between samples, including warmup"
@@ -119,7 +119,7 @@ try {
   );
   if (measured.some((n) => n === 0))
     console.warn(
-      "Zero-duration samples: increase --iterations; the in-process clock has 1 ms resolution.",
+      `Zero-duration samples: increase --iterations; ${!config.inProcessClock || config.inProcessClock.startsWith("Date.now") ? "the in-process clock has 1 ms resolution" : "batches are below the clock's measurable resolution"}.`,
     );
 } finally {
   await fixture?.stop();
