@@ -17,7 +17,7 @@ export function compilePlan(variant: Variant, workload: Workload): Step[] {
     case "node":
       return nodePlan(variant.cache, workload);
     case "bun":
-      return bunPlan(variant.cache, workload);
+      return bunPlan(variant, workload);
     case "deno":
       return denoPlan(variant, workload);
     case "perry":

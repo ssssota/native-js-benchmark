@@ -8,9 +8,9 @@ import { Docker, renderSteps } from "../docker.ts";
 import { batch } from "../workflow.ts";
 import { Interrupted } from "../process.ts";
 
-test("matrix has eighteen distinct output names and valid cache settings", () => {
-  assert.equal(new Set(variants.map(variantName)).size, 18);
-  assert.equal(parseOptions(["compile", "--all"]).selected.length, 18);
+test("matrix has twenty-four distinct output names and valid cache settings", () => {
+  assert.equal(new Set(variants.map(variantName)).size, 24);
+  assert.equal(parseOptions(["compile", "--all"]).selected.length, 24);
   assert.deepEqual(
     parseOptions(["compile", "--variants", "--tool", "deno"]).selected.map(variantName),
     ["deno-v8-cache-off", "deno-v8-cache-on", "deno-quickjs"],
@@ -24,7 +24,8 @@ test("matrix has eighteen distinct output names and valid cache settings", () =>
         v.engine === "v8" && v.cache === "off",
       );
     }
-    if (v.tool === "bun") assert.equal(plan[0].argv.includes("--bytecode"), v.cache === "on");
+    if (v.tool === "bun")
+      assert.equal(plan[0].argv.includes("--bytecode"), "cache" in v && v.cache === "on");
     if (v.tool === "node")
       assert.equal(JSON.parse(plan[0].argv.at(-1)!).useCodeCache, v.cache === "on");
     if (v.tool === "node") {

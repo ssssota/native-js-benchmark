@@ -28,7 +28,9 @@ export const workloads = [
 export type Workload = (typeof workloads)[number];
 export type Cache = "off" | "on";
 export type Variant =
-  | { tool: "node" | "bun"; cache: Cache }
+  | { tool: "node"; cache: Cache }
+  | { tool: "bun"; cache: Cache; channel?: "canary" }
+  | { tool: "bun"; aot: true; language?: "typescript"; trim?: true }
   | { tool: "deno"; engine: "v8"; cache: Cache }
   | { tool: "deno"; engine: "quickjs" }
   | { tool: "perry" | "scriptc" | "oseo"; language?: "typescript" }
@@ -44,6 +46,12 @@ export const variants: Variant[] = [
   { tool: "deno", engine: "quickjs" },
   { tool: "bun", cache: "off" },
   { tool: "bun", cache: "on" },
+  { tool: "bun", cache: "off", channel: "canary" },
+  { tool: "bun", cache: "on", channel: "canary" },
+  { tool: "bun", aot: true },
+  { tool: "bun", aot: true, language: "typescript" },
+  { tool: "bun", aot: true, trim: true },
+  { tool: "bun", aot: true, language: "typescript", trim: true },
   { tool: "perry" },
   { tool: "perry", language: "typescript" },
   { tool: "scriptc" },
@@ -68,11 +76,18 @@ export const sourceLanguage = (tool: string) =>
       : "javascript";
 
 export function variantName(v: Variant): string {
+  if (v.tool === "bun") {
+    if ("aot" in v) return `bun-aot${v.language ? "-typescript" : ""}${v.trim ? "-trim" : ""}`;
+    return `bun${v.channel ? "-canary" : ""}-cache-${v.cache}`;
+  }
   if (v.tool === "deno")
     return v.engine === "quickjs" ? "deno-quickjs" : `deno-v8-cache-${v.cache}`;
   if ("language" in v && v.language) return `${v.tool}-${v.language}`;
   return "cache" in v ? `${v.tool}-cache-${v.cache}` : v.tool;
 }
+
+export const usesBunCanary = (v: { tool: string; channel?: string; aot?: boolean }) =>
+  v.tool === "bun" && (v.channel === "canary" || v.aot === true);
 
 export function sourceName(v: { tool: string; language?: string }, workload: Workload): string {
   if (v.tool === "lython" && workload === "json") return "json.lython.py";
@@ -101,7 +116,8 @@ export function selectVariant(tool: Tool, cache: Cache, engine: "v8" | "quickjs"
     return { tool, engine };
   }
   if (tool === "deno") return { tool, engine, cache };
-  if (tool === "node" || tool === "bun") return { tool, cache };
+  if (tool === "node") return { tool, cache };
+  if (tool === "bun") return { tool, cache };
   if (cache !== "off") throw new Error("--cache on applies only to Node, Bun, and Deno/V8.");
   return { tool };
 }

@@ -67,6 +67,12 @@ jobs:
           - { tool: node-cache-on, image: node }
           - { tool: bun-cache-off, image: bun }
           - { tool: bun-cache-on, image: bun }
+          - { tool: bun-canary-cache-off, image: bun }
+          - { tool: bun-canary-cache-on, image: bun }
+          - { tool: bun-aot, image: bun }
+          - { tool: bun-aot-typescript, image: bun }
+          - { tool: bun-aot-trim, image: bun }
+          - { tool: bun-aot-typescript-trim, image: bun }
           - { tool: deno-v8-cache-off, image: deno }
           - { tool: deno-v8-cache-on, image: deno }
           - { tool: deno-quickjs, image: deno }

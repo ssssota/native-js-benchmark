@@ -5,8 +5,9 @@ import { mkdir, readFile, writeFile, mkdtemp, rm, stat } from "node:fs/promises"
 import { join, resolve } from "node:path";
 import { tmpdir, cpus, release, arch } from "node:os";
 import { parseArgs } from "node:util";
-import { hostCompile } from "../host.ts";
+import { hostCompile, hostToolCommand } from "../host.ts";
 import { llvmPrefix, dynamicAotConfig } from "../host-dynamic-aot.ts";
+import { bunCanaryConfig } from "../host-bun-canary.ts";
 import { loopSource } from "../benchmark.ts";
 import {
   languageLoopSource,
@@ -16,35 +17,63 @@ import {
 } from "../language-workloads.ts";
 import { execute } from "../process.ts";
 import { benchmarkOutput } from "../benchmark-output.ts";
-import { sourceName, sourceLanguage, type Variant, type Workload } from "../variants.ts";
+import {
+  sourceName,
+  sourceLanguage,
+  variants,
+  variantName,
+  usesBunCanary,
+  type Variant,
+  type Workload,
+} from "../variants.ts";
 
 const root = resolve(import.meta.dirname, "../..");
 const { values } = parseArgs({
   options: {
-    output: { type: "string", default: "build/cross-language-2026-10-07/study" },
+    output: { type: "string" },
+    suite: { type: "string", default: "cross-language" },
     phase: { type: "string", default: "compile" },
     targets: { type: "string" },
     snapshot: { type: "string" },
   },
 });
 if (!["compile", "measure", "inspect"].includes(values.phase!)) throw new Error("Invalid phase");
-const directory = resolve(root, values.output!);
+if (!["cross-language", "bun-aot"].includes(values.suite!)) throw new Error("Invalid suite");
+const directory = resolve(
+  root,
+  values.output ??
+    (values.suite === "bun-aot"
+      ? "build/bun-aot-2026-11-03/study"
+      : "build/cross-language-2026-10-07/study"),
+);
 const json = async (file: string) => JSON.parse(await readFile(file, "utf8"));
 const save = (file: string, value: unknown) =>
   writeFile(file, JSON.stringify(value, null, 2) + "\n");
 const median = (numbers: number[]) =>
   [...numbers].sort((a, b) => a - b)[Math.floor(numbers.length / 2)];
 const hash = (data: string | Buffer) => createHash("sha256").update(data).digest("hex");
-type Target = { name: string; tool: string; variant?: Variant };
-const targets: Target[] = [
-  { name: "spinel", tool: "spinel", variant: { tool: "spinel" } },
-  { name: "cruby", tool: "cruby" },
-  { name: "lython", tool: "lython", variant: { tool: "lython" } },
-  { name: "cpython", tool: "cpython" },
-  { name: "node", tool: "node" },
-  { name: "porffor", tool: "porffor", variant: { tool: "porffor" } },
-  { name: "shermes", tool: "static_hermes", variant: { tool: "static_hermes" } },
-];
+type Target = { name: string; tool: string; variant?: Variant; language?: "typescript" };
+const targets: Target[] =
+  values.suite === "bun-aot"
+    ? [
+        ...variants.filter(usesBunCanary).map((variant) => ({
+          name: variantName(variant),
+          tool: variant.tool,
+          variant,
+          ...("language" in variant ? { language: variant.language as "typescript" } : {}),
+        })),
+        { name: "bun-source", tool: "bun" },
+        { name: "node", tool: "node" },
+      ]
+    : [
+        { name: "spinel", tool: "spinel", variant: { tool: "spinel" } },
+        { name: "cruby", tool: "cruby" },
+        { name: "lython", tool: "lython", variant: { tool: "lython" } },
+        { name: "cpython", tool: "cpython" },
+        { name: "node", tool: "node" },
+        { name: "porffor", tool: "porffor", variant: { tool: "porffor" } },
+        { name: "shermes", tool: "static_hermes", variant: { tool: "static_hermes" } },
+      ];
 const expected = {
   hello: "hello",
   primes: 9592,
@@ -69,7 +98,12 @@ const command = (target: Target, workload: Workload, output: string) =>
   target.variant
     ? [join(output, "out")]
     : sourceCommand(target.tool, join(output, "src", sourceName(target, workload))).map(
-        (value, i) => (i === 0 && value === "node" ? process.execPath : value),
+        (value, i) =>
+          i === 0 && value === "node"
+            ? process.execPath
+            : i === 0 && value === "bun"
+              ? hostToolCommand("bun", root)[0]
+              : value,
       );
 async function build(body: string, target: Target, workload: Workload, output: string) {
   const src = join(output, "src");
@@ -131,7 +165,7 @@ if (values.phase === "compile") {
           ? 'objects = [{"a" => 0}]; object = objects[0]; object["a"] = 9; puts objects[0]["a"]; object.delete("a"); puts(objects[0].key?("a") ? 0 : -1)\n'
           : sourceLanguage(target.tool) === "python"
             ? 'objects = [{"a": 0}]\nobj = objects[0]\nobj["a"] = 9\nprint(objects[0]["a"])\ndel obj["a"]\nprint(0 if "a" in objects[0] else -1)\n'
-            : 'const objects = [{a:0}]; const object = objects[0]; object.a = 9; console.log(objects[0].a); delete object.a; console.log("a" in objects[0] ? 0 : -1);\n';
+            : `const objects${target.language ? ": {a?: number}[]" : ""} = [{a:0}]; const object = objects[0]; object.a = 9; console.log(objects[0].a); delete object.a; console.log("a" in objects[0] ? 0 : -1);\n`;
       await build(body, target, "hello", probe);
       const observation = run(target, "hello", probe);
       alias = { passed: observation === "9\n-1", output: observation };
@@ -218,6 +252,8 @@ if (values.phase === "measure") {
         "RUBYLIB",
         "PYTHONPATH",
         "PYTHONHOME",
+        "BUN_OPTIONS",
+        "BUN_BE_BUN",
       ])
         delete env[key];
       try {
@@ -237,7 +273,12 @@ if (values.phase === "measure") {
           command: job.target.variant
             ? ["/out/out"]
             : sourceCommand(job.target.tool, `/src/${sourceName(job.target, job.case)}`).map(
-                (value, i) => (i === 0 && value === "node" ? process.execPath : value),
+                (value, i) =>
+                  i === 0 && value === "node"
+                    ? process.execPath
+                    : i === 0 && value === "bun"
+                      ? hostToolCommand("bun", root)[0]
+                      : value,
               ),
           args: [],
           inputPaths: { source: join(artifact, "src"), output: artifact, temporary },
@@ -293,9 +334,11 @@ if (values.snapshot) {
   for (const row of results) {
     const artifact = join(row.output, row.mode === "process" ? "plain" : "measured");
     const intermediates = [];
-    for (const filename of ["out.c", "out.ll", "out.ir"])
+    let aotExplain: unknown;
+    for (const filename of ["out.c", "out.ll", "out.ir", "out.aot-explain.json"])
       try {
         const file = await readFile(join(artifact, filename));
+        if (filename === "out.aot-explain.json") aotExplain = JSON.parse(file.toString("utf8"));
         intermediates.push({
           file: join(artifact, filename).slice(root.length + 1),
           bytes: file.length,
@@ -308,6 +351,10 @@ if (values.snapshot) {
       hermesRevision: round.hermesRevision,
       lythonRevision: round.lythonRevision,
       spinelRelease: round.spinelRelease,
+      bunRevision: round.bunRevision,
+      bunCanaryVersion: round.bunCanaryVersion,
+      bunAot: round.bunAot,
+      trim: round.trim,
       artifactSha256: round.artifactSha256,
       clock: round.clock,
       samplesMs: round.samplesMs,
@@ -321,6 +368,7 @@ if (values.snapshot) {
       output: row.output.slice(root.length + 1),
       rounds,
       intermediates,
+      ...(aotExplain ? { aotExplain } : {}),
       ...(row.target.variant && row.status === "passed"
         ? {
             binaryBytes: (await stat(join(artifact, "out"))).size,
@@ -346,10 +394,15 @@ if (values.snapshot) {
     arch: arch(),
     kernel: release(),
     cpu: cpus()[0]?.model,
-    llvmVersion: execFileSync(join(llvmPrefix(), "bin/llvm-config"), ["--version"], {
-      encoding: "utf8",
-    }).trim(),
-    pins: dynamicAotConfig,
+    suite: values.suite,
+    ...(values.suite === "bun-aot"
+      ? { bunCanary: bunCanaryConfig }
+      : {
+          llvmVersion: execFileSync(join(llvmPrefix(), "bin/llvm-config"), ["--version"], {
+            encoding: "utf8",
+          }).trim(),
+          pins: dynamicAotConfig,
+        }),
     power,
     method: {
       rounds: 3,
@@ -360,11 +413,17 @@ if (values.snapshot) {
       inputStorage: "host-local",
       unit: "milliseconds per workload call",
       json: "1000 records x 100 transformations per call",
-      sourceCommands: {
-        node: sourceCommand("node", "entry.js"),
-        cruby: sourceCommand("cruby", "entry.rb"),
-        cpython: sourceCommand("cpython", "entry.py"),
-      },
+      sourceCommands:
+        values.suite === "bun-aot"
+          ? {
+              node: [process.execPath, "entry.js"],
+              bun: [hostToolCommand("bun", root)[0], "entry.js"],
+            }
+          : {
+              node: sourceCommand("node", "entry.js"),
+              cruby: sourceCommand("cruby", "entry.rb"),
+              cpython: sourceCommand("cpython", "entry.py"),
+            },
     },
     results: rows,
   });

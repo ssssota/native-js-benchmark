@@ -50,7 +50,7 @@ pnpm cli bench --backend host --all --execution both --workload object-stable --
 pnpm cli bench --backend host --all --execution both --workload object-churn --mode in-process --samples 7 --warmup 3 --iterations 10
 ```
 
-Node SEA・Bun/Deno の実行ファイル化はJITを除去するものではありません。
+Node SEA・Bunのcache構成・Deno/V8の実行ファイル化はJITを除去するものではありません。`bun-aot*`は別のAOT構成で、型付き版は既存の`.ts`を使います。
 ネイティブコンパイラとの比較では、その区別を保って結果を解釈してください。
 
 ## キャッシュとエンジン
@@ -75,16 +75,17 @@ Deno V8 の `run-binary --tool deno-v8-cache-on` は出力先の `runtime-cache/
 
 実行ファイルは `build/docker/<構成>-<workload>/out` に出力します。次の中間ファイルも検証用に残します。
 
-| ツール        | 中間ファイル                                    |
-| ------------- | ----------------------------------------------- |
-| Node          | `out.sea.json`・`out.blob`                      |
-| scriptc       | `<workload>.ll`・`<workload>.ir.json`           |
-| Perry         | `intermediates/.perry-trace/llvm/` 内の LLVM IR |
-| Porffor       | `out.c`                                         |
-| Oseo          | `out.c`・`out.mir`                              |
-| Static Hermes | `out.c`・`out.ir`・`out.o`                      |
-| Spinel        | `out.c`                                         |
-| Lython        | `out.ll`（runtimeリンク後・最終LLVM最適化前）   |
+| ツール        | 中間ファイル                                                    |
+| ------------- | --------------------------------------------------------------- |
+| Node          | `out.sea.json`・`out.blob`                                      |
+| Bun AOT       | `out.aot-explain.json`・`out.aot-explain.log`（コンパイル診断） |
+| scriptc       | `<workload>.ll`・`<workload>.ir.json`                           |
+| Perry         | `intermediates/.perry-trace/llvm/` 内の LLVM IR                 |
+| Porffor       | `out.c`                                                         |
+| Oseo          | `out.c`・`out.mir`                                              |
+| Static Hermes | `out.c`・`out.ir`・`out.o`                                      |
+| Spinel        | `out.c`                                                         |
+| Lython        | `out.ll`（runtimeリンク後・最終LLVM最適化前）                   |
 
 中間ファイルは通常の実行には不要です。生成処理も含むため、`compile` 全体の時間を純粋なコンパイル速度として比較しないでください。
 

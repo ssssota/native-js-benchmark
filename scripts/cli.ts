@@ -25,7 +25,7 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
   bench --all --execution source --workload hello
   bench --all --execution both --workload primes
   compile --tool bun --workload hello
-  compile --all --workload hello     Compile all 18 configurations
+  compile --all --workload hello     Compile all 24 configurations
   compile --variants --tool deno     Compile Deno V8 off/on and QuickJS
   run --tool node --workload json    Run source (AOT tools compile first)
   run-binary --tool node-cache-on   Run a previously compiled binary
@@ -36,6 +36,8 @@ const help = `Usage: node scripts/cli.ts <command> [options] [-- program argumen
   run --workload npm-cli -- Hello World
 
 Tools: node-cache-off, node-cache-on, bun-cache-off, bun-cache-on,
+       bun-canary-cache-off, bun-canary-cache-on,
+       bun-aot, bun-aot-typescript, bun-aot-trim, bun-aot-typescript-trim,
        deno-v8-cache-off, deno-v8-cache-on, deno-quickjs,
        perry, perry-typescript, scriptc, scriptc-typescript, porffor,
        static_hermes, static_hermes-flow, oseo, oseo-typescript, spinel, lython,
@@ -49,6 +51,7 @@ Output: build/docker/<tool>[-variant]-<workload>/out (host: build/host-<platform
 Node SEA supports hello/primes/json/fetch-json/object-stable/object-churn. API compatibility errors remain visible.
 Ruby/Python ports support hello/primes/json/object-stable/object-churn; Hash/dict are analogous keyed containers.
 No timestamp-based rebuild detection; Docker still caches image layers.
+Bun AOT and its canary JIT controls use a pinned experimental compiler; reports are saved as out.aot-explain.json and .log.
 `;
 
 try {

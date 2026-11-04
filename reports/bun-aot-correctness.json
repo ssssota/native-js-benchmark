@@ -1,0 +1,845 @@
+{
+  "recordedAt": "2026-11-03T04:44:53.020Z",
+  "canary": {
+    "version": "1.4.4-canary.20261102.1",
+    "revision": "271b65ec608a50eca96a894c6bbff1e65849d920",
+    "artifacts": {
+      "darwin-aarch64": {
+        "url": "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.4.4-canary.20261102.1.tgz",
+        "integrity": "sha512-xlB/rjKIShm0ynZMVYAP8cgy+J7vK1DfvARwgEwiztIDcl9G6U4cRVWkskwsWwX+PC5cdzp1czR8s2O2A5ascQ=="
+      },
+      "darwin-x64": {
+        "url": "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.4.4-canary.20261102.1.tgz",
+        "integrity": "sha512-QuHh7XO/33yx5del43BtYbrWgsf/BKtrmfym5Y9SfZVuRV4Uhoe5g/oyeNXfEwzNhbW+NvsHWqeY7EKhqecpqw=="
+      },
+      "linux-aarch64": {
+        "url": "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.4.4-canary.20261102.1.tgz",
+        "integrity": "sha512-0wcdi9B8osDdYaTrSv529kaAzpcNjgde2Ub7Mo3cA/UZNfhjFifi4jeAK4aJYyqeY20vhKU0Zmqol/F/Yj844Q=="
+      },
+      "linux-x64": {
+        "url": "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.4.4-canary.20261102.1.tgz",
+        "integrity": "sha512-E30yjdWCzpJfJuNE6LIzHZcguMnuggm44wFzyjiai3tC6MLRq6i3J3Cq2KNlS/eAgD1INx4nWk8H1rHmod6Ftg=="
+      }
+    }
+  },
+  "host": {
+    "backend": "host",
+    "recordedAt": "2026-11-03T04:29:13.924Z",
+    "rows": [
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "npm-cli",
+        "status": "skipped",
+        "reason": "The host CLI does not isolate npm-cli dependencies; verified with Docker instead."
+      }
+    ]
+  },
+  "docker": {
+    "backend": "docker",
+    "recordedAt": "2026-11-03T04:28:55.326Z",
+    "rows": [
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-canary-cache-off",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-canary-cache-on",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-typescript",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-trim",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "hello",
+        "status": "passed",
+        "output": "hello"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "node-process",
+        "status": "passed",
+        "output": "bun-aot-smoke"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "object-stable",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "object-churn",
+        "status": "passed",
+        "output": "102387360"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "primes",
+        "status": "passed",
+        "output": "9592"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "json",
+        "status": "passed",
+        "output": "1491500"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "fetch-json",
+        "status": "passed",
+        "output": "14915"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "file-cli",
+        "status": "passed",
+        "output": "{\"lines\":2,\"words\":6}"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "http-server",
+        "status": "passed"
+      },
+      {
+        "tool": "bun-aot-typescript-trim",
+        "workload": "npm-cli",
+        "status": "passed",
+        "output": "hello-native-java-script"
+      }
+    ]
+  },
+  "linuxHelloSizes": [
+    {
+      "name": "bun-canary-cache-off",
+      "bytes": 144166624,
+      "sha256": "2acfe1fc85df4c90c50b8836f68547f8a077cfbeb83d6015a3e77b3a6db1f299",
+      "format": "ELF",
+      "arch": "arm64"
+    },
+    {
+      "name": "bun-canary-cache-on",
+      "bytes": 144166624,
+      "sha256": "b408cf41b67f2381de70d693f381f364d44ba3f995b53565684f04922e1c1f76",
+      "format": "ELF",
+      "arch": "arm64"
+    },
+    {
+      "name": "bun-aot",
+      "bytes": 69914656,
+      "sha256": "bd641d20600b1e9953c4cecca693a9e6923781e8c202ca5978cda8f0c3acc84f",
+      "format": "ELF",
+      "arch": "arm64"
+    },
+    {
+      "name": "bun-aot-typescript",
+      "bytes": 69914656,
+      "sha256": "52a5161d8077e30fbc528c4ea695915428647b6c6a9dd9f4793474c1f1d88929",
+      "format": "ELF",
+      "arch": "arm64"
+    },
+    {
+      "name": "bun-aot-trim",
+      "bytes": 28758624,
+      "sha256": "9dacc25d2ed939f3e129351c31b517a5aee544d37e984439e7d94c967f5162c1",
+      "format": "ELF",
+      "arch": "arm64"
+    },
+    {
+      "name": "bun-aot-typescript-trim",
+      "bytes": 28758624,
+      "sha256": "062fcc3744ac111778775ca7c5a6d591017063267dbe81831fc758b6e0af36d4",
+      "format": "ELF",
+      "arch": "arm64"
+    }
+  ],
+  "typeProbes": [
+    {
+      "mode": "jit",
+      "typeErrorExit": 0,
+      "typeErrorDiagnostic": "   [1ms]  bundle  1 modules\n  [13ms] compile  build/bun-aot-2026-11-03/probe/invalid-jit\n",
+      "boundaryBuildExit": 0,
+      "boundaryError": "",
+      "runs": [
+        {
+          "input": {
+            "x": 2,
+            "y": 4
+          },
+          "status": 0,
+          "output": "{\"result\":6,\"type\":\"number\"}",
+          "error": ""
+        },
+        {
+          "input": {
+            "x": "2",
+            "y": 4
+          },
+          "status": 0,
+          "output": "{\"result\":\"24\",\"type\":\"string\"}",
+          "error": ""
+        }
+      ]
+    },
+    {
+      "mode": "aot",
+      "typeErrorExit": 1,
+      "typeErrorDiagnostic": "1 | const value: number = \"wrong\"; console.log(value);\n          ^\nerror: TS2322: Type 'string' is not assignable to type 'number'.\n    at /Users/sotaro/Dev/github.com/ssssota/native-js-dream/build/bun-aot-2026-11-03/probe/type-error.ts:1:7\n",
+      "boundaryBuildExit": 0,
+      "boundaryError": "",
+      "runs": [
+        {
+          "input": {
+            "x": 2,
+            "y": 4
+          },
+          "status": 0,
+          "output": "{\"result\":6,\"type\":\"number\"}",
+          "error": ""
+        },
+        {
+          "input": {
+            "x": "2",
+            "y": 4
+          },
+          "status": 0,
+          "output": "{\"result\":\"24\",\"type\":\"string\"}",
+          "error": ""
+        }
+      ]
+    }
+  ]
+}

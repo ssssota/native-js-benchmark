@@ -4,7 +4,14 @@ import { createHash } from "node:crypto";
 import { renderSteps, dockerBuildDirectory } from "./docker.ts";
 import { compilePlan } from "./compilers/index.ts";
 import { Workflow } from "./workflow.ts";
-import { sourceName, sourceLanguage, requireWorkload, type Workload } from "./variants.ts";
+import {
+  sourceName,
+  sourceLanguage,
+  requireWorkload,
+  usesBunCanary,
+  type Workload,
+} from "./variants.ts";
+import { bunCanaryConfig } from "./host-bun-canary.ts";
 import {
   sourceCommand,
   languageLoopSource,
@@ -117,6 +124,7 @@ export async function benchmark(
           ),
     );
     if (!isSource(v)) {
+      if (usesBunCanary(v)) await rm(join(output, "out"), { force: true });
       await docker.build(v.tool);
       await docker.run(v.tool, ["sh", "-ec", renderSteps(compilePlan(v, workload))], {
         sourceDirectory,
@@ -158,6 +166,14 @@ export async function benchmark(
       name,
       workload,
       ...workloadMetadata(v, workload),
+      ...(usesBunCanary(v)
+        ? {
+            bunCanaryVersion: bunCanaryConfig.version,
+            bunRevision: bunCanaryConfig.revision,
+            bunAot: "aot" in v,
+            trim: "trim" in v && v.trim === true,
+          }
+        : {}),
       inProcessClock: workloadClock(v.tool),
       ...(v.tool === "spinel"
         ? {

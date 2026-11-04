@@ -26,16 +26,16 @@ test("tool names select each exact configuration without changing artifact names
 });
 
 test("source targets are distinct, deduplicated and opt-in for measurement", () => {
-  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 18);
+  assert.equal(parseOptions(["bench", "--all"]).benchmarkSelected.length, 24);
   assert.deepEqual(
     parseOptions(["bench", "--all", "--execution", "source"]).benchmarkSelected.map(benchmarkName),
     ["node-source", "deno-source", "bun-source", "cpython-source", "cruby-source"],
   );
   assert.equal(
     parseOptions(["bench", "--all", "--execution", "both"]).benchmarkSelected.length,
-    23,
+    29,
   );
-  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 23);
+  assert.equal(parseOptions(["bench-results"]).benchmarkSelected.length, 29);
   assert.equal(
     parseOptions(["bench-results", "--tool", "static_hermes"]).benchmarkSelected.length,
     1,

@@ -19,6 +19,7 @@ import { hostHermesPlan, shermesManifest, shermesPath } from "./host-hermes.ts";
 import { hostPerryPlan } from "./host-perry.ts";
 import { hostOseoPlan, oseoConfig, oseoDirectory, prepareOseo } from "./host-oseo.ts";
 import { prepareDynamicAot, dynamicAotCommand, dynamicAotConfig } from "./host-dynamic-aot.ts";
+import { prepareBunCanary, bunCanaryCommand, bunCanaryConfig } from "./host-bun-canary.ts";
 import {
   sourceCommand,
   languageLoopSource,
@@ -33,6 +34,7 @@ import {
   sourceTools,
   tools,
   requireWorkload,
+  usesBunCanary,
   variantName,
   type Variant,
   type Workload,
@@ -53,6 +55,8 @@ export function requireHostTool(tool: string): void {
 
 // Perry/scriptc use workspace packages; Porffor uses the mise-managed release binary.
 export function hostToolCommand(tool: string, root = resolve(import.meta.dirname, "..")): string[] {
+  if (tool === "bun")
+    return [execFileSync("mise", ["which", "bun"], { cwd: root, encoding: "utf8" }).trim()];
   if (tool === "spinel" || tool === "lython") return [dynamicAotCommand(root, tool)];
   if (tool === "cpython") return ["python3"];
   if (tool === "cruby") return ["ruby"];
@@ -95,6 +99,7 @@ export async function hostCompile(
 ): Promise<void> {
   requireHostTool(v.tool);
   requireWorkload(v.tool, workload);
+  if (usesBunCanary(v)) await prepareBunCanary(root);
   if (v.tool === "spinel" || v.tool === "lython") await prepareDynamicAot(root, v.tool);
   if (v.tool === "oseo") await prepareOseo(root);
   if (v.tool === "node")
@@ -111,7 +116,8 @@ export async function hostCompile(
           : compilePlan(v, workload);
   await mkdir(output, { recursive: true });
   await rm(join(output, "build.json"), { force: true });
-  if (v.tool === "spinel" || v.tool === "lython") await rm(join(output, "out"), { force: true });
+  if (v.tool === "spinel" || v.tool === "lython" || usesBunCanary(v))
+    await rm(join(output, "out"), { force: true });
   if (v.tool === "perry") {
     await mkdir(join(output, "intermediates", "tmp"), { recursive: true });
     await writeFile(join(output, "intermediates", "package.json"), '{"private":true}\n');
@@ -121,6 +127,8 @@ export async function hostCompile(
     if (argv[0] === "cp" && argv[1] === "/usr/local/bin/node")
       argv[1] = await realpath(process.execPath);
     if (argv[0] === "node") argv[0] = process.execPath;
+    if (argv[0] === "bun") argv[0] = hostToolCommand("bun", root)[0];
+    if (argv[0] === "bun-canary") argv[0] = bunCanaryCommand(root);
     if (argv[0] === "spinel" || argv[0] === "lyc")
       argv[0] = dynamicAotCommand(root, argv[0] === "lyc" ? "lython" : "spinel");
     if (["porf", "scriptc", "perry"].includes(argv[0]))
@@ -156,7 +164,7 @@ export async function hostCompile(
       });
     if (inject) await execute("/usr/bin/codesign", ["--sign", "-", join(output, "out")]);
   }
-  if (["static_hermes", "perry", "oseo", "spinel", "lython"].includes(v.tool))
+  if (usesBunCanary(v) || ["static_hermes", "perry", "oseo", "spinel", "lython"].includes(v.tool))
     assertSystemLibraries(
       execFileSync("/usr/bin/otool", ["-L", join(output, "out")], { encoding: "utf8" }),
       `${v.tool} executable`,
@@ -166,7 +174,9 @@ export async function hostCompile(
       ? [shermesPath(root)]
       : v.tool === "oseo"
         ? [process.execPath, join(root, "scripts", "oseo-compile.mjs"), oseoDirectory(root)]
-        : hostToolCommand(v.tool, root);
+        : usesBunCanary(v)
+          ? [bunCanaryCommand(root)]
+          : hostToolCommand(v.tool, root);
   await writeFile(
     join(output, "build.json"),
     JSON.stringify(
@@ -177,6 +187,14 @@ export async function hostCompile(
         platform: process.platform,
         arch: process.arch,
         ...workloadMetadata(v, workload),
+        ...(usesBunCanary(v)
+          ? {
+              bunCanaryVersion: bunCanaryConfig.version,
+              bunRevision: bunCanaryConfig.revision,
+              bunAot: "aot" in v,
+              trim: "trim" in v && v.trim === true,
+            }
+          : {}),
         ...(v.tool === "spinel"
           ? {
               spinelRelease: dynamicAotConfig.spinel.version,
@@ -248,6 +266,7 @@ async function hostBenchmark(
   await access(artifact);
   const sourceArgv = sourceCommand(target.tool, entry);
   if (sourceArgv[0] === "node") sourceArgv[0] = process.execPath;
+  if (sourceArgv[0] === "bun") sourceArgv[0] = hostToolCommand("bun", root)[0];
   const runtime = sourceArgv[0];
   const digest = createHash("sha256")
     .update(await readFile(artifact))
@@ -274,6 +293,8 @@ async function hostBenchmark(
     delete env.NODE_COMPILE_CACHE;
     delete env.RUBYOPT;
     delete env.RUBYLIB;
+    delete env.BUN_OPTIONS;
+    delete env.BUN_BE_BUN;
     const config = {
       ...options.benchmark,
       name,
@@ -281,6 +302,14 @@ async function hostBenchmark(
       backend: "host",
       execution: source ? "source" : "binary",
       runtimeVersion,
+      ...(buildInfo?.bunRevision
+        ? {
+            bunRevision: buildInfo.bunRevision,
+            bunCanaryVersion: buildInfo.bunCanaryVersion,
+            bunAot: buildInfo.bunAot,
+            trim: buildInfo.trim,
+          }
+        : {}),
       ...workloadMetadata(target, options.workload),
       inProcessClock: workloadClock(target.tool),
       ...(buildInfo?.spinelRelease
@@ -386,6 +415,10 @@ export async function host(root: string, options: Options): Promise<void> {
       return;
     }
     case "build":
+      if (usesBunCanary(options.variant)) {
+        await prepareBunCanary(root);
+        return;
+      }
       if (options.tool === "spinel" || options.tool === "lython") {
         await prepareDynamicAot(root, options.tool);
         return;
@@ -423,6 +456,7 @@ export async function host(root: string, options: Options): Promise<void> {
             join(root, "src", sourceName(options.variant, options.workload)),
           );
       if (command[0] === "node") command[0] = process.execPath;
+      if (command[0] === "bun") command[0] = hostToolCommand("bun", root)[0];
       command.push(
         ...options.args.map((arg) =>
           arg.startsWith("/src/") ? join(root, "src", arg.slice(5)) : arg,

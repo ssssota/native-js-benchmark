@@ -1,8 +1,14 @@
-import { mkdir, access, mkdtemp } from "node:fs/promises";
+import { mkdir, access, mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { Docker, renderSteps, dockerBuildDirectory } from "./docker.ts";
 import { compilePlan } from "./compilers/index.ts";
-import { variantName, sourceTools, sourceName, requireWorkload } from "./variants.ts";
+import {
+  variantName,
+  sourceTools,
+  sourceName,
+  requireWorkload,
+  usesBunCanary,
+} from "./variants.ts";
 import { sourceCommand } from "./language-workloads.ts";
 import type { Variant, Workload } from "./variants.ts";
 import { execute, Interrupted } from "./process.ts";
@@ -69,6 +75,7 @@ export class Workflow {
     const sourceDirectory = workload === "npm-cli" ? await this.deps() : undefined;
     const output = this.output(v, workload);
     await mkdir(output, { recursive: true });
+    if (usesBunCanary(v)) await rm(join(output, "out"), { force: true });
     await this.docker.run(v.tool, ["sh", "-ec", renderSteps(plan)], {
       sourceDirectory,
       mounts: [`${output}:/out`],

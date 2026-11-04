@@ -10,7 +10,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 FROM denoland/deno:debian-2.9.7 AS deno
-FROM oven/bun:1.4.2 AS bun
+FROM oven/bun:1.4.4 AS bun
 FROM python:3.14.8-slim-trixie AS cpython
 FROM ruby:4.0.7-slim-trixie AS cruby
 FROM node:26.10.0-trixie-slim

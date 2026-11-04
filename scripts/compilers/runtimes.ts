@@ -1,5 +1,5 @@
 import type { Step } from "../docker.ts";
-import type { Cache, Variant, Workload } from "../variants.ts";
+import { sourceName, usesBunCanary, type Cache, type Variant, type Workload } from "../variants.ts";
 
 export function nodePlan(cache: Cache, workload: Workload): Step[] {
   if (
@@ -43,22 +43,38 @@ export function nodePlan(cache: Cache, workload: Workload): Step[] {
     },
   ];
 }
-export function bunPlan(cache: Cache, workload: Workload): Step[] {
+export function bunPlan(v: Extract<Variant, { tool: "bun" }>, workload: Workload): Step[] {
   // Keep module format identical when toggling bytecode.
-  return [
+  const steps: Step[] = [
     {
       argv: [
-        "bun",
+        usesBunCanary(v) ? "bun-canary" : "bun",
         "build",
         "--compile",
         "--format=cjs",
-        ...(cache === "on" ? ["--bytecode"] : []),
-        `/src/${workload}.js`,
+        ...("aot" in v
+          ? ["--aot", "--explain=json", ...(v.trim ? ["--trim"] : [])]
+          : v.cache === "on"
+            ? ["--bytecode"]
+            : []),
+        `/src/${sourceName(v, workload)}`,
         "--outfile",
         "/out/out",
       ],
+      ...("aot" in v ? { stdout: "/out/out.aot-explain.log" } : {}),
     },
   ];
+  if ("aot" in v)
+    steps.push({
+      argv: [
+        "bun-canary",
+        "-e",
+        'const fs = require("node:fs"); const records = fs.readFileSync(process.argv[1], "utf8").split(/\\r?\\n/).filter(line => line.trimStart().startsWith("{")).map(line => JSON.parse(line)); if (!records.some(record => record.accesses && record.calls)) throw new Error("Missing AOT explain report; refusing a non-AOT artifact"); fs.writeFileSync(process.argv[2], JSON.stringify(records, null, 2) + "\\n");',
+        "/out/out.aot-explain.log",
+        "/out/out.aot-explain.json",
+      ],
+    });
+  return steps;
 }
 export function denoPlan(v: Extract<Variant, { tool: "deno" }>, workload: Workload): Step[] {
   return [

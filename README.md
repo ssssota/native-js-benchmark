@@ -8,7 +8,7 @@ Node.js 24 以上・pnpm・Docker が必要です。
 ## ビルド・実行
 
 ```sh
-# 全18構成をコンパイル（必要な Docker イメージも自動ビルド）
+# 全24構成をコンパイル（必要な Docker イメージも自動ビルド）
 pnpm cli compile --all --workload hello
 
 # 1構成だけコンパイルして実行
@@ -23,16 +23,18 @@ pnpm cli run --tool node --workload primes
 - `--variants --tool deno`：Deno の V8 キャッシュなし・あり・QuickJS をまとめて選択。
 - 省略時は `node`・`hello`。コンパイル・計測では `node-cache-off` 相当です。
 
-| ツール | バイナリ構成                                                                                                                                      | 通常起動                          |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| Node   | `node-cache-off` / `node-cache-on`                                                                                                                | `node-source`                     |
-| Bun    | `bun-cache-off` / `bun-cache-on`                                                                                                                  | `bun-source`                      |
-| Deno   | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs`                                                                                         | `deno-source`                     |
-| AOT    | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | —                                 |
-| Ruby   | `spinel`                                                                                                                                          | `cruby-source`（`cruby`も可）     |
-| Python | `lython`                                                                                                                                          | `cpython-source`（`cpython`も可） |
+| ツール     | バイナリ構成                                                                                                                                      | 通常起動                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| Node       | `node-cache-off` / `node-cache-on`                                                                                                                | `node-source`                     |
+| Bun        | `bun-cache-off` / `bun-cache-on`                                                                                                                  | `bun-source`                      |
+| Bun canary | `bun-canary-cache-off` / `bun-canary-cache-on`                                                                                                    | —                                 |
+| Bun AOT    | `bun-aot` / `bun-aot-typescript` / `bun-aot-trim` / `bun-aot-typescript-trim`                                                                     | —                                 |
+| Deno       | `deno-v8-cache-off` / `deno-v8-cache-on` / `deno-quickjs`                                                                                         | `deno-source`                     |
+| AOT        | `perry` / `perry-typescript` / `scriptc` / `scriptc-typescript` / `porffor` / `static_hermes` / `static_hermes-flow` / `oseo` / `oseo-typescript` | —                                 |
+| Ruby       | `spinel`                                                                                                                                          | `cruby-source`（`cruby`も可）     |
+| Python     | `lython`                                                                                                                                          | `cpython-source`（`cpython`も可） |
 
-`perry-typescript`・`scriptc-typescript`・`oseo-typescript` は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
+`perry-typescript`・`scriptc-typescript`・`oseo-typescript`・Bun AOTの`typescript`構成は `.ts` を、`static_hermes-flow` は `-typed` で `.flow.js` をコンパイルし、型なしJavaScript版とは別に比較します。
 
 [Spinel](https://github.com/matz/spinel)はrelease archive `2026.09.12`、[Lython](https://github.com/t3tra-dev/lython)はrevision `98aa88b92786538ea57eea48ee65a4142f211e71`に固定し、ソースをSHA-256検証付きで取得します。Spinelは生成C、LythonはLLVM IRとネイティブ実行物を保存します。Lythonの`jit`コマンドは計測に使いません。
 CRuby 4.0.7・CPython 3.14.8はソース実行専用で、`compile`・`run-binary`・`sizes`には含めません。CRubyは`--disable-gems --disable-yjit`、CPythonは`-I -B`で起動します。
@@ -53,6 +55,24 @@ Deno の V8／QuickJS 用ランタイムと Node の `postject` はイメージ�
 `run` は Node/Bun/Deno/CPython/CRubyではソースを実行し、AOTツールではコンパイル後に実行します。キャッシュ・エンジンの比較には `run-binary` を使ってください。
 
 ワークロードと対応上の注意は [src/README.md](src/README.md)、その他のオプションは `pnpm cli help` を参照してください。
+
+### Bunの実験的AOT
+
+`bun-aot`・`bun-aot-typescript`・`bun-aot-trim`・`bun-aot-typescript-trim`で、機械語へのAOTコンパイルを比較できます。`typescript`は既存の`.ts` workloadを使い、`trim`は未使用のBun/Node APIを除去します。従来の`bun-cache-off/on`はJITを含む実行ファイル化です。
+
+安定版1.4.4では`--aot`が無視されるため、AOTとそのJIT対照`bun-canary-cache-off/on`は公式npmの`1.4.4-canary.20261102.1`（revision `271b65ec608a50eca96a894c6bbff1e65849d920`）を別途使用します。取得物をSHA-512で検証して`build/tools/bun-canary-<version>/`へ保存し、AOT対応help・実際のrevision・explainレポートを検証します。安定版へ黙ってフォールバックしません。
+
+```sh
+mise exec -- pnpm cli build --backend host --tool bun-aot
+mise exec -- pnpm cli compile --backend host --tool bun-aot --workload hello
+mise exec -- pnpm cli run-binary --backend host --tool bun-aot --workload hello
+mise exec -- pnpm cli sizes --backend host --tool bun --workload hello
+# 安定版2構成＋canary JIT対照2構成＋AOT4構成
+mise exec -- pnpm cli bench --backend host --variants --tool bun --workload primes --mode in-process --iterations 50
+mise exec -- pnpm cli bench-results --backend host --tool bun --workload primes --mode in-process
+```
+
+Dockerも同じ構成名を使います。ホストの通常Bunは`mise which bun`の絶対パスを使い、PATH上の別バージョンが計測に混ざることを防ぎます。AOTのコンパイル出力は`out.aot-explain.log`に、抽出した診断JSONは`out.aot-explain.json`に残します。CやLLVM IRの出力ではありません。[検証結果とサイズ・速度の比較](reports/bun-aot.md)。
 
 ## サイズ比較
 
@@ -75,7 +95,7 @@ KiB・MiB 単位で表示し、未ビルド・サイズ不明は末尾に置き�
 ```sh
 pnpm cli bench --all --execution source --workload hello
 pnpm cli bench --tool node-source --workload primes --mode in-process
-# バイナリ18構成＋通常起動5構成をまとめて計測
+# バイナリ24構成＋通常起動5構成をまとめて計測
 pnpm cli bench --all --execution both --workload hello
 ```
 
@@ -155,7 +175,7 @@ pnpm cli bench --all --execution both --workload fetch-json --mode in-process
 
 ### CI
 
-GitHub Actionsでは型検査とテストに加え、18種類のバイナリ構成とCPython/CRubyの通常実行で`hello`を検証・計測します。
+GitHub Actionsでは型検査とテストに加え、24種類のバイナリ構成とCPython/CRubyの通常実行で`hello`を検証・計測します。
 ベンチマークは1回のウォームアップ後に5サンプルを計測し、全構成の結果を中央値順に workflow summary へ出力します。
 Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action で導入します。
 各構成の `result.json` も1日間 artifact として保存します。
@@ -191,7 +211,7 @@ Docker版を残したまま、`--backend host` でMac上に直接起動できま
 
 Perryはworkspaceの `@perryts/perry` を使用します（LLVM同梱）。リンクにはXcodeまたはCommand Line Toolsが必要です。ソースを成果物内に隔離してコンパイルし、`intermediates/` にLLVM IR・オブジェクト等を保存します。生成バイナリはOS標準以外の共有ライブラリに依存していないことを検査します。
 
-`mise.toml` で Node 26.10.0・Deno 2.9.7・Bun 1.4.2・pnpm 12.9.1 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
+`mise.toml` で Node 26.10.0・Deno 2.9.7・Bun 1.4.4・pnpm 12.9.1 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
 pnpmはmiseのaquaバックエンドで配布済みバイナリを取得します（npm経由ではありません）。Nodeの署名検証を有効にしているためGnuPGが必要です。古いmiseで署名鍵不足になる場合はmiseを更新するか、Node公式の公開鍵を確認して追加してください（検証は無効にしません）。
 
 ```sh
