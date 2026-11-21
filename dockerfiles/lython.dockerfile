@@ -1,4 +1,4 @@
-FROM node:26.10.0-trixie-slim
+FROM node:26.13.1-trixie-slim
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl gnupg cmake ninja-build build-essential python3 \
     && curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key -o /usr/share/keyrings/llvm.asc \

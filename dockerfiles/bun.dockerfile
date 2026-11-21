@@ -1,5 +1,5 @@
 # The default variant is Debian-based.
-FROM oven/bun:1.4.4
+FROM oven/bun:1.4.5
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl tar \
     && rm -rf /var/lib/apt/lists/*
 COPY scripts/bun-canary-config.json scripts/host-bun-canary.ts scripts/prepare-bun-canary.ts scripts/process.ts /opt/bootstrap/

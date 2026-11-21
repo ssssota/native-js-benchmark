@@ -39,10 +39,10 @@ pnpm cli run --tool node --workload primes
 [Spinel](https://github.com/matz/spinel)はrelease archive `2026.09.12`、[Lython](https://github.com/t3tra-dev/lython)はrevision `98aa88b92786538ea57eea48ee65a4142f211e71`に固定し、ソースをSHA-256検証付きで取得します。Spinelは生成C、LythonはLLVM IRとネイティブ実行物を保存します。Lythonの`jit`コマンドは計測に使いません。
 CRuby 4.0.7・CPython 3.14.8はソース実行専用で、`compile`・`run-binary`・`sizes`には含めません。CRubyは`--disable-gems --disable-yjit`、CPythonは`-I -B`で起動します。
 
-[Oseo](https://github.com/dahlia/oseo) はリビジョン `317b58bbe686219ed9b715473c91ee2e9b5c5817` に固定しています。
+[Oseo](https://github.com/dahlia/oseo) はリビジョン `13225c6faf1ed12322f6924e66f901adac28f391` に固定しています。
 Docker版はLinux x64、ホスト版はmacOS arm64が対象です。Apple Siliconでは `--backend host` を使ってください。
-現行CLIは生成バイナリを保持しないため、Oseoのホスト／ツールチェーンAPIを使って `out`・生成C・MIRを保存します。コンパイル時にはworkloadを実行しません。
-Oseo標準のAddressSanitizer・UndefinedBehaviorSanitizerを有効にしたまま計測するため、他ツールとの速度・サイズ比較にはその負荷が含まれます。
+Oseoの `build` コマンドで生成バイナリを保存し、ツールチェーンAPIで生成Cを取得します。MIRも保存します。
+Oseo の `checked` 設定で AddressSanitizer・UndefinedBehaviorSanitizer を要求して計測します。
 
 `--cache`・`--engine` は廃止しました。出力先の名前は変わりません。
 短い `node`・`bun`・`deno` も使えます。単体コンパイル・計測ではキャッシュなし（Deno は V8）、一覧表示ではそのツール全構成を選びます。
@@ -60,7 +60,7 @@ Deno の V8／QuickJS 用ランタイムと Node の `postject` はイメージ�
 
 `bun-aot`・`bun-aot-typescript`・`bun-aot-trim`・`bun-aot-typescript-trim`で、機械語へのAOTコンパイルを比較できます。`typescript`は既存の`.ts` workloadを使い、`trim`は未使用のBun/Node APIを除去します。従来の`bun-cache-off/on`はJITを含む実行ファイル化です。
 
-安定版1.4.4では`--aot`が無視されるため、AOTとそのJIT対照`bun-canary-cache-off/on`は公式npmの`1.4.4-canary.20261102.1`（revision `271b65ec608a50eca96a894c6bbff1e65849d920`）を別途使用します。取得物をSHA-512で検証して`build/tools/bun-canary-<version>/`へ保存し、AOT対応help・実際のrevision・explainレポートを検証します。安定版へ黙ってフォールバックしません。
+安定版1.4.5では`--aot`が無視されるため、AOTとそのJIT対照`bun-canary-cache-off/on`は公式npmの`1.4.5-canary.20261120.1`（revision `7bb427f3be953a1a9bf575ee8c87dc0946106de1`）を別途使用します。取得物をSHA-512で検証して`build/tools/bun-canary-<version>/`へ保存し、AOT対応help・実際のrevision・explainレポートを検証します。安定版へ黙ってフォールバックしません。
 
 ```sh
 mise exec -- pnpm cli build --backend host --tool bun-aot
@@ -182,7 +182,7 @@ Node.js・pnpmなどの開発ツールは `mise.toml` に従って mise-action �
 
 ### Macホストで計測（試験対応）
 
-Oseoは `mise install` で導入するAube 2.6.1・Zig 0.16.0（Oseo指定のバージョン）を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
+Oseoは `mise install` で導入するAube 2.10.1・Zig 0.16.0（Oseo指定のバージョン）を使います。最初の `build` / `compile` 時に固定ソースをSHA-256検証付きで取得し、`build/tools/oseo-<revision>/` にビルドします。以後は同じcheckoutを再利用します。
 
 Spinel/Lythonもホストの`build` / `compile`で固定ソースを取得・ビルドし、`build/tools/spinel-2026.09.12/`・`build/tools/lython-<revision>/`に保存します。SpinelはCコンパイラとmake、LythonはLLVM/MLIR 23・CMake・Ninjaが必要です。macOSではHomebrewの`llvm`を用意してください。別のLLVM 23を使う場合は`LYTHON_LLVM_PREFIX`でprefixを指定します。Python・Ruby・CMake・Ninjaはmiseに固定しています。
 
@@ -211,7 +211,7 @@ Docker版を残したまま、`--backend host` でMac上に直接起動できま
 
 Perryはworkspaceの `@perryts/perry` を使用します（LLVM同梱）。リンクにはXcodeまたはCommand Line Toolsが必要です。ソースを成果物内に隔離してコンパイルし、`intermediates/` にLLVM IR・オブジェクト等を保存します。生成バイナリはOS標準以外の共有ライブラリに依存していないことを検査します。
 
-`mise.toml` で Node 26.10.0・Deno 2.9.7・Bun 1.4.4・pnpm 12.9.1 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
+`mise.toml` で Node 26.13.1・Deno 2.9.8・Bun 1.4.5・pnpm 12.21.0 を固定します。Nodeは公式配布バイナリを使います。pnpm更新時は `package.json` の `packageManager` も揃えてください。Docker側は独立したままです。
 pnpmはmiseのaquaバックエンドで配布済みバイナリを取得します（npm経由ではありません）。Nodeの署名検証を有効にしているためGnuPGが必要です。古いmiseで署名鍵不足になる場合はmiseを更新するか、Node公式の公開鍵を確認して追加してください（検証は無効にしません）。
 
 ```sh
@@ -255,7 +255,7 @@ pnpm test
 ```
 
 pnpmはmiseで管理します。workspaceはルート（CLI・コンパイラ）と `src`（workload）の2つで、依存バージョンは `pnpm-workspace.yaml` の `catalog` に集約しています。変更後は `pnpm install` でlockfileを更新してください。
-Perry・scriptcはworkspaceの固定パッケージを使用します。scriptc 0.2.3はネイティブCLIを直接起動し、インストール時に公式postinstallでプラットフォーム別バイナリとtoolchain設定を配置します。コード生成はLLVMのみで、旧Cバックエンドは廃止されています。PorfforはmiseでGitHub Releasesの `alpha-15` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` は参照用で、ビルドには使いません。
+Perry・scriptcはworkspaceの固定パッケージを使用します。scriptc 0.4.14はネイティブCLIを直接起動し、インストール時に公式postinstallでプラットフォーム別バイナリとtoolchain設定を配置します。コード生成はLLVMのみで、旧Cバックエンドは廃止されています。PorfforはmiseでGitHub Releasesの `alpha-25` を取得し、Dockerも同じバージョンに固定しています。配布アーカイブのSHA-256も固定しています。hostのPorffor・scriptcにはXcode Command Line Tools等のCコンパイラ／SDKが必要です。`run` はコンパイル後に実行、`bench` は生成バイナリを計測します。Porfforは `out.c`、scriptcは `*.ll`・`*.ir.json` 等の中間ファイルも保存します。`vendor/hermes` は参照用で、ビルドには使いません。
 Dockerの `npm-cli` は `pnpm deploy` で `build/docker/workload-deps-*` に独立配置してから使います。旧 `src/package-lock.json` は廃止し、ルートの `pnpm-lock.yaml` に統一しました。現状のworkload依存は純粋なJSのlodash-esのみで、将来ネイティブ依存を追加する場合はLinux向けの配置方法も見直してください。
 
 CLI は `scripts/cli.ts`、コンパイル設定は `scripts/compilers/` にあります。

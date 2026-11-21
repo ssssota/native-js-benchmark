@@ -162,7 +162,11 @@ async function compile(source: string, target: Target, output: string): Promise<
       return cli.runNativeCli(
         {
           ...request,
-          args: [...(target.noSpecialization ? ["--no-specialization"] : []), ...request.args],
+          args: [
+            request.args[0],
+            ...(target.noSpecialization ? ["--no-specialization"] : []),
+            ...request.args.slice(1),
+          ],
         },
         host,
         selectedToolchain,

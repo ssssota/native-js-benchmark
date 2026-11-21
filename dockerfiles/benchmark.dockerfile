@@ -1,4 +1,4 @@
-FROM ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3 AS hermes-runtime
+FROM ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 AS hermes-runtime
 
 # static-hermes-cli's Linux release is built against ICU 74. The benchmark
 # image remains Debian-based for the other runtimes, so copy only the matching
@@ -9,11 +9,11 @@ RUN apt-get update \
     && cp -a /usr/lib/*/libicu*.so.74* /opt/hermes-icu/ \
     && rm -rf /var/lib/apt/lists/*
 
-FROM denoland/deno:debian-2.9.7 AS deno
-FROM oven/bun:1.4.4 AS bun
+FROM denoland/deno:debian-2.9.8 AS deno
+FROM oven/bun:1.4.5 AS bun
 FROM python:3.14.8-slim-trixie AS cpython
 FROM ruby:4.0.7-slim-trixie AS cruby
-FROM node:26.10.0-trixie-slim
+FROM node:26.13.1-trixie-slim
 
 # Shared runtime for every benchmark, including statically linked Hermes VM
 # executables that still depend on the system ICU libraries.

@@ -1,4 +1,4 @@
-FROM node:26.10.0-trixie-slim
+FROM node:26.13.1-trixie-slim
 
 # Oseo's supported Linux execution target is AMD64. Use the Mac host backend
 # on Apple Silicon; AArch64 Linux is only an upstream inspection target.
@@ -9,8 +9,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl xz-utils git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://github.com/aubepkg/aube/releases/download/v2.6.1/aube-v2.6.1-x86_64-unknown-linux-gnu.tar.gz -o /tmp/aube.tar.gz \
-    && echo '364b4cf201970cd5c943390dd3e736b4256b14a0ac52d304f8fb4acfd6a1fbd3  /tmp/aube.tar.gz' | sha256sum -c - \
+RUN curl -fsSL https://github.com/aubepkg/aube/releases/download/v2.10.1/aube-v2.10.1-x86_64-unknown-linux-gnu.tar.gz -o /tmp/aube.tar.gz \
+    && echo '2e7206a50cf3dc97b8381ce168a2639f2cf80e17b681a5c47a68ab763fac0b68  /tmp/aube.tar.gz' | sha256sum -c - \
     && tar -xzf /tmp/aube.tar.gz -C /usr/local/bin aube \
     && rm /tmp/aube.tar.gz
 
@@ -32,8 +32,10 @@ RUN set -eu; \
     rm /tmp/oseo.tar.gz /tmp/oseo-config.json
 
 WORKDIR /opt/oseo
-RUN aube install --frozen-lockfile \
-    && aube exec -- tsdown --workspace
+# tsdown uses pnpm pack for upstream's package validation.
+RUN npm install -g --no-audit --no-fund pnpm@12.21.0 \
+    && aube install --frozen-lockfile \
+    && aube exec -- tsdown
 
 COPY scripts/oseo-compile.mjs /opt/oseo-compile.mjs
 RUN node /opt/oseo-compile.mjs /opt/oseo --version

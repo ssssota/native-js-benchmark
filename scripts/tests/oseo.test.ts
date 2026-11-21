@@ -60,21 +60,26 @@ for (const fail of [false, true]) {
             },
           },
         },
-        async runNativeCli(
-          request: { args: string[] },
-          retainingHost: typeof host,
-          toolchain: any,
-        ) {
+        async runNativeCli(request: { args: string[] }, compilerHost: typeof host, toolchain: any) {
+          assert.equal(request.args[0], "build");
           if (request.args.includes("--dump-mir"))
             return { exitStatus: 0, stdout: "MIR", stderr: "" };
           if (fail)
             return { exitStatus: 1, stdout: "", stderr: "error[OSEO1001]: unsupported source" };
-          toolchain.createBuildPlan({ generatedSourcePath: generated, target });
-          await retainingHost.run({ command: "zig" });
           await writeFile(generated, "generated C");
-          await writeFile(executable, "native binary");
-          await chmod(executable, 0o755);
-          return retainingHost.run({ command: executable });
+          toolchain.createBuildPlan({ generatedSourcePath: generated, target });
+          await compilerHost.run({ command: "zig" });
+          assert.deepEqual(request.args.slice(1), [
+            "--build-config",
+            "checked",
+            "--output",
+            output,
+            "hello.ts",
+          ]);
+          await rm(generated);
+          await writeFile(output, "native binary");
+          await chmod(output, 0o755);
+          return { exitStatus: 0, stdout: "", stderr: "" };
         },
       };
       const compiled = compileOseo({ cli, host, version: "test", source: "hello.ts", output });

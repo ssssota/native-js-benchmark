@@ -1,4 +1,4 @@
-FROM ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3 AS hermes-icu
+FROM ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 AS hermes-icu
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libicu74=74.2-1ubuntu3.1 \
@@ -6,7 +6,7 @@ RUN apt-get update \
     && cp -a /usr/lib/*/libicu*.so.74* /opt/hermes-icu/ \
     && rm -rf /var/lib/apt/lists/*
 
-FROM debian:13.6-slim
+FROM debian:13.7-slim
 
 # static-hermes-cli publishes Linux artifacts for Ubuntu 24.04. Keep the
 # release and each supported archive checksum fixed so Docker does not build a

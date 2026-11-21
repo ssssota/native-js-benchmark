@@ -1,49 +1,50 @@
-import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-// Oseo's current CLI runs and then deletes its native executable. Compose its
-// host and toolchain adapters to retain the artifact without executing it.
-// Keep Oseo's target, optimization and sanitizer policy unchanged.
+// Oseo's build command saves the executable. Capture the generated C before
+// Oseo removes its temporary build directory.
 export async function compileOseo({ cli, host, version, source, output }) {
   await mkdir(dirname(output), { recursive: true });
   await Promise.all(
     [output, `${output}.c`, `${output}.mir`].map((file) => rm(file, { force: true })),
   );
-  const mir = await cli.runNativeCli({ args: ["--dump-mir", source], version }, host);
+  const mir = await cli.runNativeCli({ args: ["build", "--dump-mir", source], version }, host);
   if (mir.exitStatus !== 0) throw new Error(mir.stderr || "Oseo did not produce MIR.");
   await writeFile(`${output}.mir`, mir.stdout);
-  let executable;
   let generatedSource;
-  let retained = false;
   const toolchain = {
     ...cli.defaultComponents.toolchain,
     createBuildPlan(input) {
       const plan = cli.defaultComponents.toolchain.createBuildPlan(input);
-      executable = plan.executablePath;
-      generatedSource = input.generatedSourcePath;
+      generatedSource = readFileSync(input.generatedSourcePath);
       return plan;
     },
   };
-  const retainingHost = {
+  const compilerHost = {
     ...host,
     async run(request) {
-      if (executable && request.command === executable) {
-        await copyFile(generatedSource, `${output}.c`);
-        await copyFile(executable, output);
-        retained = true;
-        return { exitStatus: 0, stdout: "", stderr: "" };
-      }
       const observation = await host.run(request);
       if (observation.exitStatus !== 0 && observation.stderr)
         process.stderr.write(observation.stderr);
       return observation;
     },
   };
-  const result = await cli.runNativeCli({ args: [source], version }, retainingHost, toolchain);
-  if (result.exitStatus !== 0 || !retained) {
+  try {
+    const result = await cli.runNativeCli(
+      // The previous Oseo run path used checked mode. Keep the same
+      // optimization and sanitizer settings when producing a binary.
+      { args: ["build", "--build-config", "checked", "--output", output, source], version },
+      compilerHost,
+      toolchain,
+    );
+    if (result.exitStatus !== 0 || !generatedSource)
+      throw new Error(result.stderr || "Oseo did not produce an executable.");
+    await writeFile(`${output}.c`, generatedSource);
+  } catch (error) {
     await rm(output, { force: true });
-    throw new Error(result.stderr || "Oseo did not produce an executable.");
+    throw error;
   }
 }
 

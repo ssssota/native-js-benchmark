@@ -1,15 +1,15 @@
 [tools]
-node = "26.10.0"
-deno = "2.9.7"
-bun = "1.4.4"
-pnpm = "12.9.1"
-aube = "2.6.1"
+node = "26.13.1"
+deno = "2.9.8"
+bun = "1.4.5"
+pnpm = "12.21.0"
+aube = "2.10.1"
 zig = "0.16.0"
 python = "3.14.8"
 ruby = "4.0.7"
-cmake = "3.31.12"
+cmake = "4.5.1"
 ninja = "1.13.2"
-"github:CanadaHonk/porffor" = { version = "alpha-15" }
+"github:CanadaHonk/porffor" = { version = "alpha-25" }
 "github:ssssota/static-hermes-cli" = { version = "v2026.10.1" }
 
 [settings]

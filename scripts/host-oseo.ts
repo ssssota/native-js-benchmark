@@ -53,7 +53,7 @@ async function installOseo(root: string): Promise<void> {
     await mkdir(checkout);
     await execute("tar", ["-xzf", archive, "--strip-components=1", "-C", checkout]);
     await execute("aube", ["install", "--frozen-lockfile"], { cwd: checkout });
-    await execute("aube", ["exec", "--", "tsdown", "--workspace"], { cwd: checkout });
+    await execute("aube", ["exec", "--", "tsdown"], { cwd: checkout });
     await writeFile(join(checkout, ".ready"), `${oseoConfig.revision}\n`);
     await rm(directory, { recursive: true, force: true });
     await rename(checkout, directory);

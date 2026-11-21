@@ -35,9 +35,9 @@ const miseBun = spawnSync("mise", ["which", "bun"], { encoding: "utf8" });
 const stableCommand = miseBun.status === 0 ? miseBun.stdout.trim() : "bun";
 const stable = spawnSync(stableCommand, ["--version"], { encoding: "utf8" });
 test(
-  "stable Bun 1.4.4 is rejected even though it accepts an unknown --aot flag",
+  "stable Bun 1.4.5 is rejected even though it accepts an unknown --aot flag",
   {
-    skip: stable.status !== 0 || stable.stdout.trim() !== "1.4.4",
+    skip: stable.status !== 0 || stable.stdout.trim() !== "1.4.5",
   },
   () => assert.throws(() => assertBunAotSupport(stableCommand), /no AOT support/),
 );

@@ -1,4 +1,4 @@
-FROM node:26.10.0-trixie-slim
+FROM node:26.13.1-trixie-slim
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential ca-certificates curl xz-utils \
     && rm -rf /var/lib/apt/lists/*

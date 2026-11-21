@@ -69,7 +69,7 @@ Deno QuickJS は `--tool deno-quickjs` で選びます。その他は `node-cach
 Deno V8 の `run-binary --tool deno-v8-cache-on` は出力先の `runtime-cache/` を保持します。
 一方、`bench` は計測セッション内だけでキャッシュを共有し、既存の `runtime-cache/` は使いません。
 
-仕様：[Node SEA](https://nodejs.org/download/release/v26.10.0/docs/api/single-executable-applications.html#v8-code-cache-support) / [Bun](https://bun.sh/docs/bundler/executables#bytecode-compilation) / [Deno](https://docs.deno.com/runtime/reference/cli/compile/#choosing-a-javascript-engine)
+仕様：[Node SEA](https://nodejs.org/download/release/v26.13.1/docs/api/single-executable-applications.html#v8-code-cache-support) / [Bun](https://bun.sh/docs/bundler/executables#bytecode-compilation) / [Deno](https://docs.deno.com/runtime/reference/cli/compile/#choosing-a-javascript-engine)
 
 ## 中間ファイルと共有ライブラリ
 
